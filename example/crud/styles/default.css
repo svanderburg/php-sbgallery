@@ -1,0 +1,37 @@
+body
+{
+	font-face: arial, lucida, helvetica, sans-serif;
+}
+
+.mandatory
+{
+	color: #ff0000;
+}
+
+.galleryitem, .albumitem
+{
+	float: left;
+	text-align: center;
+	margin: 5px;
+	min-width: 160px;
+	min-height: 120px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000000;
+}
+
+.picturenavigation
+{
+	width: 600px;
+	height: 40px;
+}
+
+.picture-previous
+{
+	float: left;
+}
+
+.picture-next
+{
+	float: right;
+}
