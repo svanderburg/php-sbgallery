@@ -36,8 +36,8 @@ Low-level use cases
 ===================
 The low-level API provides direct control over the gallery's state.
 
-Composing a gallery
--------------------
+Managing a gallery
+------------------
 We can compose a gallery (an object displaying a set of albums and their
 thumbnails) as follows:
 
@@ -88,8 +88,8 @@ use:
 displayEditableGallery($gallery);
 ```
 
-Composing an album
-------------------
+Managing albums
+---------------
 An album (that displays a set of pictures and their thumbnails) can be managed
 by composing an album object that takes similar parameters as the gallery
 constructor.
@@ -121,7 +121,7 @@ rendered.
 
 To determine which kind of CRUD operation you need to execute, every UI element
 of the album (such as hyperlinks and forms) send an `__operation` request
-parameter along with it ($_REQUEST["create_album"]) that can be used to
+parameter along with it (e.g. `$_REQUEST["create_album"]`) that can be used to
 determine what CRUD operation to execute. For example, `create_album`
 corresponds to creating an album.
 
@@ -156,8 +156,8 @@ displayPicturesUploader($albumId);
 The page that displays the uploader should correspond to the multiple images
 upload URL shown in the previous section.
 
-Picture
--------
+Managing pictures
+-----------------
 An individual picture can be managed by composing a picture object that takes
 similar parameters as the gallery and album constructors.
 
@@ -272,9 +272,9 @@ $application = new Application(
 ```
 Adding the page object to the application layout allows us to:
 
-* Access the gallery through: http://localhost/gallery
-* Access each album through: http://localhost/gallery/<albumId>
-* Access each picture through: http://localhost/gallery/<albumId>/<pictureId>
+* Access the gallery through: `http://localhost/gallery`
+* Access each album through: `http://localhost/gallery/<albumId>`
+* Access each picture through: `http://localhost/gallery/<albumId>/<pictureId>`
 
 And we can access CRUD operations (other than reading) by appending a
 `__operation` request paramer, such as:

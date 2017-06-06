@@ -68,7 +68,7 @@ function displayPictureNavigation(Picture $picture, $displayImageLink)
 	<?php
 }
 
-function displayPicture(Picture $picture)
+function displayPicture(Picture $picture, $displayImageLink = "displayConventionalImageLink")
 {
 	if($picture->entity === false)
 	{

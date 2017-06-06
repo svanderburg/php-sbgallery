@@ -12,7 +12,7 @@ create index album_ordering on albums(Ordering);
 
 create table pictures
 (
-	PICTURE_ID    VARCHAR(255)  NOT NULL check(ALBUM_ID <> ''),
+	PICTURE_ID    VARCHAR(255)  NOT NULL check(PICTURE_ID <> ''),
 	Title         VARCHAR(255)  NOT NULL check(Title <> ''),
 	Description   VARCHAR(255),
 	FileType      VARCHAR(3)    check(FileType in ('gif', 'jpg', 'png')),
