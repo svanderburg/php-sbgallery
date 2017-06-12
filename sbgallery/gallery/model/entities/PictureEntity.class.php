@@ -54,7 +54,6 @@ class PictureEntity
 		return $stmt;
 	}
 
-
 	public static function insert(PDO $dbh, array $picture, $picturesTable = "pictures")
 	{
 		$dbh->beginTransaction();
@@ -129,17 +128,11 @@ class PictureEntity
 	{
 		$stmt = $dbh->prepare("update ".$picturesTable." set Ordering = ? where PICTURE_ID = ? and ALBUM_ID = ?");
 		if(!$stmt->execute(array($secondPicture["Ordering"], $firstPicture["PICTURE_ID"], $albumId)))
-		{
-			$dbh->rollBack();
 			throw new Exception($stmt->errorInfo()[2]);
-		}
 
 		$stmt = $dbh->prepare("update ".$picturesTable." set Ordering = ? where PICTURE_ID = ? and ALBUM_ID = ?");
 		if(!$stmt->execute(array($firstPicture["Ordering"], $secondPicture["PICTURE_ID"], $albumId)))
-		{
-			$dbh->rollBack();
 			throw new Exception($stmt->errorInfo()[2]);
-		}
 	}
 
 	public static function moveLeft(PDO $dbh, $pictureId, $albumId, $picturesTable = "pictures")

@@ -103,17 +103,11 @@ class AlbumEntity
 	{
 		$stmt = $dbh->prepare("update ".$albumsTable." set Ordering = ? where ALBUM_ID = ?");
 		if(!$stmt->execute(array($secondAlbum["Ordering"], $firstAlbum["ALBUM_ID"])))
-		{
-			$dbh->rollBack();
 			throw new Exception($stmt->errorInfo()[2]);
-		}
 
 		$stmt = $dbh->prepare("update ".$albumsTable." set Ordering = ? where ALBUM_ID = ?");
 		if(!$stmt->execute(array($firstAlbum["Ordering"], $secondAlbum["ALBUM_ID"])))
-		{
-			$dbh->rollBack();
 			throw new Exception($stmt->errorInfo()[2]);
-		}
 	}
 
 	public static function moveLeft(PDO $dbh, $id, $albumsTable = "albums")
