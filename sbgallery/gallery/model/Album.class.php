@@ -73,13 +73,13 @@ class Album
 	public $form;
 
 	/** Name of the database table storing album properties */
-	private $albumsTable;
+	public $albumsTable;
 
 	/** Name of the database table storing thumbnail properties */
-	private $thumbnailsTable;
+	public $thumbnailsTable;
 
 	/** Name of the database table storing picture properties */
-	private $picturesTable;
+	public $picturesTable;
 
 	/**
 	 * Constructs a new album instance.

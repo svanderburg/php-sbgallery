@@ -59,13 +59,13 @@ class Picture
 	public $entity = false;
 
 	/** Name of the database table storing picture properties */
-	private $picturesTable;
+	public $picturesTable;
 
 	/** Name of the database table storing thumbnail properties */
-	private $thumbnailsTable;
+	public $thumbnailsTable;
 
 	/** Name of the database table storing album properties */
-	private $albumsTable;
+	public $albumsTable;
 
 	/**
 	 * Creates a new picture object.

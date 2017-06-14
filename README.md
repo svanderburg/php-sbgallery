@@ -10,7 +10,7 @@ web application. It supports the following features:
 * Embedded HTML editor for managing descriptions
 * Bulk importer
 * Translatable into a language of choice
-* Integratable into the `php-sbeditor` and `php-sbdata` frameworks
+* Integratable into the `php-sbeditor`, `php-sblayout` and `php-sbdata` frameworks
 
 Prerequisites
 =============
@@ -191,7 +191,7 @@ $picture->moveLeft($pictureId, $albumId);
 $picture->moveRight($pictureId, $albumId);
 ```
 
-Similarly to albums, any picture UI elements sends a `$_REQUEST["__operation"]`
+Similarly to albums, any picture UI element sends a `$_REQUEST["__operation"]`
 parameter that can be used to determine what CRUD operation to execute.
 
 We can display a picture in read-only mode as follows:
@@ -238,6 +238,11 @@ object and permission checker:
 ```php
 class MyGalleryPage extends GalleryPage
 {
+    public function __construct()
+    {
+        parent::__construct("Gallery");
+    }
+
     public function constructGallery()
     {
         return new Gallery(array(...));
@@ -292,6 +297,89 @@ http://localhost/gallery/myalbum/mypicture?__operation=moveleft_picture
 
 By invoking the above URL (and having met the appropriate authentication
 criteria) the picture will be moved left in the album.
+
+Exposing a gallery as a set of sub pages
+========================================
+In addition to using the high level API to embed the gallery as a sub
+application into an application layout, we can also expose albums as sub pages.
+
+By using albums as pages, we can use the gallery as a simple content manager
+allowing a user to dynamic construct sub pages of a web applications including
+the contents of the pages.
+
+When defining the gallery page, we must configure it to use the `pages` views
+(as opposed to the `html` views) and we must override the root of the gallery
+page to prevent the gallery overview from showing up:
+
+```php
+class MyGalleryPage extends GalleryPage
+{
+    public function __construct()
+    {
+        parent::__construct("Gallery", null, "pages", "gallery.inc.php");
+    }
+
+    public function constructGallery()
+    {
+        return new Gallery(array(...));
+    }
+
+    public function constructGalleryPermissionChecker()
+    {
+        return new MyGalleryPermissionChecker();
+    }
+}
+```
+
+Composing the application layout is done in a similar way as the previous
+example:
+
+```php
+$galleryPage = new MyGalleryPage();
+
+$application = new Application(
+        /* Title */
+        "Gallery layout integration",
+
+        /* CSS stylesheets */
+        array("default.css"),
+
+        /* Sections */
+        array(
+                "header" => new StaticSection("header.inc.php"),
+                "menu" => new MenuSection(0),
+                "submenu" => new StaticSection("submenu.inc.php"),
+                "contents" => new ContentsSection(true)
+        ),
+
+        /* Pages */
+        new StaticContentPage("Home", new Contents("home.inc.php"), array(
+                "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.inc.php")),
+
+                "home" => new PageAlias("Home", ""),
+                "gallery" => $galleryPage
+        ))
+);
+```
+
+In the above example, we compose a layout in a similar way except that we
+globally declare the gallery page and we add a `submenu` section whose
+responsibility is to display the available albums as menu options.
+
+The `submenu.inc.php` section module should be written as follows:
+
+```php
+<?php
+require_once("gallery/view/pages/displayalbummenusection.inc.php");
+
+if(visitedGallerySubPage())
+    displayAlbumMenuSection($GLOBALS["galleryPage"]);
+?>
+```
+
+The above code fragement checks whether the user is actually visiting one of the
+gallery's sub pages and if this is the case, it will display all the albums as
+menu options.
 
 Embedding a gallery into a HTML editor
 ======================================
@@ -373,8 +461,11 @@ This package contains two examples in the `example/` sub folder:
   a gallery, album, picture and multiple pictures upload page.
 * The `crud` folder contains an example using the high-level API. It provides
   a gallery with a useless authentication check (the `view=1` GET parameter).
-* The `simpleeditor` folder contains a very basic example showing an editor with
-  embedded gallery.
+* The `pages` folder contains an example of exposing albums as sub pages in the
+  application layout so that parts of the web application content can be
+  managed by end-users.
+* The `simpleeditor` folder contains a very basic example showing an HTML editor
+  with embedded gallery.
 * The `formeditor` folder contains an example of an editor with gallery
   integrated into the `php-sbdata` framework, so that input can be automatically
   validated and presented.

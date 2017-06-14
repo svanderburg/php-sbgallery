@@ -8,11 +8,14 @@ class PictureCRUDModel extends CRUDModel
 
 	public $checker;
 
+	public $crudPage;
+
 	public function __construct(CRUDPage $crudPage, Picture $picture)
 	{
 		parent::__construct($crudPage);
 		$this->picture = $picture;
 		$this->checker = $crudPage->constructGalleryPermissionChecker();
+		$this->crudPage = $crudPage;
 	}
 
 	private function createPicture()
@@ -32,6 +35,7 @@ class PictureCRUDModel extends CRUDModel
 	private function viewPicture()
 	{
 		$this->picture->view($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->crudPage->title = $this->picture->entity["Title"];
 	}
 
 	private function updatePicture()
@@ -46,6 +50,8 @@ class PictureCRUDModel extends CRUDModel
 			header("Location: ".$parentURL."/".$this->picture->entity["ALBUM_ID"]."/".$this->picture->entity["PICTURE_ID"]);
 			exit;
 		}
+
+		$this->crudPage->title = $this->form->fields["Title"]->value;
 	}
 
 	private function removePicture()

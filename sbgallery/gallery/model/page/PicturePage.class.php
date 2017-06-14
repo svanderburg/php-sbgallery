@@ -9,11 +9,11 @@ class PicturePage extends StaticContentCRUDPage
 {
 	private $parent;
 
-	public function __construct(AlbumPage $parent = null, array $sections = null, $gallerySection = "contents")
+	public function __construct(AlbumPage $parent = null, array $sections = null, $view = "html", $gallerySection = "contents")
 	{
 		$baseURL = Page::computeBaseURL();
 
-		$contentsPath = dirname(__FILE__)."/../../view/html/contents/crud/";
+		$contentsPath = dirname(__FILE__)."/../../view/".$view."/contents/crud/";
 		$htmlEditorJsPath = $baseURL."/lib/sbeditor/editor/scripts/htmleditor.js";
 
 		parent::__construct("Picture",
@@ -29,7 +29,7 @@ class PicturePage extends StaticContentCRUDPage
 			/* Contents per operation */
 			array(),
 			null);
-		
+
 		$this->parent = $parent;
 	}
 

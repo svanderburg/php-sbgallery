@@ -8,20 +8,23 @@ require_once("util/composegallerycontents.inc.php");
 
 abstract class GalleryPage extends DynamicContentCRUDPage
 {
-	public function __construct(array $sections = null, $gallerySection = "contents")
+	public function __construct($title, array $sections = null, $view = "html", $gallerySectionContent = null, $gallerySection = "contents")
 	{
 		$baseURL = Page::computeBaseURL();
 
-		$contentsPath = dirname(__FILE__)."/../../view/html/contents/crud/";
+		$contentsPath = dirname(__FILE__)."/../../view/".$view."/contents/crud/";
 		$htmlEditorJsPath = $baseURL."/lib/sbeditor/editor/scripts/htmleditor.js";
 
-		parent::__construct("Gallery",
+		if($gallerySectionContent === null)
+			$gallerySectionContent = $contentsPath."gallery.inc.php";
+
+		parent::__construct($title,
 			/* Parameter name */
 			"albumId",
 			/* Key fields */
 			array(),
 			/* Default contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."gallery.inc.php")),
+			new Contents(composeGalleryContents($sections, $gallerySection, $gallerySectionContent)),
 			/* Error contents */
 			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php")),
 			/* Contents per operation */
@@ -29,7 +32,7 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 				"create_album" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, null, array($htmlEditorJsPath)),
 				"insert_album" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, null, array($htmlEditorJsPath))
 			),
-			new AlbumPage($this, $sections, $gallerySection));
+			new AlbumPage($this, $sections, $view, $gallerySection));
 	}
 
 	public function constructCRUDModel()

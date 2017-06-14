@@ -11,11 +11,11 @@ class AlbumPage extends DynamicContentCRUDPage
 {
 	private $parent;
 
-	public function __construct(GalleryPage $parent = null, array $sections = null, $gallerySection = "contents")
+	public function __construct(GalleryPage $parent = null, array $sections = null, $view = "html", $gallerySection = "contents")
 	{
 		$baseURL = Page::computeBaseURL();
 
-		$contentsPath = dirname(__FILE__)."/../../view/html/contents/crud/";
+		$contentsPath = dirname(__FILE__)."/../../view/".$view."/contents/crud/";
 		$htmlEditorJsPath = $baseURL."/lib/sbeditor/editor/scripts/htmleditor.js";
 
 		parent::__construct("Album",
@@ -35,8 +35,8 @@ class AlbumPage extends DynamicContentCRUDPage
 				"insert_picture" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, null, array($htmlEditorJsPath)),
 				"add_multiple_pictures" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."addmultiplepictures.inc.php"))
 			),
-			new PicturePage($this, $sections, $gallerySection));
-		
+			new PicturePage($this, $sections, $view, $gallerySection));
+
 		$this->parent = $parent;
 	}
 

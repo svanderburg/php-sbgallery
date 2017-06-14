@@ -8,11 +8,14 @@ class AlbumCRUDModel extends CRUDModel
 
 	public $checker;
 
+	public $crudPage;
+
 	public function __construct(CRUDPage $crudPage, Album $album)
 	{
 		parent::__construct($crudPage);
 		$this->album = $album;
 		$this->checker = $crudPage->constructGalleryPermissionChecker();
+		$this->crudPage = $crudPage;
 	}
 
 	private function createAlbum()
@@ -32,6 +35,7 @@ class AlbumCRUDModel extends CRUDModel
 	private function viewAlbum()
 	{
 		$this->album->view($this->keyFields["albumId"]->value);
+		$this->crudPage->title = $this->album->entity["Title"];
 	}
 
 	private function updateAlbum()
@@ -46,6 +50,8 @@ class AlbumCRUDModel extends CRUDModel
 			header("Location: ".$parentURL."/".$this->album->entity["ALBUM_ID"]);
 			exit;
 		}
+
+		$this->crudPage->title = $this->form->fields["Title"]->value;
 	}
 
 	private function removeAlbum()

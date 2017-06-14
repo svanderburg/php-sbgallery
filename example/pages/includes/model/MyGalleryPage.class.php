@@ -5,9 +5,14 @@ require_once("MyGalleryPermissionChecker.class.php");
 
 class MyGalleryPage extends GalleryPage
 {
+	public function __construct()
+	{
+		parent::__construct("Gallery", null, "pages", "gallery.inc.php");
+	}
+
 	public function constructGallery()
 	{
-		return new MyGallery("Gallery");
+		return new MyGallery();
 	}
 
 	public function constructGalleryPermissionChecker()
