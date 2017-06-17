@@ -54,6 +54,10 @@ function displayGallery(Gallery $gallery, $displayAlbumLink = "displayConvention
 		<div class="galleryitem"><?php displayGalleryThumbnail($gallery, $row, $displayAlbumLink); ?></div>
 		<?php
 	}
+	// Clear hack to allow the enclosing div to automatically adjust its height
+	?>
+	<div style="clear: both;"></div>
+	<?php
 }
 
 function displayConventionalAddAlbumLink(Gallery $gallery)
@@ -100,5 +104,9 @@ function displayEditableGallery(Gallery $gallery, $displayAlbumLink = "displayCo
 		</div>
 		<?php
 	}
+	// Clear hack to allow the enclosing div to automatically adjust its height
+	?>
+	<div style="clear: both;"></div>
+	<?php
 }
 ?>

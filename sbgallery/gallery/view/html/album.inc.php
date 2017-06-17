@@ -77,9 +77,13 @@ function displayAlbum(Album $album, $displayPictureLink = "displayConventionalPi
 		while(($row = $stmt->fetch()) !== false)
 		{
 			?>
-			<div class="albumitem"><?php displayAlbumThumbnail($album, $row, $displayPictureLink); ?></a></div>
+			<div class="albumitem"><?php displayAlbumThumbnail($album, $row, $displayPictureLink); ?></div>
 			<?php
 		}
+		// Clear hack to allow the enclosing div to automatically adjust its height
+		?>
+		<div style="clear: both;"></div>
+		<?php
 	}
 }
 
@@ -144,6 +148,10 @@ function displayEditableAlbum(Album $album, $submitLabel, $generalErrorMessage, 
 			</div>
 			<?php
 		}
+		// Clear hack to allow the enclosing div to automatically adjust its height
+		?>
+		<div style="clear: both;"></div>
+		<?php
 	}
 }
 ?>
