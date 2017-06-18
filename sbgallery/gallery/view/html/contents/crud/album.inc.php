@@ -4,7 +4,12 @@ require_once("gallery/view/html/album.inc.php");
 global $crudModel;
 
 $albumURL = $_SERVER["PHP_SELF"];
-$galleryURL = dirname($albumURL);
+
+if($crudModel->album->entity === false)
+	$galleryURL = $_SERVER["PHP_SELF"];
+else
+	$galleryURL = dirname($albumURL);
+
 displayAlbumBreadcrumbs($crudModel->album, $galleryURL, $albumURL, "displayLayoutAlbumLink");
 
 if($crudModel->checker->checkWritePermissions())

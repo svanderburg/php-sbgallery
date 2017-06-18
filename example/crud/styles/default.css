@@ -20,10 +20,9 @@ body
 	border-color: #000000;
 }
 
-.picturenavigation
+.pictureitem
 {
-	width: 600px;
-	height: 40px;
+	display: inline-block;
 }
 
 .picture-previous

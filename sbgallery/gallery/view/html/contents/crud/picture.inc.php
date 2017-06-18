@@ -4,7 +4,11 @@ require_once("gallery/view/html/picture.inc.php");
 global $crudModel;
 $pictureURL = $_SERVER["PHP_SELF"];
 $albumURL = dirname($pictureURL);
-$galleryURL = dirname($albumURL);
+
+if($crudModel->picture->entity === false)
+	$galleryURL = $albumURL;
+else
+	$galleryURL = dirname($albumURL);
 
 displayPictureBreadcrumbs($crudModel->picture, $galleryURL, $albumURL, $pictureURL, "displayLayoutAlbumOrPictureLink", "displayLayoutAlbumOrPictureLink");
 

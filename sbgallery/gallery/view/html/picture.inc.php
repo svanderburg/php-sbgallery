@@ -43,9 +43,6 @@ function displayPictureBreadcrumbs(Picture $picture, $galleryURL, $albumURL, $pi
 
 function displayPictureNavigation(Picture $picture, $displayImageLink)
 {
-	?>
-	<div class="picturenavigation">
-	<?php
 	$stmt = $picture->queryPredecessor();
 
 	if(($row = $stmt->fetch()) !== false)
@@ -63,9 +60,6 @@ function displayPictureNavigation(Picture $picture, $displayImageLink)
 		<a class="picture-next" href="<?php print($displayImageLink($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/next.png" alt="Next"></a>
 		<?php
 	}
-	?>
-	</div>
-	<?php
 }
 
 function displayPicture(Picture $picture, $displayImageLink = "displayConventionalImageLink")
@@ -78,12 +72,16 @@ function displayPicture(Picture $picture, $displayImageLink = "displayConvention
 	}
 	else
 	{
-		displayPictureNavigation($picture, $displayImageLink);
 		?>
-		<p>
-			<img src="<?php print($picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"]); ?>" alt="<?php print($picture->entity["Title"]); ?>">
-		</p>
-		<div><?php print($picture->entity["Description"]); ?></div>
+		<div class="pictureitem">
+			<?php
+			displayPictureNavigation($picture, $displayImageLink);
+			?>
+			<p>
+				<img src="<?php print($picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"]); ?>" alt="<?php print($picture->entity["Title"]); ?>">
+			</p>
+			<div><?php print($picture->entity["Description"]); ?></div>
+		</div>
 		<?php
 	}
 }
@@ -112,17 +110,23 @@ function displayEditablePicture(Picture $picture, $submitLabel, $generalErrorMes
 {
 	if($picture->entity !== false)
 	{
-		displayPictureNavigation($picture, $displayImageLink);
-
-		if($picture->entity["FileType"] !== null)
-		{
-			?>
-			<p>
-				<img src="<?php print($picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"]); ?>" alt="<?php print($picture->entity["Title"]); ?>">
-			</p>
-			<p><a href="<?php print($displayImageLink($picture->entity["ALBUM_ID"], $picture->entity["PICTURE_ID"], "remove_picture_image")); ?>"><?php print($picture->labels["Remove image"]); ?></a></p>
+		?>
+		<div class="pictureitem">
 			<?php
-		}
+			displayPictureNavigation($picture, $displayImageLink);
+
+			if($picture->entity["FileType"] !== null)
+			{
+				?>
+				<p>
+					<img src="<?php print($picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"]); ?>" alt="<?php print($picture->entity["Title"]); ?>">
+				</p>
+				<p><a href="<?php print($displayImageLink($picture->entity["ALBUM_ID"], $picture->entity["PICTURE_ID"], "remove_picture_image")); ?>"><?php print($picture->labels["Remove image"]); ?></a></p>
+				<?php
+			}
+			?>
+		</div>
+		<?php
 	}
 
 	displayEditableForm($picture->form, $submitLabel, $generalErrorMessage, $fieldErrorMessage);
