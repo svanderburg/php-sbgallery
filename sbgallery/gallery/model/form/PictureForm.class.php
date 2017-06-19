@@ -22,8 +22,8 @@ class PictureForm extends Form
 		$args = array(
 			"__operation" => new HiddenField(true),
 			"ALBUM_ID" => new HiddenField(true),
-			"PICTURE_ID" => new TextField($labels["PICTURE_ID"], true),
-			"Title" => new TextField($labels["Title"], true),
+			"PICTURE_ID" => new TextField($labels["PICTURE_ID"], true, 20, 255),
+			"Title" => new TextField($labels["Title"], true, 20, 255),
 			"Description" => new HTMLEditorField($editorSettings["id"], $labels["Description"], $editorSettings["iframePage"], $editorSettings["iconsPath"], false),
 			"Image" => new FileField($labels["Image"], array("image/gif", "image/jpeg", "image/png"), false)
 		);

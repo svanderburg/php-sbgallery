@@ -21,8 +21,8 @@ class AlbumForm extends Form
 
 		$args = array(
 			"__operation" => new HiddenField(true),
-			"ALBUM_ID" => new TextField($labels["ALBUM_ID"], true),
-			"Title" => new TextField($labels["Title"], true),
+			"ALBUM_ID" => new TextField($labels["ALBUM_ID"], true, 20, 255),
+			"Title" => new TextField($labels["Title"], true, 20, 255),
 			"Visible" => new CheckBoxField("Visible"),
 			"Description" => new HTMLEditorField($editorSettings["id"], $labels["Description"], $editorSettings["iframePage"], $editorSettings["iconsPath"], false),
 		);

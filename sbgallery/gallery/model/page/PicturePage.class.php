@@ -19,8 +19,8 @@ class PicturePage extends StaticContentCRUDPage
 		parent::__construct("Picture",
 			/* Key fields */
 			array(
-				"albumId" => new TextField(true),
-				"pictureId" => new TextField(true)
+				"albumId" => new TextField(true, 20, 255),
+				"pictureId" => new TextField(true, 20, 255)
 			),
 			/* Default contents */
 			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, null, array($htmlEditorJsPath)),

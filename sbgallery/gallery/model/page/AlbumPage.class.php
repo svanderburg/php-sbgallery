@@ -23,7 +23,7 @@ class AlbumPage extends DynamicContentCRUDPage
 			"pictureId",
 			/* Key fields */
 			array(
-				"albumId" => new TextField(true)
+				"albumId" => new TextField(true, 20, 255)
 			),
 			/* Default contents */
 			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, null, array($htmlEditorJsPath)),
