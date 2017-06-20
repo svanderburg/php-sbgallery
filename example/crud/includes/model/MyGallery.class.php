@@ -3,12 +3,8 @@ require_once("gallery/model/Gallery.class.php");
 
 class MyGallery extends Gallery
 {
-	function __construct()
+	function __construct(PDO $dbh)
 	{
-		$dbh = new PDO("mysql:host=localhost;dbname=gallery", "root", "admin", array(
-			PDO::ATTR_PERSISTENT => true
-		));
-
 		$baseURL = Page::computeBaseURL();
 
 		$editorSettings = array(
