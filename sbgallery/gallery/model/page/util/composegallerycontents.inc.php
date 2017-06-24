@@ -6,7 +6,7 @@ function composeGalleryContents($sections, $gallerySection, $path)
 	else
 		$contentSections = $sections;
 	
-	$contentSection[$gallerySection] = $path;
-	return $contentSection;
+	$contentSections[$gallerySection] = $path;
+	return $contentSections;
 }
 ?>

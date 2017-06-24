@@ -11,7 +11,7 @@ class AlbumPage extends DynamicContentCRUDPage
 {
 	private $parent;
 
-	public function __construct(GalleryPage $parent = null, array $sections = null, $view = "html", $gallerySection = "contents")
+	public function __construct(GalleryPage $parent = null, array $sections = null, $view = "html", $gallerySection = "contents", array $styles = null)
 	{
 		$baseURL = Page::computeBaseURL();
 
@@ -26,16 +26,16 @@ class AlbumPage extends DynamicContentCRUDPage
 				"albumId" => new TextField(true, 20, 255)
 			),
 			/* Default contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, null, array($htmlEditorJsPath)),
+			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, $styles, array($htmlEditorJsPath)),
 			/* Error contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php")),
+			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php"), null, $styles),
 			/* Contents per operation */
 			array(
-				"create_picture" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, null, array($htmlEditorJsPath)),
-				"insert_picture" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, null, array($htmlEditorJsPath)),
-				"add_multiple_pictures" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."addmultiplepictures.inc.php"))
+				"create_picture" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, $styles, array($htmlEditorJsPath)),
+				"insert_picture" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, $styles, array($htmlEditorJsPath)),
+				"add_multiple_pictures" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."addmultiplepictures.inc.php"), null, $styles)
 			),
-			new PicturePage($this, $sections, $view, $gallerySection));
+			new PicturePage($this, $sections, $view, $gallerySection, $styles));
 
 		$this->parent = $parent;
 	}

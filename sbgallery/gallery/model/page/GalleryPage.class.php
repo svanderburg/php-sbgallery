@@ -8,7 +8,17 @@ require_once("util/composegallerycontents.inc.php");
 
 abstract class GalleryPage extends DynamicContentCRUDPage
 {
-	public function __construct($title, array $sections = null, $view = "html", $gallerySectionContent = null, $gallerySection = "contents")
+	/**
+	 * Constructs a new gallery page
+	 *
+	 * @param string $title Title of the gallery page
+	 * @param array $sections An array mapping the name of content sections to a PHP file that should be displayed in it
+	 * @param string $view The kind of view it should use to display the gallery elements
+	 * @param string $gallerySectionContent PHP file that should be displayed when the gallery is opened
+	 * @param string $gallerySection The name of the content section that should display the gallery (defaults to: contents)
+	 * @param array $styles An array containing stylesheet files to include
+	 */
+	public function __construct($title, array $sections = null, $view = "html", $gallerySectionContent = null, $gallerySection = "contents", array $styles = null)
 	{
 		$baseURL = Page::computeBaseURL();
 
@@ -24,15 +34,15 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 			/* Key fields */
 			array(),
 			/* Default contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $gallerySectionContent)),
+			new Contents(composeGalleryContents($sections, $gallerySection, $gallerySectionContent), null, $styles),
 			/* Error contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php")),
+			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php"), null, $styles),
 			/* Contents per operation */
 			array(
-				"create_album" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, null, array($htmlEditorJsPath)),
-				"insert_album" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, null, array($htmlEditorJsPath))
+				"create_album" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, $styles, array($htmlEditorJsPath)),
+				"insert_album" => new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."album.inc.php"), null, $styles, array($htmlEditorJsPath))
 			),
-			new AlbumPage($this, $sections, $view, $gallerySection));
+			new AlbumPage($this, $sections, $view, $gallerySection, $styles));
 	}
 
 	public function constructCRUDModel()

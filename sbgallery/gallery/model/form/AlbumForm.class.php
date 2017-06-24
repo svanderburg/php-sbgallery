@@ -11,7 +11,9 @@ class AlbumForm extends Form
 	private static $editorSettings = array(
 		"id" => "editor1",
 		"iframePage" => "iframepage.html",
-		"iconsPath" => "lib/sbeditor/editor/image"
+		"iconsPath" => "lib/sbeditor/editor/image",
+		"width" => 60,
+		"height" => 20
 	);
 
 	public function __construct($updateMode, array $labels, array $editorSettings = null)
@@ -24,7 +26,7 @@ class AlbumForm extends Form
 			"ALBUM_ID" => new TextField($labels["ALBUM_ID"], true, 20, 255),
 			"Title" => new TextField($labels["Title"], true, 20, 255),
 			"Visible" => new CheckBoxField("Visible"),
-			"Description" => new HTMLEditorField($editorSettings["id"], $labels["Description"], $editorSettings["iframePage"], $editorSettings["iconsPath"], false),
+			"Description" => new HTMLEditorField($editorSettings["id"], $labels["Description"], $editorSettings["iframePage"], $editorSettings["iconsPath"], false, $editorSettings["width"], $editorSettings["height"]),
 		);
 
 		if($updateMode)

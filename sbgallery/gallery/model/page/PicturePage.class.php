@@ -9,7 +9,7 @@ class PicturePage extends StaticContentCRUDPage
 {
 	private $parent;
 
-	public function __construct(AlbumPage $parent = null, array $sections = null, $view = "html", $gallerySection = "contents")
+	public function __construct(AlbumPage $parent = null, array $sections = null, $view = "html", $gallerySection = "contents", array $styles = null)
 	{
 		$baseURL = Page::computeBaseURL();
 
@@ -23,9 +23,9 @@ class PicturePage extends StaticContentCRUDPage
 				"pictureId" => new TextField(true, 20, 255)
 			),
 			/* Default contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, null, array($htmlEditorJsPath)),
+			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."picture.inc.php"), null, $styles, array($htmlEditorJsPath)),
 			/* Error contents */
-			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php")),
+			new Contents(composeGalleryContents($sections, $gallerySection, $contentsPath."error.inc.php"), null, $styles),
 			/* Contents per operation */
 			array(),
 			null);
