@@ -21,7 +21,7 @@ function displayPictureBreadcrumbs(Picture $picture, $galleryURL, $albumURL, $pi
 {
 	?>
 	<p>
-		<a href="<?php print($galleryURL); ?>">Gallery</a>
+		<a href="<?php print($galleryURL); ?>"><?php print($picture->labels["Gallery"]); ?></a>
 		<?php
 		if($picture->entity !== false)
 		{

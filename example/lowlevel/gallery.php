@@ -16,7 +16,7 @@ $myGallery = new MyGallery();
 	<body>
 		<h1>Gallery</h1>
 		<?php
-		displayGalleryBreadcrumbs($_SERVER["PHP_SELF"]);
+		displayGalleryBreadcrumbs($myGallery, $_SERVER["PHP_SELF"]);
 
 		if(array_key_exists("view", $_GET) && $_GET["view"] == "1")
 			displayGallery($myGallery);

@@ -16,7 +16,7 @@ function displayAlbumBreadcrumbs(Album $album, $galleryURL, $albumURL, $displayA
 {
 	?>
 	<p>
-		<a href="<?php print($galleryURL); ?>">Gallery</a>
+		<a href="<?php print($galleryURL); ?>"><?php print($album->albumLabels["Gallery"]); ?></a>
 		<?php
 		if($album->entity !== false)
 		{

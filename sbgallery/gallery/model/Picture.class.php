@@ -9,6 +9,7 @@ require_once("filesets/PictureFileSet.class.php");
 class Picture
 {
 	private static $referenceLabels = array(
+		"Gallery" => "Gallery",
 		"PICTURE_ID" => "Id",
 		"Title" => "Title",
 		"Description" => "Description",

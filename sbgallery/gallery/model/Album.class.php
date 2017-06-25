@@ -12,6 +12,7 @@ require_once("Picture.class.php");
 class Album
 {
 	private static $labels = array(
+		"Gallery" => "Gallery",
 		"ALBUM_ID" => "Id",
 		"Title" => "Title",
 		"Visible" => "Visible",

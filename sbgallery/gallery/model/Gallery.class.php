@@ -8,6 +8,7 @@ require_once("Album.class.php");
 class Gallery
 {
 	private static $referenceLabels = array(
+		"Gallery" => "Gallery",
 		"Add album" => "Add album",
 		"Move left" => "Move left",
 		"Move right" => "Move right",

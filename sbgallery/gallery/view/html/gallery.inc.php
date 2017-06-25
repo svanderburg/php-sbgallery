@@ -1,10 +1,9 @@
 <?php
-
-function displayGalleryBreadcrumbs($galleryURL)
+function displayGalleryBreadcrumbs(Gallery $gallery, $galleryURL)
 {
 	?>
 	<p>
-		<a href="<?php print($galleryURL); ?>">Gallery</a>
+		<a href="<?php print($galleryURL); ?>"><?php print($gallery->galleryLabels["Gallery"]); ?></a>
 	</p>
 	<?php
 }
