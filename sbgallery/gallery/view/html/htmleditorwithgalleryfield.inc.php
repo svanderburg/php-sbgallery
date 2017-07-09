@@ -1,10 +1,9 @@
 <?php
-require_once("data/view/html/field/textfield.inc.php");
 require_once("htmleditorwithgallery.inc.php");
 
-function displayHTMLEditorWithGalleryField(HTMLEditorField $field)
+function displayHTMLEditorWithGalleryField(HTMLEditorWithGalleryField $field)
 {
-	displayTextField($field);
+	print($field->value);
 }
 
 function displayEditableHTMLEditorWithGalleryField($name, HTMLEditorWithGalleryField $field)
