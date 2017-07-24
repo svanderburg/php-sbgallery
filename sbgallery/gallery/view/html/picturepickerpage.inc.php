@@ -1,5 +1,5 @@
 <?php
-function displayPicturePickerPage(Gallery $gallery, $galleryLabel = "Gallery", $style = "style.css", $htmlEditorJs = "lib/sbeditor/editor/scripts/htmleditor.js", $galleryJs = "lib/sbgallery/gallery/scripts/gallery.js")
+function displayPicturePickerPage(Gallery $gallery, $galleryLabel = "Gallery", $styles = null, $htmlEditorJs = "lib/sbeditor/editor/scripts/htmleditor.js", $galleryJs = "lib/sbgallery/gallery/scripts/gallery.js")
 {
 	?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -7,7 +7,17 @@ function displayPicturePickerPage(Gallery $gallery, $galleryLabel = "Gallery", $
 	<html>
 		<head>
 			<title>Picture picker</title>
-			<link rel="stylesheet" type="text/css" href="<?php print($style); ?>">
+			<?php
+			if($styles !== null)
+			{
+				foreach($styles as $style)
+				{
+					?>
+					<link rel="stylesheet" type="text/css" href="<?php print($style); ?>">
+					<?php
+				}
+			}
+			?>
 			<meta name="robots" content="noindex, nofollow">
 			<script type="text/javascript" src="<?php print($htmlEditorJs); ?>"></script>
 			<script type="text/javascript" src="<?php print($galleryJs); ?>"></script>
