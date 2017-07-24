@@ -87,7 +87,7 @@ class Picture
 	 * @param string $thumbnailsTable Name of the database table storing thumbnail properties
 	 * @param string $albumsTable Name of the database table storing album properties
 	 */
-	public function __construct(PDO $dbh, $baseURL, $albumDir, $pictureDisplayURL, $iconsPath, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $labels = null, array $editorSettings = null, $filePermissions = 0777, $picturesTable = "pictures", $thumbnailsTable = "thumbnails", $albumsTable = "albums")
+	public function __construct(PDO $dbh, $baseURL, $albumDir, $pictureDisplayURL, $iconsPath, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $labels = null, array $editorSettings = null, $filePermissions = 0666, $picturesTable = "pictures", $thumbnailsTable = "thumbnails", $albumsTable = "albums")
 	{
 		$this->dbh = $dbh;
 		$this->baseURL = $baseURL;

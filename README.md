@@ -17,9 +17,9 @@ Prerequisites
 The gallery is built on top of the functionality provided by the following
 packages:
 
-- [php-sbdata](https://github.com/svanderburg/php-sbdata)
-- [php-sbeditor](https://github.com/svanderburg/php-sbeditor)
-- [php-sbcrud](https://github.com/svanderburg/php-sbcrud) (optional)
+* [php-sbdata](https://github.com/svanderburg/php-sbdata)
+* [php-sbeditor](https://github.com/svanderburg/php-sbeditor)
+* [php-sbcrud](https://github.com/svanderburg/php-sbcrud) (optional)
 
 Usage
 =====
@@ -69,7 +69,8 @@ Gallery $gallery = new Gallery(
     $albumLabels = null, // Array that translates the album labels into another language (optional)
     $pictureLabels = null, // Array that translates the picture labels into another language (optional)
     $editorSettings = null, // Array that modifies the properties of the embedded editor (optional)
-    $filePermissions = 0777, // The filesystem permissions for the gallery artifacts (optional)
+    $dirPermissions = 0777, // The filesystem permissions for the gallery directories (optional)
+    $filePermissions = 0666, // The filesystem permissions for the gallery's picture files (optional)
     $albumsTable = "albums", // Name of the album table (optional)
     $thumbnailsTable = "thumbnails", // Name of thumbnails table (optional)
     $picturesTable = "pictures" // Name of the pictures table (optional)

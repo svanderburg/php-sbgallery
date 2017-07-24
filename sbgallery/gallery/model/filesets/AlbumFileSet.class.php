@@ -1,17 +1,17 @@
 <?php
 class AlbumFileSet
 {
-	public static function createAlbumDirectories($baseDir, $albumId, $filePermissions)
+	public static function createAlbumDirectories($baseDir, $albumId, $dirPermissions)
 	{
 		$albumDir = $baseDir."/".$albumId;
 		mkdir($albumDir);
-		chmod($albumDir, $filePermissions);
+		chmod($albumDir, $dirPermissions);
 		$thumbnailsDir = $albumDir."/thumbnails";
 		mkdir($thumbnailsDir);
-		chmod($thumbnailsDir, $filePermissions);
+		chmod($thumbnailsDir, $dirPermissions);
 		$picturesDir = $albumDir."/pictures";
 		mkdir($picturesDir);
-		chmod($picturesDir, $filePermissions);
+		chmod($picturesDir, $dirPermissions);
 	}
 
 	public static function removeAlbumDirectories($baseDir, $albumId)

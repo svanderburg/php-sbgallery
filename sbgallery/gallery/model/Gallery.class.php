@@ -36,6 +36,9 @@ class Gallery
 	/** Base directory where all album artifacts are stored */
 	public $baseDir;
 
+	/** The directory permissions for the files stored in the base dir */
+	public $dirPermissions;
+
 	/** The file permissions for the files stored in the base dir */
 	public $filePermissions;
 
@@ -90,12 +93,13 @@ class Gallery
 	 * @param array $albumsLabels Message labels for translation of the album properties
 	 * @param array $pictureLabels Message labels for translation of the picture properties
 	 * @param array $editorSettings Configuration settings for the embedded editor
+	 * @param int $dirPermissions The directory permissions for the files stored in the base dir
 	 * @param int $filePermissions The file permissions for the files stored in the base dir
 	 * @param string $albumsTable Name of the database table storing album properties
 	 * @param string $thumbnailsTable Name of the database table storing thumbnail properties
 	 * @param string $picturesTable Name of the database table storing picture properties
 	 */
-	public function __construct(PDO $dbh, $baseURL, $albumDisplayURL, $pictureDisplayURL, $addMultiplePicturesURL, $iconsPath, $baseDir, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $galleryLabels = null, array $albumLabels = null, array $pictureLabels = null, array $editorSettings = null, $filePermissions = 0777, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
+	public function __construct(PDO $dbh, $baseURL, $albumDisplayURL, $pictureDisplayURL, $addMultiplePicturesURL, $iconsPath, $baseDir, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $galleryLabels = null, array $albumLabels = null, array $pictureLabels = null, array $editorSettings = null, $dirPermissions = 0777, $filePermissions = 0666, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
 	{
 		$this->dbh = $dbh;
 		$this->baseURL = $baseURL;
@@ -115,6 +119,7 @@ class Gallery
 		$this->albumLabels = $albumLabels;
 		$this->pictureLabels = $pictureLabels;
 		$this->editorSettings = $editorSettings;
+		$this->dirPermissions = $dirPermissions;
 		$this->filePermissions = $filePermissions;
 		$this->albumsTable = $albumsTable;
 		$this->thumbnailsTable = $thumbnailsTable;
@@ -129,7 +134,7 @@ class Gallery
 	 */
 	public function constructAlbum()
 	{
-		return new Album($this->dbh, $this->baseURL, $this->pictureDisplayURL, $this->addMultiplePicturesURL, $this->iconsPath, $this->baseDir, $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->albumLabels, $this->pictureLabels, $this->editorSettings, $this->filePermissions, $this->albumsTable, $this->thumbnailsTable, $this->picturesTable);
+		return new Album($this->dbh, $this->baseURL, $this->pictureDisplayURL, $this->addMultiplePicturesURL, $this->iconsPath, $this->baseDir, $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->albumLabels, $this->pictureLabels, $this->editorSettings, $this->dirPermissions, $this->filePermissions, $this->albumsTable, $this->thumbnailsTable, $this->picturesTable);
 	}
 
 	/**
