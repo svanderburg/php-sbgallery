@@ -1,0 +1,58 @@
+{
+  "name": "svanderburg/php-sbgallery",
+  "description": "Simple embeddable picture gallery",
+  "type": "library",
+  "license": "Apache-2.0",
+  "authors": [
+      {
+          "name": "Sander van der Burg",
+          "email": "svanderburg@gmail.com",
+          "homepage": "http://sandervanderburg.nl"
+      }
+  ],
+  "autoload": {
+      "psr-4": { "SBGallery\\": "src/SBGallery" },
+      "files": [
+          "src/SBGallery/Model/Page/Util/composegallerycontents.php",
+          "src/SBGallery/View/HTML/multiplepictures.php",
+          "src/SBGallery/View/HTML/gallery.php",
+          "src/SBGallery/View/HTML/album.php",
+          "src/SBGallery/View/HTML/htmleditorwithgallery.php",
+          "src/SBGallery/View/HTML/picturepickerpage.php",
+          "src/SBGallery/View/HTML/picture.php",
+          "src/SBGallery/View/HTML/Field/htmleditorwithgalleryfield.php",
+          "src/SBGallery/View/Pages/displayalbummenusection.php"
+      ]
+  },
+  "autoload-dev": {
+      "psr-4": {
+          "Examples\\LowLevel\\": "examples/lowlevel/includes",
+          "Examples\\CRUD\\": "examples/crud/includes",
+          "Examples\\Pages\\": "examples/pages/includes"
+      }
+  },
+  "repositories": [
+      {
+          "type": "path",
+          "url": "../php-sbcrud"
+      },
+      {
+          "type": "path",
+          "url": "../php-sbdata"
+      },
+      {
+          "type": "path",
+          "url": "../php-sblayout"
+      },
+      {
+          "type": "path",
+          "url": "../php-sbeditor"
+      }
+  ],
+  "require": {
+      "svanderburg/php-sbcrud": "@dev",
+      "svanderburg/php-sbdata": "@dev",
+      "svanderburg/php-sblayout": "@dev",
+      "svanderburg/php-sbeditor": "@dev"
+  }
+}

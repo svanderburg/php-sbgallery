@@ -49,7 +49,7 @@ We can compose a gallery (an object displaying a set of albums and their
 thumbnails) as follows:
 
 ```php
-require_once("gallery/model/Gallery.class.php");
+use SBGallery\Model\Gallery;
 
 $dbh = new PDO("mysql:host=localhost;dbname=gallery", "user", "password", array(
     PDO::ATTR_PERSISTENT => true
@@ -84,16 +84,14 @@ display pages and the dimensions of the images.
 A gallery can be displayed in read-only mode as follows:
 
 ```php
-require_once("gallery/view/html/gallery.inc.php");
-
-displayGallery($gallery);
+\SBGallery\View\HTML\displayGallery($gallery);
 ```
 
 To make the gallery writable so that the user can modify its contents, we can
 use:
 
 ```php
-displayEditableGallery($gallery);
+\SBGallery\View\HTML\displayEditableGallery($gallery);
 ```
 
 Managing albums
@@ -106,7 +104,7 @@ Alternatively, it is possible to automatically construct an album with identical
 settings to a gallery instance:
 
 ```php
-require_once("gallery/model/Album.class.php");
+use SBGallery\Model\Album;
 
 $album = $gallery->constructAlbum();
 ```
@@ -136,15 +134,13 @@ corresponds to creating an album.
 We can display an album in read-only mode as follows:
 
 ```php
-require_once("gallery/view/html/album.inc.php");
-
-displayAlbum($album);
+\SBGallery\View\HTML\displayAlbum($album);
 ```
 
 Or in write mode by:
 
 ```php
-displayEditableAlbum($album,
+\SBGallery\View\HTML\displayEditableAlbum($album,
     "Submit",
     "One or more fields are incorrectly specified and marked with a red color!",
     "This field is incorrectly specified!");
@@ -158,7 +154,7 @@ We can also display an uploader that can be used to bulk insert a collection of
 images:
 
 ```php
-displayPicturesUploader($albumId);
+\SBGallery\View\HTML\displayPicturesUploader($albumId);
 ```
 
 The page that displays the uploader should correspond to the multiple images
@@ -173,7 +169,7 @@ Alternatively, it is possible to automatically construct a picture with identica
 settings to an album instance:
 
 ```php
-require_once("gallery/model/Picture.class.php");
+use SBGallery\Model\Picture;
 
 $picture = $album->constructPicture($albumId);
 ```
@@ -198,15 +194,13 @@ parameter that can be used to determine what CRUD operation to execute.
 We can display a picture in read-only mode as follows:
 
 ```php
-require_once("gallery/view/html/picture.inc.php");
-
-displayPicture($picture);
+\SBGallery\View\HTML\displayPicture($picture);
 ```
 
 And in write mode, by:
 
 ```php
-displayEditablePicture($picture,
+\SBGallery\View\HTML\displayEditablePicture($picture,
     "Submit",
     "One or more fields are incorrectly specified and marked with a red color!",
     "This field is incorrectly specified!");
@@ -221,6 +215,8 @@ First, we must construct our own permission checker that determines whether a
 user has write permissions:
 
 ```php
+use SBGallery\Model\GalleryPermissionChecker;
+
 class MyGalleryPermissionChecker implements GalleryPermissionChecker
 {
     public function checkWritePermissions()
@@ -237,6 +233,9 @@ Then we must construct our sub class from `GalleryPage` that provides a Gallery
 object and permission checker:
 
 ```php
+use SBGallery\Model\Gallery;
+use SBGallery\Model\Page\GalleryPage;
+
 class MyGalleryPage extends GalleryPage
 {
     public function __construct()
@@ -260,6 +259,15 @@ We can add a page instance of our sub class to the application layout as
 follows:
 
 ```php
+use SBLayout\Model\Application;
+use SBLayout\Model\Page\HiddenStaticContentPage;
+use SBLayout\Model\Page\PageAlias;
+use SBLayout\Model\Page\StaticContentPage;
+use SBLayout\Model\Page\Content\Contents;
+use SBLayout\Model\Section\ContentsSection;
+use SBLayout\Model\Section\MenuSection;
+use SBLayout\Model\Section\StaticSection;
+
 $application = new Application(
     /* Title */
     "Gallery",
@@ -313,11 +321,15 @@ When defining the gallery page, we must configure it to use the `pages` views
 page to prevent the gallery overview from showing up:
 
 ```php
+use SBGallery\Model\Gallery;
+use SBGallery\Model\GalleryPermissionChecker;
+use SBGallery\Model\Page\GalleryPage;
+
 class MyGalleryPage extends GalleryPage
 {
     public function __construct()
     {
-        parent::__construct("Gallery", null, "pages", "gallery.inc.php");
+        parent::__construct("Gallery", null, "Pages", "gallery.inc.php");
     }
 
     public function constructGallery()
@@ -336,6 +348,15 @@ Composing the application layout is done in a similar way as the previous
 example:
 
 ```php
+use SBLayout\Model\Application;
+use SBLayout\Model\Page\HiddenStaticContentPage;
+use SBLayout\Model\Page\PageAlias;
+use SBLayout\Model\Page\StaticContentPage;
+use SBLayout\Model\Page\Content\Contents;
+use SBLayout\Model\Section\ContentsSection;
+use SBLayout\Model\Section\MenuSection;
+use SBLayout\Model\Section\StaticSection;
+
 $galleryPage = new MyGalleryPage();
 
 $application = new Application(
@@ -371,10 +392,8 @@ The `submenu.inc.php` section module should be written as follows:
 
 ```php
 <?php
-require_once("gallery/view/pages/displayalbummenusection.inc.php");
-
-if(visitedGallerySubPage())
-    displayAlbumMenuSection($GLOBALS["galleryPage"]);
+if(\SBGallery\View\Pages\visitedGallerySubPage())
+    \SBGallery\View\Pages\displayAlbumMenuSection($GLOBALS["galleryPage"]);
 ?>
 ```
 
@@ -391,9 +410,7 @@ the text that he composes in the editor.
 By invoking the `displayHTMLEditorWithGallery()` function:
 
 ```php
-require_once("gallery/view/html/htmleditorwithgallery.inc.php");
-
-displayHTMLEditorWithGallery("editor1", "contents", "picturepicker.php", "iframepage.html", "image");
+\SBGallery\View\HTML\displayHTMLEditorWithGallery("editor1", "contents", "picturepicker.php", "iframepage.html", "image");
 ```
 
 we can directly generate a `div` providing a `textarea` and two `iframe`s
@@ -411,11 +428,8 @@ that integrates with a gallery object:
 
 ```php
 <?php
-require_once("includes/model/MyGallery.class.php");
-require_once("gallery/view/html/picturepickerpage.inc.php");
-
 $myGallery = new MyGallery();
-displayPicturePickerPage($myGallery);
+\SBGallery\View\HTML\displayPicturePickerPage($myGallery);
 ?>
 ```
 
@@ -430,7 +444,9 @@ used to construct fields that can be added to a `Form` managed by the
 `php-sbdata` framework:
 
 ```php
-require_once("gallery/model/field/HTMLEditorWithGalleryField.class.php");
+use SBData\Model\Form;
+use SBData\Model\Field\TextField;
+use SBGallery\Model\Field\HTMLEditorWithGalleryField;
 
 $form = new Form(array(
     "title" => new TextField("Title", true),
@@ -441,9 +457,7 @@ $form = new Form(array(
 When displaying the above form as an editable form:
 
 ```php
-require_once("gallery/view/html/htmleditorwithgalleryfield.inc.php");
-
-displayEditableForm($form,
+\SBData\View\HTML\displayEditableForm($form,
     "Submit",
     "One or more of the field values are incorrect!",
     "This field is incorrect!");

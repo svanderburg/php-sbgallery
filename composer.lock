@@ -1,0 +1,188 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1e1db536a37d44b8416125e691c9231b",
+    "packages": [
+        {
+            "name": "svanderburg/php-sbcrud",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../php-sbcrud",
+                "reference": "a96d0e12d4c36f01872853f550b0f4cf016dd346",
+                "shasum": null
+            },
+            "require": {
+                "svanderburg/php-sbdata": "@dev",
+                "svanderburg/php-sblayout": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SBCrud\\": "src/SBCrud"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Example\\": "example/includes"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sander van der Burg",
+                    "email": "svanderburg@gmail.com",
+                    "homepage": "http://sandervanderburg.nl"
+                }
+            ],
+            "description": "Abstractions to construct web-based information systems"
+        },
+        {
+            "name": "svanderburg/php-sbdata",
+            "version": "dev-composer",
+            "dist": {
+                "type": "path",
+                "url": "../php-sbdata",
+                "reference": "25f54e0e6742e2893a724c338f5a6f31be88d071",
+                "shasum": null
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SBData\\": "src/SBData"
+                },
+                "files": [
+                    "src/SBData/View/HTML/table.php",
+                    "src/SBData/View/HTML/form.php",
+                    "src/SBData/View/HTML/field.php",
+                    "src/SBData/View/HTML/Field/arraycomboboxfield.php",
+                    "src/SBData/View/HTML/Field/textareafield.php",
+                    "src/SBData/View/HTML/Field/checkboxfield.php",
+                    "src/SBData/View/HTML/Field/numericinttextfield.php",
+                    "src/SBData/View/HTML/Field/emailfield.php",
+                    "src/SBData/View/HTML/Field/keylinkfield.php",
+                    "src/SBData/View/HTML/Field/readonlynumericinttextfield.php",
+                    "src/SBData/View/HTML/Field/filefield.php",
+                    "src/SBData/View/HTML/Field/datefield.php",
+                    "src/SBData/View/HTML/Field/passwordfield.php",
+                    "src/SBData/View/HTML/Field/textfield.php",
+                    "src/SBData/View/HTML/Field/hiddenfield.php",
+                    "src/SBData/View/HTML/Field/dbcomboboxfield.php",
+                    "src/SBData/View/HTML/Field/urlfield.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Examples\\Books\\": "examples/books/includes"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sander van der Burg",
+                    "email": "svanderburg@gmail.com",
+                    "homepage": "http://sandervanderburg.nl"
+                }
+            ],
+            "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications"
+        },
+        {
+            "name": "svanderburg/php-sbeditor",
+            "version": "dev-composer",
+            "dist": {
+                "type": "path",
+                "url": "../php-sbeditor",
+                "reference": "1c5f5c342f889cbabd00066288f2987be891b8b7",
+                "shasum": null
+            },
+            "require-dev": {
+                "svanderburg/php-sbdata": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SBEditor\\": "src/SBEditor"
+                },
+                "files": [
+                    "src/SBEditor/View/HTML/htmleditor.php",
+                    "src/SBEditor/View/HTML/Field/htmleditorfield.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sander van der Burg",
+                    "email": "svanderburg@gmail.com",
+                    "homepage": "http://sandervanderburg.nl"
+                }
+            ],
+            "description": "Simple embeddable HTML editor"
+        },
+        {
+            "name": "svanderburg/php-sblayout",
+            "version": "dev-composer",
+            "dist": {
+                "type": "path",
+                "url": "../php-sblayout",
+                "reference": "fc441e3168899873529fca5dfc20a8b597160fb2",
+                "shasum": null
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SBLayout\\": "src/SBLayout"
+                },
+                "files": [
+                    "src/SBLayout/View/HTML/page.php",
+                    "src/SBLayout/View/HTML/menusection.php",
+                    "src/SBLayout/View/HTML/Util/composecontentpath.php",
+                    "src/SBLayout/View/HTML/styles.php",
+                    "src/SBLayout/View/HTML/scripts.php",
+                    "src/SBLayout/View/HTML/controller.php",
+                    "src/SBLayout/View/HTML/index.php",
+                    "src/SBLayout/View/HTML/baseurl.php",
+                    "src/SBLayout/View/HTML/section.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Examples\\Simple\\": "examples/simple/includes",
+                    "Examples\\I18N\\": "examples/i18n/includes"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sander van der Burg",
+                    "email": "svanderburg@gmail.com",
+                    "homepage": "http://sandervanderburg.nl"
+                }
+            ],
+            "description": "My custom website layout organiser framework for PHP"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "svanderburg/php-sbcrud": 20,
+        "svanderburg/php-sbdata": 20,
+        "svanderburg/php-sblayout": 20,
+        "svanderburg/php-sbeditor": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
