@@ -33,26 +33,26 @@
   },
   "repositories": [
       {
-          "type": "path",
-          "url": "../php-sbcrud"
+          "type": "git",
+          "url": "https://github.com/svanderburg/php-sbdata.git"
       },
       {
-          "type": "path",
-          "url": "../php-sbdata"
+          "type": "git",
+          "url": "https://github.com/svanderburg/php-sblayout.git"
       },
       {
-          "type": "path",
-          "url": "../php-sblayout"
+          "type": "git",
+          "url": "https://github.com/svanderburg/php-sbeditor.git"
       },
       {
-          "type": "path",
-          "url": "../php-sbeditor"
+          "type": "git",
+          "url": "https://github.com/svanderburg/php-sbcrud.git"
       }
   ],
   "require": {
-      "svanderburg/php-sbcrud": "@dev",
-      "svanderburg/php-sbdata": "@dev",
-      "svanderburg/php-sblayout": "@dev",
-      "svanderburg/php-sbeditor": "@dev"
+      "svanderburg/php-sbcrud": "dev-master",
+      "svanderburg/php-sbdata": "dev-master",
+      "svanderburg/php-sblayout": "dev-master",
+      "svanderburg/php-sbeditor": "dev-master"
   }
 }
