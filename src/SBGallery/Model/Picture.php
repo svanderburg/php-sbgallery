@@ -18,7 +18,10 @@ class Picture
 		"Title" => "Title",
 		"Description" => "Description",
 		"Image" => "Image",
-		"Remove image" => "Remove image"
+		"Remove image" => "Remove image",
+		"Submit" => "Submit",
+		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
+		"Field invalid" => "This field is incorrectly specified!"
 	);
 
 	/** Database connection handler */

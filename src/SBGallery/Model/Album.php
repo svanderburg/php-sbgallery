@@ -24,7 +24,10 @@ class Album
 		"Move left" => "Move left",
 		"Move right" => "Move right",
 		"Set as album thumbnail" => "Set as album thumbnail",
-		"Remove" => "Remove"
+		"Remove" => "Remove",
+		"Submit" => "Submit",
+		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
+		"Field invalid" => "This field is incorrectly specified!"
 	);
 
 	/** Database connection handler */

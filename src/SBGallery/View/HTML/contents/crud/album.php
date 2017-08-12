@@ -13,9 +13,9 @@ else
 if($crudModel->checker->checkWritePermissions())
 {
 	\SBGallery\View\HTML\displayEditableAlbum($crudModel->album,
-		"Submit",
-		"One or more fields are incorrectly specified and marked with a red color!",
-		"This field is incorrectly specified!",
+		$crudModel->album->albumLabels["Submit"],
+		$crudModel->album->albumLabels["Form invalid"],
+		$crudModel->album->albumLabels["Field invalid"],
 		"Layout");
 	?>
 	<script type="text/javascript">
