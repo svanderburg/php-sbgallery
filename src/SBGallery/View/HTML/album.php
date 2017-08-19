@@ -48,7 +48,11 @@ function album_displayConventionalPictureLink(Album $album, $albumId, $pictureId
 	if($operation === null)
 		$operationParam = "";
 	else
-		$operationParam = "&amp;__operation=".$operation."&amp;__id=".$count;
+	{
+		$operationParam = "&amp;__operation=".$operation;
+		if($album->displayAnchors)
+			$operationParam .= "&amp;__id=".$count;
+	}
 
 	return $album->pictureDisplayURL."?ALBUM_ID=".$albumId."&amp;PICTURE_ID=".$pictureId.$operationParam;
 }
@@ -58,7 +62,11 @@ function album_displayLayoutPictureLink(Album $album, $albumId, $pictureId, $cou
 	if($operation === null)
 		$operationParam = "";
 	else
-		$operationParam = "?__operation=".$operation."&amp;__id=".$count;
+	{
+		$operationParam = "?__operation=".$operation;
+		if($album->displayAnchors)
+			$operationParam .= "&amp;__id=".$count;
+	}
 
 	return $_SERVER["PHP_SELF"]."/".$pictureId.$operationParam;
 }
@@ -155,7 +163,14 @@ function displayEditableAlbum(Album $album, $submitLabel, $generalErrorMessage, 
 				}
 				?>
 				<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "remove_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/delete.png" alt="<?php print($album->albumLabels["Remove"]); ?>"></a>
-				<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+				<?php
+				if($album->displayAnchors)
+				{
+					?>
+					<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+					<?php
+				}
+				?>
 			</div>
 			<?php
 			$count++;

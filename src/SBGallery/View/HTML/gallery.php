@@ -33,7 +33,12 @@ function gallery_displayConventionalAlbumLink(Gallery $gallery, $albumId, $count
 	if($operation === null)
 		$operationParam = "";
 	else
-		$operationParam = "&amp;__operation=".$operation."&amp;__id=".$count;
+	{
+		$operationParam = "&amp;__operation=".$operation;
+
+		if($gallery->displayAnchors)
+			$operationParam .= "&amp;__id=".$count;
+	}
 
 	return $gallery->albumDisplayURL."?ALBUM_ID=".$albumId.$operationParam;
 }
@@ -43,7 +48,12 @@ function gallery_displayLayoutAlbumLink(Gallery $gallery, $albumId, $count, $ope
 	if($operation === null)
 		$operationParam = "";
 	else
-		$operationParam = "?__operation=".$operation."&amp;__id=".$count;
+	{
+		$operationParam = "?__operation=".$operation;
+
+		if($gallery->displayAnchors)
+			$operationParam .= "&amp;__id=".$count;
+	}
 
 	return $_SERVER["PHP_SELF"]."/".$albumId.$operationParam;
 }
@@ -109,8 +119,14 @@ function displayEditableGallery(Gallery $gallery, $viewType = "Conventional", $a
 					<?php
 				}
 			}
+
+			if($gallery->displayAnchors)
+			{
+				?>
+				<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+				<?php
+			}
 			?>
-			<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
 		</div>
 		<?php
 		$count++;

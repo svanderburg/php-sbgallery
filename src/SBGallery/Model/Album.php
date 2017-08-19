@@ -69,6 +69,9 @@ class Album
 	/** Configuration settings for the embedded editor */
 	public $editorSettings;
 
+	/** Whether to display anchors to support redirects to albums and pictures */
+	public $displayAnchors;
+
 	/** The file permissions for the directories stored in the base dir */
 	public $dirPermissions;
 
@@ -106,13 +109,9 @@ class Album
 	 * @param array $albumLabels Message labels for translation of the album properties
 	 * @param array $pictureLabels Message labels for translation of the picture properties
 	 * @param array $editorSettings Configuration settings for the embedded editor
-	 * @param int $dirPermissions The directory permissions for the files stored in the base dir
-	 * @param int $filePermissions The file permissions for the files stored in the base dir
-	 * @param string $albumsTable Name of the database table storing album properties
-	 * @param string $thumbnailsTable Name of the database table storing thumbnail properties
-	 * @param string $picturesTable Name of the database table storing picture properties
+	 * @param bool $displayAnchors Whether to display anchors to support redirects to albums and pictures
 	 */
-	public function __construct(PDO $dbh, $baseURL, $pictureDisplayURL, $addMultiplePicturesURL, $iconsPath, $baseDir, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $albumLabels = null, array $pictureLabels = null, array $editorSettings = null, $dirPermissions = 0777, $filePermissions = 0666, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
+	public function __construct(PDO $dbh, $baseURL, $pictureDisplayURL, $addMultiplePicturesURL, $iconsPath, $baseDir, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $albumLabels = null, array $pictureLabels = null, array $editorSettings = null, $displayAnchors = true, $dirPermissions = 0777, $filePermissions = 0666, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
 	{
 		$this->dbh = $dbh;
 		$this->baseURL = $baseURL;
@@ -130,6 +129,7 @@ class Album
 			$this->albumLabels = $albumLabels;
 		$this->pictureLabels = $pictureLabels;
 		$this->editorSettings = $editorSettings;
+		$this->displayAnchors = $displayAnchors;
 		$this->dirPermissions = $dirPermissions;
 		$this->filePermissions = $filePermissions;
 		$this->albumsTable = $albumsTable;
