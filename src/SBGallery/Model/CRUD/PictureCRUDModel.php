@@ -1,5 +1,6 @@
 <?php
 namespace SBGallery\Model\CRUD;
+use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\CRUDPage;
 use SBGallery\Model\Picture;
@@ -59,7 +60,7 @@ class PictureCRUDModel extends CRUDModel
 	private function removePicture()
 	{
 		$this->picture->remove($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
@@ -73,21 +74,21 @@ class PictureCRUDModel extends CRUDModel
 	private function moveLeftPicture()
 	{
 		$this->picture->moveLeft($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
 	private function moveRightPicture()
 	{
 		$this->picture->moveRight($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
 	private function setAsThumbnailPicture()
 	{
 		$this->picture->setAsThumbnail($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 

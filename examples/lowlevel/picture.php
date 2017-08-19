@@ -3,6 +3,7 @@ error_reporting(E_STRICT | E_ALL);
 
 require_once(dirname(__FILE__)."/../../vendor/autoload.php");
 
+use SBData\Model\Table\Anchor\AnchorRow;
 use Examples\LowLevel\Model\MyGallery;
 
 /* Construct picture model from the gallery model */
@@ -39,7 +40,7 @@ try
 		{
 			$picture->remove($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "remove_picture_image")
@@ -53,21 +54,21 @@ try
 		{
 			$picture->setAsThumbnail($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveleft_picture")
 		{
 			$picture->moveLeft($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveright_picture")
 		{
 			$picture->moveRight($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
 			exit;
 		}
 		else

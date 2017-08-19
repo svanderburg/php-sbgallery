@@ -1,5 +1,6 @@
 <?php
 namespace SBGallery\Model\CRUD;
+use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\CRUDPage;
 use SBGallery\Model\Album;
@@ -59,21 +60,21 @@ class AlbumCRUDModel extends CRUDModel
 	private function removeAlbum()
 	{
 		$this->album->remove($this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
 	private function moveLeftAlbum()
 	{
 		$this->album->moveLeft($this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
 	private function moveRightAlbum()
 	{
 		$this->album->moveRight($this->keyFields["albumId"]->value);
-		header("Location: ".$_SERVER['HTTP_REFERER']);
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 

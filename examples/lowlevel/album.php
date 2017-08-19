@@ -3,6 +3,7 @@ error_reporting(E_STRICT | E_ALL);
 
 require_once(dirname(__FILE__)."/../../vendor/autoload.php");
 
+use SBData\Model\Table\Anchor\AnchorRow;
 use Examples\LowLevel\Model\MyGallery;
 
 /* Construct album model from the gallery model */
@@ -36,19 +37,19 @@ try
 		{
 			$album->remove($_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("album"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveleft_album")
 		{
 			$album->moveLeft($_REQUEST["ALBUM_ID"]);
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("album"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveright_album")
 		{
 			$album->moveRight($_REQUEST["ALBUM_ID"]);
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("album"));
 			exit;
 		}
 		else
