@@ -1,5 +1,6 @@
 <?php
 namespace SBGallery\Model\CRUD;
+use Exception;
 use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\CRUDPage;
