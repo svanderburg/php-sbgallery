@@ -76,7 +76,7 @@ class AlbumEntity
 
 	public static function queryThumbnails(PDO $dbh, $displayOnlyVisible, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
 	{
-		$stmt = $dbh->prepare("select ".$thumbnailsTable.".ALBUM_ID, ".$thumbnailsTable.".PICTURE_ID, ".$albumsTable.".Title, ".$picturesTable.".FileType ".
+		$stmt = $dbh->prepare("select distinct ".$thumbnailsTable.".ALBUM_ID, ".$thumbnailsTable.".PICTURE_ID, ".$albumsTable.".Title, ".$picturesTable.".FileType ".
 			"from ".$thumbnailsTable." ".
 			"inner join ".$albumsTable." on ".$thumbnailsTable.".ALBUM_ID = ".$albumsTable.".ALBUM_ID ".
 			"left outer join ".$picturesTable." on ".$thumbnailsTable.".PICTURE_ID = ".$picturesTable.".PICTURE_ID ".
