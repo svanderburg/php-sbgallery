@@ -50,6 +50,7 @@
       }
   ],
   "require": {
+      "ext-gd": "*",
       "svanderburg/php-sbcrud": "dev-master",
       "svanderburg/php-sbdata": "dev-master",
       "svanderburg/php-sblayout": "dev-master",
