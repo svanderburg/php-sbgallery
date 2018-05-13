@@ -1,20 +1,27 @@
-{ nixpkgs ? <nixpkgs> }:
+{ nixpkgs ? <nixpkgs>
+, systems ? [ "x86_64-linux" ]
+}:
 
 let
   pkgs = import nixpkgs {};
 in
 {
-  doc = pkgs.stdenv.mkDerivation {
-    name = "php-sbgallery-doc";
-    src = ./sbgallery;
-    buildInputs = [ pkgs.doxygen ];
-    buildPhase = ''
-      make doc
-    '';
-    installPhase = ''
+  package = pkgs.lib.genAttrs systems (system: (import ./default.nix {
+    inherit pkgs system;
+    noDev = true;
+  }).override {
+    executable = true;
+  });
+
+  dev = pkgs.lib.genAttrs systems (system: (import ./default.nix {
+    inherit pkgs system;
+  }).override (oldAttrs: {
+    buildInputs = oldAttrs.buildInputs ++ [ pkgs.graphviz ];
+    executable = true;
+    postInstall = ''
+      vendor/bin/phpdoc
       mkdir -p $out/nix-support
-      cp -av apidoc $out
-      echo "doc api $out/apidoc/html" >> $out/nix-support/hydra-build-products
+      echo "doc api $out/doc" >> $out/nix-support/hydra-build-products
     '';
-  };
+  }));
 }
