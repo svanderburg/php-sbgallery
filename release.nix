@@ -9,19 +9,18 @@ in
   package = pkgs.lib.genAttrs systems (system: (import ./default.nix {
     inherit pkgs system;
     noDev = true;
-  }).override {
-    executable = true;
-  });
+  }));
 
   dev = pkgs.lib.genAttrs systems (system: (import ./default.nix {
     inherit pkgs system;
-  }).override (oldAttrs: {
-    buildInputs = oldAttrs.buildInputs ++ [ pkgs.graphviz ];
+  }).override {
+    buildInputs = [ pkgs.graphviz ];
     executable = true;
     postInstall = ''
       vendor/bin/phpdoc
+      mv doc $out
       mkdir -p $out/nix-support
-      echo "doc api $out/doc" >> $out/nix-support/hydra-build-products
+      echo "doc api $out/share/doc" >> $out/nix-support/hydra-build-products
     '';
-  }));
+  });
 }

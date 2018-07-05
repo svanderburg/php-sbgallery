@@ -2,11 +2,11 @@
 
 { stdenv, writeTextFile, fetchurl, php, unzip }:
 
-rec {
+let
   composer = stdenv.mkDerivation {
-    name = "composer-1.5.2";
+    name = "composer-1.6.5";
     src = fetchurl {
-      url = https://github.com/composer/composer/releases/download/1.5.2/composer.phar;
+      url = https://github.com/composer/composer/releases/download/1.6.5/composer.phar;
       sha256 = "07xkpg9y1dd4s33y3cbf7r5fphpgc39mpm066a8m9y4ffsf539f0";
     };
     buildInputs = [ php ];
@@ -49,7 +49,21 @@ rec {
       '';
     };
 
-  buildPackage = { name, src, packages ? {}, devPackages ? {}, symlinkDependencies ? false, executable ? false, removeComposerArtifacts ? false, postInstall ? "", noDev ? false, ...}@args:
+  buildPackage =
+    { name
+    , src
+    , packages ? {}
+    , devPackages ? {}
+    , buildInputs ? []
+    , symlinkDependencies ? false
+    , executable ? false
+    , removeComposerArtifacts ? false
+    , postInstall ? ""
+    , noDev ? false
+    , unpackPhase ? "true"
+    , buildPhase ? "true"
+    , ...}@args:
+
     let
       reconstructInstalled = writeTextFile {
         name = "reconstructinstalled.php";
@@ -114,7 +128,8 @@ rec {
 
               if(array_key_exists("bin", $config))
               {
-                  mkdir("vendor/".$binDir);
+                  if(!file_exists("vendor/".$binDir))
+                      mkdir("vendor/".$binDir);
 
                   foreach($config["bin"] as $bin)
                       symlink("../../".$bin, "vendor/".$binDir."/".basename($bin));
@@ -148,11 +163,16 @@ rec {
               }
             ''}
           '') (builtins.attrNames dependencies);
+
+      extraArgs = removeAttrs args [ "name" "packages" "devPackages" "buildInputs" ];
     in
-    stdenv.lib.makeOverridable stdenv.mkDerivation (builtins.removeAttrs args [ "packages" "devPackages" ] // {
-      name = "composer-${args.name}";
-      buildInputs = [ php composer ] ++ args.buildInputs or [];
-      buildCommand = ''
+    stdenv.mkDerivation ({
+      name = "composer-${name}";
+      buildInputs = [ php composer ] ++ buildInputs;
+
+      inherit unpackPhase buildPhase;
+
+      installPhase = ''
         ${if executable then ''
           mkdir -p $out/share/php
           cp -av $src $out/share/php/$name
@@ -241,5 +261,10 @@ rec {
         # Execute post install hook
         runHook postInstall
     '';
-  });
+  } // extraArgs);
+in
+{
+  composer = stdenv.lib.makeOverridable composer;
+  buildZipPackage = stdenv.lib.makeOverridable buildZipPackage;
+  buildPackage = stdenv.lib.makeOverridable buildPackage;
 }
