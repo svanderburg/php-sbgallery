@@ -38,7 +38,7 @@ class AlbumEntity
 			$ordering = $row[0] + 1;
 
 		$stmt = $dbh->prepare("insert into ".$albumsTable." values (?, ?, ?, ?, ?)");
-		if(!$stmt->execute(array($album["ALBUM_ID"], $album["Title"], $album["Visible"], $album["Description"], $ordering)))
+		if(!$stmt->execute(array($album["ALBUM_ID"], $album["Title"], $album["Visible"] == 1 ? 1 : 0, $album["Description"], $ordering)))
 		{
 			$dbh->rollBack();
 			throw new Exception($stmt->errorInfo()[2]);
