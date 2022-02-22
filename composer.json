@@ -55,8 +55,5 @@
       "svanderburg/php-sbdata": "dev-master",
       "svanderburg/php-sblayout": "dev-master",
       "svanderburg/php-sbeditor": "dev-master"
-  },
-  "require-dev": {
-      "phpdocumentor/phpdocumentor": "2.9.x"
   }
 }
