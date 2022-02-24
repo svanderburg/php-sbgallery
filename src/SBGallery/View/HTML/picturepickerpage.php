@@ -1,8 +1,23 @@
 <?php
+/**
+ * @file
+ * @brief View-HTML-PicturePickerPage module
+ * @defgroup View-HTML-PicturePickerPage
+ * @{
+ */
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Gallery;
 
-function displayPicturePickerPage(Gallery $gallery, $galleryLabel = "Gallery", $styles = null, $htmlEditorJs = "scripts/htmleditor.js", $galleryJs = "scripts/gallery.js")
+/**
+ * Displays a page that allows a user to pick an image from the gallery.
+ *
+ * @param $gallery Gallery to display
+ * @param $galleryLabel Title of the gallery
+ * @param $styles Style sheets to use in the gallery picker package
+ * @param $htmlEditorJs JavaScript include that provides HTML editor functionality
+ * @param $galleryJs JavaScript include that provides gallery functionality
+ */
+function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gallery", string $styles = null, string $htmlEditorJs = "scripts/htmleditor.js", string $galleryJs = "scripts/gallery.js")
 {
 	?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -84,4 +99,8 @@ function displayPicturePickerPage(Gallery $gallery, $galleryLabel = "Gallery", $
 	</html>
 	<?php
 }
+
+/**
+ * @}
+ */
 ?>

@@ -1,6 +1,8 @@
 <?php
 namespace Examples\Pages\Model\Page;
 use PDO;
+use SBGallery\Model\Gallery;
+use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\Page\GalleryPage;
 use Examples\Pages\Model\MyGallery;
 use Examples\Pages\Model\MyGalleryPermissionChecker;
@@ -11,16 +13,16 @@ class MyGalleryPage extends GalleryPage
 
 	public function __construct(PDO $dbh)
 	{
-		parent::__construct("Gallery", null, "Pages", "gallery.php");
+		parent::__construct("Gallery", array(), "Pages", "gallery.php");
 		$this->dbh = $dbh;
 	}
 
-	public function constructGallery()
+	public function constructGallery(): Gallery
 	{
 		return new MyGallery($this->dbh);
 	}
 
-	public function constructGalleryPermissionChecker()
+	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
 	{
 		return new MyGalleryPermissionChecker();
 	}

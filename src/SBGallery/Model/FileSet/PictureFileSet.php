@@ -3,7 +3,7 @@ namespace SBGallery\Model\FileSet;
 
 class PictureFileSet
 {
-	private static function scaleImageInBox($sourceFile, $destinationFile, $fileType, $boxWidth, $boxHeight, $filePermissions)
+	private static function scaleImageInBox(string $sourceFile, string $destinationFile, string $fileType, int $boxWidth, int $boxHeight, int $filePermissions): void
 	{
 		/* Get dimensions of the source image */
 		list($width, $height) = getimagesize($sourceFile);
@@ -59,12 +59,12 @@ class PictureFileSet
 		chmod($destinationFile, $filePermissions);
 	}
 
-	private static function composePicturePath($albumDir, $type, $id, $fileType)
+	private static function composePicturePath(string $albumDir, string $type, string $id, string $fileType): string
 	{
 		return $albumDir."/".$type."/".$id.".".$fileType;
 	}
 
-	public static function generatePictures($sourceFile, $albumDir, $id, $fileType, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, $filePermissions)
+	public static function generatePictures(string $sourceFile, string $albumDir, string $id, ?string $fileType, int $thumbnailWidth, int $thumbnailHeight, int $pictureWidth, int $pictureHeight, int $filePermissions): void
 	{
 		if($fileType !== null)
 		{
@@ -76,7 +76,7 @@ class PictureFileSet
 		}
 	}
 
-	public static function determineImageType($mimeType)
+	public static function determineImageType(string $mimeType): ?string
 	{
 		switch($mimeType)
 		{
@@ -91,7 +91,7 @@ class PictureFileSet
 		}
 	}
 
-	public static function determineImageFileType($key)
+	public static function determineImageFileType(string $key): ?string
 	{
 		if(array_key_exists($key, $_FILES))
 			return PictureFileSet::determineImageType($_FILES[$key]["type"]);
@@ -99,7 +99,7 @@ class PictureFileSet
 			return null;
 	}
 
-	public static function deletePictures($albumDir, $id, $fileType)
+	public static function deletePictures(string $albumDir, string $id, ?string $fileType): void
 	{
 		if($fileType !== null)
 		{
@@ -108,7 +108,7 @@ class PictureFileSet
 		}
 	}
 
-	public static function renamePictures($albumDir, $oldPictureId, $newPictureId, $oldFileType, $newFileType)
+	public static function renamePictures(string $albumDir, string $oldPictureId, string $newPictureId, string $oldFileType, string $newFileType): void
 	{
 		$fileType = ($oldFileType === null) ? $newFileType : $oldFileType;
 		

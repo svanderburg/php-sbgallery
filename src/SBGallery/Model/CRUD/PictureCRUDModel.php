@@ -5,14 +5,15 @@ use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\CRUDPage;
 use SBGallery\Model\Picture;
+use SBGallery\Model\GalleryPermissionChecker;
 
 class PictureCRUDModel extends CRUDModel
 {
-	public $picture;
+	public Picture $picture;
 
-	public $checker;
+	public GalleryPermissionChecker $checker;
 
-	public $crudPage;
+	public CRUDPage $crudPage;
 
 	public function __construct(CRUDPage $crudPage, Picture $picture)
 	{
@@ -22,12 +23,12 @@ class PictureCRUDModel extends CRUDModel
 		$this->crudPage = $crudPage;
 	}
 
-	private function createPicture()
+	private function createPicture(): void
 	{
 		$this->picture->create($this->keyFields["albumId"]->value);
 	}
 
-	private function insertPicture()
+	private function insertPicture(): void
 	{
 		if($this->picture->insert($_REQUEST))
 		{
@@ -36,13 +37,13 @@ class PictureCRUDModel extends CRUDModel
 		}
 	}
 
-	private function viewPicture()
+	private function viewPicture(): void
 	{
 		$this->picture->view($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
 		$this->crudPage->title = $this->picture->entity["Title"];
 	}
 
-	private function updatePicture()
+	private function updatePicture(): void
 	{
 		if($this->picture->update($_REQUEST))
 		{
@@ -58,42 +59,42 @@ class PictureCRUDModel extends CRUDModel
 		$this->crudPage->title = $this->form->fields["Title"]->value;
 	}
 
-	private function removePicture()
+	private function removePicture(): void
 	{
 		$this->picture->remove($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
-	private function removePictureImage()
+	private function removePictureImage(): void
 	{
 		$this->picture->removePictureImage($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER']);
 		exit();
 	}
 
-	private function moveLeftPicture()
+	private function moveLeftPicture(): void
 	{
 		$this->picture->moveLeft($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
-	private function moveRightPicture()
+	private function moveRightPicture(): void
 	{
 		$this->picture->moveRight($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
-	private function setAsThumbnailPicture()
+	private function setAsThumbnailPicture(): void
 	{
 		$this->picture->setAsThumbnail($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
-	public function executeOperation()
+	public function executeOperation(): void
 	{
 		if(array_key_exists("__operation", $_REQUEST))
 		{

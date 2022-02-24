@@ -2,10 +2,11 @@
 namespace SBGallery\Model\Entity;
 use Exception;
 use PDO;
+use PDOStatement;
 
 class AlbumEntity
 {
-	public static function queryAll(PDO $dbh, $albumsTable = "albums")
+	public static function queryAll(PDO $dbh, string $albumsTable = "albums"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select * from ".$albumsTable." order by ALBUM_ID");
 		if(!$stmt->execute())
@@ -13,7 +14,7 @@ class AlbumEntity
 		return $stmt;
 	}
 
-	public static function queryOne(PDO $dbh, $id, $albumsTable = "albums")
+	public static function queryOne(PDO $dbh, string $id, string $albumsTable = "albums"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select * from ".$albumsTable." where ALBUM_ID = ?");
 		if(!$stmt->execute(array($id)))
@@ -21,7 +22,7 @@ class AlbumEntity
 		return $stmt;
 	}
 
-	public static function insert(PDO $dbh, array $album, $albumsTable = "albums", $thumbnailsTable = "thumbnails")
+	public static function insert(PDO $dbh, array $album, string $albumsTable = "albums", string $thumbnailsTable = "thumbnails"): void
 	{
 		$dbh->beginTransaction();
 
@@ -54,7 +55,7 @@ class AlbumEntity
 		$dbh->commit();
 	}
 
-	public static function update(PDO $dbh, array $album, $id, $albumsTable = "albums")
+	public static function update(PDO $dbh, array $album, string $id, string $albumsTable = "albums"): void
 	{
 		$stmt = $dbh->prepare("update ".$albumsTable." set ".
 			"ALBUM_ID = ?, ".
@@ -67,14 +68,14 @@ class AlbumEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function remove(PDO $dbh, $id, $albumsTable = "albums")
+	public static function remove(PDO $dbh, string $id, string $albumsTable = "albums"): void
 	{
 		$stmt = $dbh->prepare("delete from ".$albumsTable." where ALBUM_ID = ?");
 		if(!$stmt->execute(array($id)))
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function queryThumbnails(PDO $dbh, $displayOnlyVisible, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
+	public static function queryThumbnails(PDO $dbh, bool $displayOnlyVisible, string $albumsTable = "albums", string $thumbnailsTable = "thumbnails", string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select distinct ".$thumbnailsTable.".ALBUM_ID, ".$thumbnailsTable.".PICTURE_ID, ".$albumsTable.".Title, ".$picturesTable.".FileType ".
 			"from ".$thumbnailsTable." ".
@@ -87,7 +88,7 @@ class AlbumEntity
 		return $stmt;
 	}
 
-	public static function queryPictureCount(PDO $dbh, $albumId, $picturesTable = "pictures")
+	public static function queryPictureCount(PDO $dbh, string $albumId, string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select count(*) from ".$picturesTable." where ALBUM_ID = ?");
 		if(!$stmt->execute(array($albumId)))
@@ -95,7 +96,7 @@ class AlbumEntity
 		return $stmt;
 	}
 
-	public static function setThumbnail(PDO $dbh, $pictureId, $albumId, $thumbnailsTable = "thumbnails")
+	public static function setThumbnail(PDO $dbh, string $pictureId, string $albumId, string $thumbnailsTable = "thumbnails"): void
 	{
 		$stmt = $dbh->prepare("update ".$thumbnailsTable." set PICTURE_ID = ? where ALBUM_ID = ?");
 
@@ -103,7 +104,7 @@ class AlbumEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	private static function switchAlbumOrdering(PDO $dbh, array $firstAlbum, array $secondAlbum, $albumsTable = "albums")
+	private static function switchAlbumOrdering(PDO $dbh, array $firstAlbum, array $secondAlbum, string $albumsTable = "albums"): void
 	{
 		$stmt = $dbh->prepare("update ".$albumsTable." set Ordering = ? where ALBUM_ID = ?");
 		if(!$stmt->execute(array($secondAlbum["Ordering"], $firstAlbum["ALBUM_ID"])))
@@ -114,7 +115,7 @@ class AlbumEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function moveLeft(PDO $dbh, $id, $albumsTable = "albums")
+	public static function moveLeft(PDO $dbh, string $id, string $albumsTable = "albums"): void
 	{
 		$dbh->beginTransaction();
 
@@ -147,7 +148,7 @@ class AlbumEntity
 		}
 	}
 
-	public static function moveRight(PDO $dbh, $id, $albumsTable = "albums")
+	public static function moveRight(PDO $dbh, string $id, string $albumsTable = "albums"): void
 	{
 		$dbh->beginTransaction();
 

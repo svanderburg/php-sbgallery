@@ -1,7 +1,7 @@
 <?php
 namespace SBGallery\Model\Page\Util;
 
-function composeGalleryContents($sections, $gallerySection, $path)
+function composeGalleryContents(?array $sections, string $gallerySection, string $path)
 {
 	if($sections === null)
 		$contentSections = array();

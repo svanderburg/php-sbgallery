@@ -4,14 +4,17 @@ use Exception;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
 use SBData\Model\Field\TextField;
+use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\StaticContentCRUDPage;
+use SBGallery\Model\Picture;
+use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\CRUD\PictureCRUDModel;
 
 class PicturePage extends StaticContentCRUDPage
 {
-	private $parent;
+	private ?AlbumPage $parent;
 
-	public function __construct(AlbumPage $parent = null, array $sections = null, $view = "HTML", $gallerySection = "contents", array $styles = null)
+	public function __construct(AlbumPage $parent = null, array $sections = array(), string $view = "HTML", string $gallerySection = "contents", array $styles = array())
 	{
 		$baseURL = Page::computeBaseURL();
 
@@ -30,17 +33,17 @@ class PicturePage extends StaticContentCRUDPage
 			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."error.php"), null, $styles),
 			/* Contents per operation */
 			array(),
-			null);
+			array());
 
 		$this->parent = $parent;
 	}
 
-	public function constructCRUDModel()
+	public function constructCRUDModel(): CRUDModel
 	{
 		return new PictureCRUDModel($this, $this->constructPicture());
 	}
 
-	public function constructPicture()
+	public function constructPicture(): Picture
 	{
 		if($this->parent === null)
 			throw new Exception("Can't construct picture!");
@@ -52,7 +55,7 @@ class PicturePage extends StaticContentCRUDPage
 		}
 	}
 
-	public function constructGalleryPermissionChecker()
+	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
 	{
 		if($this->parent === null)
 			throw new Exception("Can't construct a permission checker");

@@ -2,10 +2,11 @@
 namespace SBGallery\Model\Entity;
 use Exception;
 use PDO;
+use PDOStatement;
 
 class PictureEntity
 {
-	public static function queryAll(PDO $dbh, $albumId, $picturesTable = "pictures")
+	public static function queryAll(PDO $dbh, string $albumId, $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select * from ".$picturesTable." where ALBUM_ID = ? order by Ordering");
 		if(!$stmt->execute(array($albumId)))
@@ -13,7 +14,7 @@ class PictureEntity
 		return $stmt;
 	}
 
-	public static function queryOne(PDO $dbh, $pictureId, $albumId, $picturesTable = "pictures")
+	public static function queryOne(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select * from ".$picturesTable." where PICTURE_ID = ? and ALBUM_ID = ?");
 		if(!$stmt->execute(array($pictureId, $albumId)))
@@ -21,7 +22,7 @@ class PictureEntity
 		return $stmt;
 	}
 
-	public static function queryNumOfPicturesInAlbum(PDO $dbh, $albumId, $picturesTable = "pictures")
+	public static function queryNumOfPicturesInAlbum(PDO $dbh, string $albumId, string $picturesTable = "pictures"): int
 	{
 		$stmt = $dbh->prepare("select count(*) from ".$picturesTable." where ALBUM_ID = ?");
 
@@ -30,13 +31,13 @@ class PictureEntity
 			if(($row = $stmt->fetch()) === false)
 				return 0;
 			else
-				return $row[0];
+				return (int)$row[0];
 		}
 		else
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function queryPredecessor(PDO $dbh, $albumId, $ordering, $picturesTable = "pictures")
+	public static function queryPredecessor(PDO $dbh, string $albumId, int $ordering, string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select PICTURE_ID, Ordering ".
 			"from ".$picturesTable." ".
@@ -47,7 +48,7 @@ class PictureEntity
 		return $stmt;
 	}
 
-	public static function querySuccessor(PDO $dbh, $albumId, $ordering, $picturesTable = "pictures")
+	public static function querySuccessor(PDO $dbh, string $albumId, int $ordering, string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select PICTURE_ID, Ordering ".
 			"from ".$picturesTable." ".
@@ -58,7 +59,7 @@ class PictureEntity
 		return $stmt;
 	}
 
-	public static function insert(PDO $dbh, array $picture, $picturesTable = "pictures")
+	public static function insert(PDO $dbh, array $picture, string $picturesTable = "pictures"): void
 	{
 		$dbh->beginTransaction();
 
@@ -84,7 +85,7 @@ class PictureEntity
 		$dbh->commit();
 	}
 
-	public static function update(PDO $dbh, array $picture, $pictureId, $albumId, $picturesTable = "pictures")
+	public static function update(PDO $dbh, array $picture, string $pictureId, string $albumId, string $picturesTable = "pictures"): void
 	{
 		if($picture["FileType"] === null)
 		{
@@ -111,7 +112,7 @@ class PictureEntity
 		}
 	}
 
-	public static function resetFileType(PDO $dbh, $pictureId, $albumId, $picturesTable = "pictures")
+	public static function resetFileType(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): void
 	{
 		$stmt = $dbh->prepare("update ".$picturesTable." set ".
 			"FileType = NULL ".
@@ -121,14 +122,14 @@ class PictureEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function remove(PDO $dbh, $pictureId, $albumId, $picturesTable = "pictures")
+	public static function remove(PDO $dbh, string $pictureId, string $albumId, $picturesTable = "pictures"): void
 	{
 		$stmt = $dbh->prepare("delete from ".$picturesTable." where PICTURE_ID = ? and ALBUM_ID = ?");
 		if(!$stmt->execute(array($pictureId, $albumId)))
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	private static function switchPictureOrdering(PDO $dbh, $albumId, array $firstPicture, array $secondPicture, $picturesTable = "pictures")
+	private static function switchPictureOrdering(PDO $dbh, string $albumId, array $firstPicture, array $secondPicture, string $picturesTable = "pictures"): void
 	{
 		$stmt = $dbh->prepare("update ".$picturesTable." set Ordering = ? where PICTURE_ID = ? and ALBUM_ID = ?");
 		if(!$stmt->execute(array($secondPicture["Ordering"], $firstPicture["PICTURE_ID"], $albumId)))
@@ -139,7 +140,7 @@ class PictureEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function moveLeft(PDO $dbh, $pictureId, $albumId, $picturesTable = "pictures")
+	public static function moveLeft(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): void
 	{
 		$dbh->beginTransaction();
 
@@ -164,7 +165,7 @@ class PictureEntity
 		}
 	}
 
-	public static function moveRight(PDO $dbh, $pictureId, $albumId, $picturesTable = "pictures")
+	public static function moveRight(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): void
 	{
 		$dbh->beginTransaction();
 

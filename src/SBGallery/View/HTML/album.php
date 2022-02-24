@@ -1,18 +1,25 @@
 <?php
+/**
+ * @file
+ * @brief View-HTML-Album module
+ * @defgroup View-HTML-Album
+ * @{
+ */
+
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Album;
 
-function album_displayConventionalAlbumLink(Album $album, $albumURL)
+function album_displayConventionalAlbumLink(Album $album, string $albumURL): string
 {
 	return $albumURL."?ALBUM_ID=".$album->entity["ALBUM_ID"];
 }
 
-function album_displayLayoutAlbumLink(Album $album, $albumURL)
+function album_displayLayoutAlbumLink(Album $album, string $albumURL): string
 {
 	return $albumURL;
 }
 
-function displayAlbumBreadcrumbs(Album $album, $galleryURL, $albumURL, $viewType = "Conventional")
+function displayAlbumBreadcrumbs(Album $album, string $galleryURL, string $albumURL, string $viewType = "Conventional"): void
 {
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AlbumLink';
 	?>
@@ -30,7 +37,7 @@ function displayAlbumBreadcrumbs(Album $album, $galleryURL, $albumURL, $viewType
 	<?php
 }
 
-function displayAlbumThumbnail(Album $album, array $picture, $count, $viewType)
+function displayAlbumThumbnail(Album $album, array $picture, int $count, string $viewType): void
 {
 	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
 
@@ -43,7 +50,7 @@ function displayAlbumThumbnail(Album $album, array $picture, $count, $viewType)
 	<?php
 }
 
-function album_displayConventionalPictureLink(Album $album, $albumId, $pictureId, $count, $operation = null)
+function album_displayConventionalPictureLink(Album $album, string $albumId, string $pictureId, int $count, string $operation = null): string
 {
 	if($operation === null)
 		$operationParam = "";
@@ -57,7 +64,7 @@ function album_displayConventionalPictureLink(Album $album, $albumId, $pictureId
 	return $album->pictureDisplayURL."?ALBUM_ID=".$albumId."&amp;PICTURE_ID=".$pictureId.$operationParam;
 }
 
-function album_displayLayoutPictureLink(Album $album, $albumId, $pictureId, $count, $operation = null)
+function album_displayLayoutPictureLink(Album $album, string $albumId, string $pictureId, int $count, string $operation = null): string
 {
 	if($operation === null)
 		$operationParam = "";
@@ -71,7 +78,13 @@ function album_displayLayoutPictureLink(Album $album, $albumId, $pictureId, $cou
 	return $_SERVER["PHP_SELF"]."/".$pictureId.$operationParam;
 }
 
-function displayAlbum(Album $album, $viewType = "Conventional")
+/**
+ * Displays a non-editable album.
+ *
+ * @param $album Album to display
+ * @param $viewType Name of the class of functions that display the gallery
+ */
+function displayAlbum(Album $album, string $viewType = "Conventional"): void
 {
 	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
 
@@ -100,27 +113,37 @@ function displayAlbum(Album $album, $viewType = "Conventional")
 	}
 }
 
-function album_displayConventionalAddPictureLink(Album $album)
+function album_displayConventionalAddPictureLink(Album $album): string
 {
 	return $album->pictureDisplayURL."?ALBUM_ID=".$album->entity["ALBUM_ID"];
 }
 
-function album_displayLayoutAddPictureLink(Album $album)
+function album_displayLayoutAddPictureLink(Album $album): string
 {
 	return $_SERVER["PHP_SELF"]."?__operation=create_picture";
 }
 
-function album_displayConventionalAddMultiplePicturesLink(Album $album)
+function album_displayConventionalAddMultiplePicturesLink(Album $album): string
 {
 	return $album->addMultiplePicturesURL."?ALBUM_ID=".$album->entity["ALBUM_ID"];
 }
 
-function album_displayLayoutAddMultiplePicturesLink(Album $album)
+function album_displayLayoutAddMultiplePicturesLink(Album $album): string
 {
 	return $_SERVER["PHP_SELF"]."?__operation=add_multiple_pictures";
 }
 
-function displayEditableAlbum(Album $album, $submitLabel, $generalErrorMessage, $fieldErrorMessage, $viewType = "Conventional", $anchorPrefix = "picture")
+/**
+ * Displays an editable album.
+ *
+ * @param $album Album to display
+ * @param $submitLabel Text to be displayed on the submit button
+ * @param $generalErrorMessage Error message to be displayed if an album is incorrect
+ * @param $fieldErrorMessage Error message to be display if a field is incorrect
+ * @param $viewType Name of the class of functions that display the gallery
+ * @param $anchorPrefix Prefix that the hidden anchors for searching should use
+ */
+function displayEditableAlbum(Album $album, string $submitLabel, string $generalErrorMessage, string $fieldErrorMessage, string $viewType = "Conventional", string $anchorPrefix = "picture"): void
 {
 	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
 	$displayAddPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddPictureLink';
@@ -181,4 +204,8 @@ function displayEditableAlbum(Album $album, $submitLabel, $generalErrorMessage, 
 		<?php
 	}
 }
+
+/**
+ * @}
+ */
 ?>

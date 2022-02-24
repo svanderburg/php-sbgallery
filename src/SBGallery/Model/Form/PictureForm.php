@@ -8,7 +8,7 @@ use SBEditor\Model\Field\HTMLEditorField;
 
 class PictureForm extends Form
 {
-	private static $editorSettings = array(
+	private static array $editorSettings = array(
 		"id" => "editor1",
 		"iframePage" => "iframepage.html",
 		"iconsPath" => "image/editor",
@@ -16,7 +16,7 @@ class PictureForm extends Form
 		"height" => 20
 	);
 
-	public function __construct($updateMode, array $labels, array $editorSettings = null)
+	public function __construct(bool $updateMode, array $labels, array $editorSettings = null)
 	{
 		if($editorSettings === null)
 			$editorSettings = PictureForm::$editorSettings;

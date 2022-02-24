@@ -5,14 +5,15 @@ use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\CRUDPage;
 use SBGallery\Model\Album;
+use SBGallery\Model\GalleryPermissionChecker;
 
 class AlbumCRUDModel extends CRUDModel
 {
-	public $album;
+	public Album $album;
 
-	public $checker;
+	public GalleryPermissionChecker $checker;
 
-	public $crudPage;
+	public CRUDPage $crudPage;
 
 	public function __construct(CRUDPage $crudPage, Album $album)
 	{
@@ -22,12 +23,12 @@ class AlbumCRUDModel extends CRUDModel
 		$this->crudPage = $crudPage;
 	}
 
-	private function createAlbum()
+	private function createAlbum(): void
 	{
 		$this->album->create();
 	}
 
-	private function insertAlbum()
+	private function insertAlbum(): void
 	{
 		if($this->album->insert($_REQUEST))
 		{
@@ -36,13 +37,13 @@ class AlbumCRUDModel extends CRUDModel
 		}
 	}
 
-	private function viewAlbum()
+	private function viewAlbum(): void
 	{
 		$this->album->view($this->keyFields["albumId"]->value);
 		$this->crudPage->title = $this->album->entity["Title"];
 	}
 
-	private function updateAlbum()
+	private function updateAlbum(): void
 	{
 		if($this->album->update($_REQUEST))
 		{
@@ -58,35 +59,35 @@ class AlbumCRUDModel extends CRUDModel
 		$this->crudPage->title = $this->form->fields["Title"]->value;
 	}
 
-	private function removeAlbum()
+	private function removeAlbum(): void
 	{
 		$this->album->remove($this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
-	private function moveLeftAlbum()
+	private function moveLeftAlbum(): void
 	{
 		$this->album->moveLeft($this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
-	private function moveRightAlbum()
+	private function moveRightAlbum(): void
 	{
 		$this->album->moveRight($this->keyFields["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
-	private function insertMultiplePictures()
+	private function insertMultiplePictures(): void
 	{
 		$this->album->insertMultiplePictures($this->keyFields["albumId"]->value, "Image");
 		header("Location: ".$_SERVER["SCRIPT_NAME"]."/gallery/".$this->keyFields["albumId"]->value);
 		exit();
 	}
 
-	public function executeOperation()
+	public function executeOperation(): void
 	{
 		if(array_key_exists("__operation", $_REQUEST))
 		{

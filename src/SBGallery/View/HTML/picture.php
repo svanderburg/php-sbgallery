@@ -1,28 +1,34 @@
 <?php
+/**
+ * @file
+ * @brief View-HTML-Picture module
+ * @defgroup View-HTML-Picture
+ * @{
+ */
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Picture;
 
-function picture_displayConventionalAlbumLink(Picture $picture, $albumURL)
+function picture_displayConventionalAlbumLink(Picture $picture, string $albumURL): string
 {
 	return $albumURL."?ALBUM_ID=".$picture->entity["ALBUM_ID"];
 }
 
-function picture_displayConventionalPictureLink(Picture $picture, $pictureURL)
+function picture_displayConventionalPictureLink(Picture $picture, string $pictureURL): string
 {
 	return $pictureURL."?ALBUM_ID=".$picture->entity["ALBUM_ID"]."&amp;PICTURE_ID=".$picture->entity["PICTURE_ID"];
 }
 
-function picture_displayLayoutAlbumLink(Picture $picture, $url)
+function picture_displayLayoutAlbumLink(Picture $picture, string $url): string
 {
 	return $url;
 }
 
-function picture_displayLayoutPictureLink(Picture $picture, $url)
+function picture_displayLayoutPictureLink(Picture $picture, string $url): string
 {
 	return $url;
 }
 
-function displayPictureBreadcrumbs(Picture $picture, $galleryURL, $albumURL, $pictureURL, $viewType = "Conventional")
+function displayPictureBreadcrumbs(Picture $picture, string $galleryURL, string $albumURL, string $pictureURL, string $viewType = "Conventional"): void
 {
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'AlbumLink';
 	$displayPictureLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'PictureLink';
@@ -48,7 +54,7 @@ function displayPictureBreadcrumbs(Picture $picture, $galleryURL, $albumURL, $pi
 	<?php
 }
 
-function displayPictureNavigation(Picture $picture, $viewType)
+function displayPictureNavigation(Picture $picture, string $viewType): void
 {
 	$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
 
@@ -71,7 +77,13 @@ function displayPictureNavigation(Picture $picture, $viewType)
 	}
 }
 
-function displayPicture(Picture $picture, $viewType = "Conventional")
+/**
+ * Displays a non-editable picture.
+ *
+ * @param $picture Picture to display
+ * @param $viewType Name of the class of functions that display the gallery
+ */
+function displayPicture(Picture $picture, string $viewType = "Conventional"): void
 {
 	$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
 
@@ -97,7 +109,7 @@ function displayPicture(Picture $picture, $viewType = "Conventional")
 	}
 }
 
-function picture_displayConventionalImageLink($albumId, $pictureId, $operation = null)
+function picture_displayConventionalImageLink(string $albumId, string $pictureId, string $operation = null): string
 {
 	if($operation === null)
 		$operationParam = "";
@@ -107,7 +119,7 @@ function picture_displayConventionalImageLink($albumId, $pictureId, $operation =
 	return $_SERVER["PHP_SELF"]."?ALBUM_ID=".$albumId."&amp;PICTURE_ID=".$pictureId.$operationParam;
 }
 
-function picture_displayLayoutImageLink($albumId, $pictureId, $operation = null)
+function picture_displayLayoutImageLink(string $albumId, string $pictureId, string $operation = null): string
 {
 	if($operation === null)
 		$operationParam = "";
@@ -117,7 +129,16 @@ function picture_displayLayoutImageLink($albumId, $pictureId, $operation = null)
 	return dirname($_SERVER["PHP_SELF"])."/".$pictureId.$operationParam;
 }
 
-function displayEditablePicture(Picture $picture, $submitLabel, $generalErrorMessage, $fieldErrorMessage, $viewType = "Conventional")
+/**
+ * Displays an editable picture.
+ *
+ * @param $picture Picture to display
+ * @param $submitLabel Text to be displayed on the submit button
+ * @param $generalErrorMessage Error message to be displayed if a picture is incorrect
+ * @param $fieldErrorMessage Error message to be display if a field is incorrect
+ * @param $viewType Name of the class of functions that display the gallery
+ */
+function displayEditablePicture(Picture $picture, string $submitLabel, string $generalErrorMessage, string $fieldErrorMessage, string $viewType = "Conventional"): void
 {
 	$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
 
@@ -144,4 +165,8 @@ function displayEditablePicture(Picture $picture, $submitLabel, $generalErrorMes
 
 	\SBData\View\HTML\displayEditableForm($picture->form, $submitLabel, $generalErrorMessage, $fieldErrorMessage);
 }
+
+/**
+ * @}
+ */
 ?>

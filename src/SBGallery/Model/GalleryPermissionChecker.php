@@ -10,8 +10,8 @@ interface GalleryPermissionChecker
 	/**
 	 * Checks whether the user has the permissions to modify the album.
 	 *
-	 * @return bool true if the user has permissions, else false
+	 * @return true if the user has permissions, else false
 	 */
-	public function checkWritePermissions();
+	public function checkWritePermissions(): bool;
 }
 ?>

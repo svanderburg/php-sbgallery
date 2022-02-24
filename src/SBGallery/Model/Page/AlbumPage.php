@@ -3,16 +3,19 @@ namespace SBGallery\Model\Page;
 use Exception;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
+use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\DynamicContentCRUDPage;
 use SBData\Model\Field\TextField;
+use SBGallery\Model\Album;
+use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\CRUD\AlbumCRUDModel;
 use SBGallery\Model\CRUD\PictureCRUDModel;
 
 class AlbumPage extends DynamicContentCRUDPage
 {
-	private $parent;
+	private ?GalleryPage $parent;
 
-	public function __construct(GalleryPage $parent = null, array $sections = null, $view = "HTML", $gallerySection = "contents", array $styles = null)
+	public function __construct(GalleryPage $parent = null, array $sections = array(), string $view = "HTML", string $gallerySection = "contents", array $styles = array())
 	{
 		$baseURL = Page::computeBaseURL();
 
@@ -41,7 +44,7 @@ class AlbumPage extends DynamicContentCRUDPage
 		$this->parent = $parent;
 	}
 
-	public function constructCRUDModel()
+	public function constructCRUDModel(): CRUDModel
 	{
 		$album = $this->constructAlbum();
 
@@ -61,7 +64,7 @@ class AlbumPage extends DynamicContentCRUDPage
 			return new AlbumCRUDModel($this, $album);
 	}
 
-	public function constructAlbum()
+	public function constructAlbum(): Album
 	{
 		if($this->parent === null)
 			throw new Exception("Can't construct an album");
@@ -72,7 +75,7 @@ class AlbumPage extends DynamicContentCRUDPage
 		}
 	}
 
-	public function constructGalleryPermissionChecker()
+	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
 	{
 		if($this->parent === null)
 			throw new Exception("Can't construct a permission checker");

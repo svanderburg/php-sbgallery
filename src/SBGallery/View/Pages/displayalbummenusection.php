@@ -1,11 +1,22 @@
 <?php
+/**
+ * @file
+ * @brief View-Pages-AlbumMenuSection module
+ * @defgroup View-Pages-AlbumMenuSection
+ * @{
+ */
 namespace SBGallery\View\Pages;
 use SBGallery\Model\Page\GalleryPage;
 use SBGallery\Model\CRUD\GalleryCRUDModel;
 use SBGallery\Model\CRUD\AlbumCRUDModel;
 use SBGallery\Model\CRUD\PictureCRUDModel;
 
-function displayAlbumMenuSection(GalleryPage $galleryPage)
+/**
+ * Displays a menu section with links derived from the albums stored in the gallery.
+ *
+ * @param $galleryPage Gallery page to display
+ */
+function displayAlbumMenuSection(GalleryPage $galleryPage): void
 {
 	$gallery = $galleryPage->constructGallery();
 	$checker = $galleryPage->constructGalleryPermissionChecker();
@@ -54,8 +65,17 @@ function displayAlbumMenuSection(GalleryPage $galleryPage)
 	}
 }
 
-function visitedGallerySubPage()
+/**
+ * Checks whether the user has visited a gallery sub page
+ *
+ * @return TRUE if a gallery sub page is visited, else FALSE
+ */
+function visitedGallerySubPage(): bool
 {
 	return (array_key_exists("crudModel", $GLOBALS) && ($GLOBALS["crudModel"] instanceof GalleryCRUDModel || $GLOBALS["crudModel"] instanceof AlbumCRUDModel || $GLOBALS["crudModel"] instanceof PictureCRUDModel));
 }
+
+/**
+ * @}
+ */
 ?>

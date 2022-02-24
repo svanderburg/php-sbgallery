@@ -1,8 +1,14 @@
 <?php
+/**
+ * @file
+ * @brief View-HTML-Gallery module
+ * @defgroup View-HTML-Gallery
+ * @{
+ */
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Gallery;
 
-function displayGalleryBreadcrumbs(Gallery $gallery, $galleryURL)
+function displayGalleryBreadcrumbs(Gallery $gallery, string $galleryURL): void
 {
 	?>
 	<p>
@@ -11,7 +17,7 @@ function displayGalleryBreadcrumbs(Gallery $gallery, $galleryURL)
 	<?php
 }
 
-function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, $count, $viewType)
+function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, int $count, string $viewType): void
 {
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AlbumLink';
 	?>
@@ -28,7 +34,7 @@ function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, $count, $vi
 	<?php
 }
 
-function gallery_displayConventionalAlbumLink(Gallery $gallery, $albumId, $count, $operation = null)
+function gallery_displayConventionalAlbumLink(Gallery $gallery, string $albumId, int $count, string $operation = null): string
 {
 	if($operation === null)
 		$operationParam = "";
@@ -43,7 +49,7 @@ function gallery_displayConventionalAlbumLink(Gallery $gallery, $albumId, $count
 	return $gallery->albumDisplayURL."?ALBUM_ID=".$albumId.$operationParam;
 }
 
-function gallery_displayLayoutAlbumLink(Gallery $gallery, $albumId, $count, $operation = null)
+function gallery_displayLayoutAlbumLink(Gallery $gallery, string $albumId, int $count, string $operation = null): string
 {
 	if($operation === null)
 		$operationParam = "";
@@ -58,7 +64,13 @@ function gallery_displayLayoutAlbumLink(Gallery $gallery, $albumId, $count, $ope
 	return $_SERVER["PHP_SELF"]."/".$albumId.$operationParam;
 }
 
-function displayGallery(Gallery $gallery, $viewType = "Conventional")
+/**
+ * Displays a non-editable gallery.
+ *
+ * @param $gallery Gallery to display
+ * @param $viewType Name of the class of functions that display the gallery
+ */
+function displayGallery(Gallery $gallery, string $viewType = "Conventional"): void
 {
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_'.$viewType.'AlbumLink';
 
@@ -75,17 +87,24 @@ function displayGallery(Gallery $gallery, $viewType = "Conventional")
 	<?php
 }
 
-function gallery_displayConventionalAddAlbumLink(Gallery $gallery)
+function gallery_displayConventionalAddAlbumLink(Gallery $gallery): string
 {
 	return $gallery->albumDisplayURL;
 }
 
-function gallery_displayLayoutAddAlbumLink(Gallery $gallery)
+function gallery_displayLayoutAddAlbumLink(Gallery $gallery): string
 {
 	return $_SERVER["PHP_SELF"]."?__operation=create_album";
 }
 
-function displayEditableGallery(Gallery $gallery, $viewType = "Conventional", $anchorPrefix = "album")
+/**
+ * Displays an editable gallery.
+ *
+ * @param $gallery Gallery to display
+ * @param $viewType Name of the class of functions that display the gallery
+ * @param $anchorPrefix Prefix that the hidden anchors for searching should use
+ */
+function displayEditableGallery(Gallery $gallery, string $viewType = "Conventional", string $anchorPrefix = "album"): void
 {
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AlbumLink';
 	$displayAddAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AddAlbumLink';
@@ -136,4 +155,8 @@ function displayEditableGallery(Gallery $gallery, $viewType = "Conventional", $a
 	<div style="clear: both;"></div>
 	<?php
 }
+
+/**
+ * @}
+ */
 ?>

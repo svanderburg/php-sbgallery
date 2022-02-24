@@ -2,6 +2,7 @@
 namespace SBGallery\Model;
 use Exception;
 use PDO;
+use PDOStatement;
 use SBGallery\Model\Form\AlbumForm;
 use SBGallery\Model\Entity\AlbumEntity;
 use SBGallery\Model\Entity\PictureEntity;
@@ -13,7 +14,7 @@ use SBGallery\Model\FileSet\PictureFileSet;
  */
 class Album
 {
-	private static $labels = array(
+	private static array $labels = array(
 		"Gallery" => "Gallery",
 		"ALBUM_ID" => "Id",
 		"Title" => "Title",
@@ -31,87 +32,92 @@ class Album
 	);
 
 	/** Database connection handler */
-	public $dbh;
+	public PDO $dbh;
 
 	/** Base URL of the gallery */
-	public $baseURL;
+	public string $baseURL;
 
 	/** URL to the page that displays an individual picture */
-	public $pictureDisplayURL;
+	public string $pictureDisplayURL;
 
 	/** URL to the page allowing one to upload multiple pictures */
-	public $addMultiplePicturesURL;
+	public string $addMultiplePicturesURL;
 
 	/** URL to the base directory of the icons of the album */
-	public $iconsPath;
+	public string $iconsPath;
 
 	/** Base directory where all album artifacts are stored */
-	public $baseDir;
+	public string $baseDir;
 
 	/** Maximum width of a thumbnail image */
-	public $thumbnailWidth;
+	public int $thumbnailWidth;
 
 	/** Maximum height of a thumbnail image */
-	public $thumbnailHeight;
+	public int $thumbnailHeight;
 
 	/** Maximum width of a picture */
-	public $pictureWidth;
+	public string $pictureWidth;
 
 	/** Maximum height of a picture */
-	public $pictureHeight;
+	public string $pictureHeight;
 
 	/** Message labels for translation of the album properties */
-	public $albumLabels;
+	public array $albumLabels;
 
 	/** Message labels for translation of the picture properties */
-	public $pictureLabels;
+	public ?array $pictureLabels;
 
 	/** Configuration settings for the embedded editor */
-	public $editorSettings;
+	public ?array $editorSettings;
 
 	/** Whether to display anchors to support redirects to albums and pictures */
-	public $displayAnchors;
+	public bool $displayAnchors;
 
 	/** The file permissions for the directories stored in the base dir */
-	public $dirPermissions;
+	public int $dirPermissions;
 
 	/** The file permissions for the files stored in the base dir */
-	public $filePermissions;
+	public int $filePermissions;
 
 	/** Stores the properties of an individual album */
 	public $entity = false;
 
 	/** Form that can be used to validate and display an album's properties */
-	public $form;
+	public AlbumForm $form;
 
 	/** Name of the database table storing album properties */
-	public $albumsTable;
+	public string $albumsTable;
 
 	/** Name of the database table storing thumbnail properties */
-	public $thumbnailsTable;
+	public string $thumbnailsTable;
 
 	/** Name of the database table storing picture properties */
-	public $picturesTable;
+	public string $picturesTable;
 
 	/**
 	 * Constructs a new album instance.
 	 *
-	 * @param PDO $dbh Database connection handler
-	 * @param string $baseURL Base URL of the gallery
-	 * @param string $pictureDisplayURL URL to the page that displays an individual picture
-	 * @param string $addMultiplePicturesURL URL to the page allowing one to upload multiple pictures
-	 * @param string $iconsPath URL to the base directory of the icons of the album
-	 * @param string $baseDir Base directory where all album artifacts are stored
-	 * @param int $thumbnailWidth Maximum width of a thumbail image
-	 * @param int $thumbnailHeight Maximum height of a thumbnail image
-	 * @param int $pictureWidth Maximum width of a picture
-	 * @param int $picutreHeight Maximum height of a picture
-	 * @param array $albumLabels Message labels for translation of the album properties
-	 * @param array $pictureLabels Message labels for translation of the picture properties
-	 * @param array $editorSettings Configuration settings for the embedded editor
-	 * @param bool $displayAnchors Whether to display anchors to support redirects to albums and pictures
+	 * @param $dbh Database connection handler
+	 * @param $baseURL Base URL of the gallery
+	 * @param $pictureDisplayURL URL to the page that displays an individual picture
+	 * @param $addMultiplePicturesURL URL to the page allowing one to upload multiple pictures
+	 * @param $iconsPath URL to the base directory of the icons of the album
+	 * @param $baseDir Base directory where all album artifacts are stored
+	 * @param $thumbnailWidth Maximum width of a thumbail image
+	 * @param $thumbnailHeight Maximum height of a thumbnail image
+	 * @param $pictureWidth Maximum width of a picture
+	 * @param $pictureHeight Maximum height of a picture
+	 * @param $albumLabels Message labels for translation of the album properties
+	 * @param $pictureLabels Message labels for translation of the picture properties
+	 * @param $editorSettings Configuration settings for the embedded editor
+	 * @param $displayAnchors Whether to display anchors to support redirects to albums and pictures
+	 * @param $dirPermissions The file permissions for the directories stored in the base dir
+	 * @param $filePermissions The file permissions for the files stored in the base dir
+	 * @param $albumsTable Name of the database table storing album properties
+	 * @param $thumbnailsTable Name of the database table storing thumbnail properties
+	 * @param $picturesTable Name of the database table storing picture properties
 	 */
-	public function __construct(PDO $dbh, $baseURL, $pictureDisplayURL, $addMultiplePicturesURL, $iconsPath, $baseDir, $thumbnailWidth, $thumbnailHeight, $pictureWidth, $pictureHeight, array $albumLabels = null, array $pictureLabels = null, array $editorSettings = null, $displayAnchors = true, $dirPermissions = 0777, $filePermissions = 0666, $albumsTable = "albums", $thumbnailsTable = "thumbnails", $picturesTable = "pictures")
+	public function __construct(PDO $dbh, string $baseURL, string $pictureDisplayURL, string $addMultiplePicturesURL, string $iconsPath, string $baseDir, int $thumbnailWidth, int $thumbnailHeight, int $pictureWidth, int $pictureHeight, array $albumLabels = null, array $pictureLabels = null, array $editorSettings = null, bool $displayAnchors = true, int $dirPermissions = 0777, int $filePermissions = 0666, string $albumsTable = "albums", string $thumbnailsTable = "thumbnails", string $picturesTable = "pictures")
 	{
 		$this->dbh = $dbh;
 		$this->baseURL = $baseURL;
@@ -140,9 +146,9 @@ class Album
 	/**
 	 * Fetches a requested album from the database
 	 *
-	 * @param string $albumId ID of the album
+	 * @param $albumId ID of the album
 	 */
-	private function fetchEntity($albumId)
+	private function fetchEntity($albumId): void
 	{
 		$stmt = AlbumEntity::queryOne($this->dbh, $albumId, $this->albumsTable);
 		$this->entity = $stmt->fetch();
@@ -152,9 +158,9 @@ class Album
 	 * Constructs a form that can be used to validate and display an album's
 	 * properties.
 	 *
-	 * @param bool $updateMode Whether the form should be used for updating an existing album
+	 * @param $updateMode Whether the form should be used for updating an existing album
 	 */
-	private function constructForm($updateMode)
+	private function constructForm($updateMode): void
 	{
 		$this->form = new AlbumForm($updateMode, $this->albumLabels, $this->editorSettings);
 	}
@@ -163,10 +169,10 @@ class Album
 	 * Constructs a picture with identical configuration settings as this
 	 * album.
 	 *
-	 * @param string $albumId ID of the album
-	 * @return Picture A picture with the same configuration properties
+	 * @param $albumId ID of the album
+	 * @return A picture with the same configuration properties
 	 */
-	public function constructPicture($albumId)
+	public function constructPicture($albumId): Picture
 	{
 		return new Picture($this->dbh, $this->baseURL."/".$albumId, $this->baseDir."/".$albumId, $this->pictureDisplayURL, $this->iconsPath, $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->pictureLabels, $this->editorSettings, $this->filePermissions, $this->picturesTable, $this->thumbnailsTable, $this->albumsTable);
 	}
@@ -174,9 +180,9 @@ class Album
 	/**
 	 * Queries all pictures belonging to this album.
 	 *
-	 * @return PDOStatement A PDO statement that can be used to retrieve picture properties
+	 * @return A PDO statement that can be used to retrieve picture properties
 	 */
-	public function queryPictures()
+	public function queryPictures(): PDOStatement
 	{
 		return PictureEntity::queryAll($this->dbh, $this->entity["ALBUM_ID"], $this->picturesTable);
 	}
@@ -184,7 +190,7 @@ class Album
 	/**
 	 * Modifies the state to support the creation of a new album.
 	 */
-	public function create()
+	public function create(): void
 	{
 		$this->constructForm(false);
 		$this->form->fields["__operation"]->value = "insert_album";
@@ -193,9 +199,9 @@ class Album
 	/**
 	 * Modifies the state to view a particular album.
 	 *
-	 * @param string $albumId ID of the album
+	 * @param $albumId ID of the album
 	 */
-	public function view($albumId)
+	public function view(string $albumId): void
 	{
 		$this->constructForm(true);
 		$this->fetchEntity($albumId);
@@ -214,9 +220,10 @@ class Album
 	 * Inserts a given album into the database and uploads the files into
 	 * the gallery base dir.
 	 *
-	 * @param array $album Array with properties of an album.
+	 * @param $album Array with properties of an album.
+	 * @return true if the album was successfully inserted, else false
 	 */
-	public function insert(array $album)
+	public function insert(array $album): bool
 	{
 		$this->constructForm(false);
 		$this->form->importValues($album);
@@ -236,9 +243,10 @@ class Album
 	/**
 	 * Updates an existing album in the database and the filesystem.
 	 *
-	 * @param array $album Array with properties of an album.
+	 * @param $album Array with properties of an album.
+	 * @return true if the album was successfully updated, else false
 	 */
-	public function update(array $album)
+	public function update(array $album): bool
 	{
 		$this->constructForm(true);
 		$this->form->importValues($album);
@@ -258,9 +266,9 @@ class Album
 	/**
 	 * Removes an album from the database and the filesystem.
 	 *
-	 * @param string $albumId ID of the album
+	 * @param $albumId ID of the album
 	 */
-	public function remove($albumId)
+	public function remove(string $albumId): void
 	{
 		AlbumEntity::remove($this->dbh, $albumId, $this->albumsTable);
 		AlbumFileSet::removeAlbumDirectories($this->baseDir, $albumId);
@@ -269,10 +277,10 @@ class Album
 	/**
 	 * Bulk inserts multiple pictures into the database.
 	 *
-	 * @param string $albumId ID of the album
-	 * @param string $key Key of the field that uploads the file
+	 * @param $albumId ID of the album
+	 * @param $key Key of the field that uploads the file
 	 */
-	public function insertMultiplePictures($albumId, $key)
+	public function insertMultiplePictures(string $albumId, string $key): void
 	{
 		foreach($_FILES[$key]["name"] as $i => $name)
 		{
@@ -295,9 +303,9 @@ class Album
 	/**
 	 * Moves the album left in the overview of albums
 	 *
-	 * @param string $albumId ID of the album
+	 * @param $albumId ID of the album
 	 */
-	public function moveLeft($albumId)
+	public function moveLeft(string $albumId): void
 	{
 		AlbumEntity::moveLeft($this->dbh, $albumId, $this->albumsTable);
 	}
@@ -305,9 +313,9 @@ class Album
 	/**
 	 * Moves the album right in the overview of albums
 	 *
-	 * @param string $albumId ID of the album
+	 * @param $albumId ID of the album
 	 */
-	public function moveRight($albumId)
+	public function moveRight(string $albumId): void
 	{
 		AlbumEntity::moveRight($this->dbh, $albumId, $this->albumsTable);
 	}

@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "72ff5e7274a47befb3b52578686173bc56a899b5"
+                "reference": "a2fe1893e158a49a6fb1262cf439611a28cd56d8"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -41,7 +41,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2022-02-22T22:28:34+00:00"
+            "time": "2022-02-23T22:53:49+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "311b93ddb0e748cda63d513f531164b53fd2b814"
+                "reference": "9e5c08f4b5f9e7d0c26df92bf384126d68f24af3"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -101,7 +101,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-02-22T22:03:36+00:00"
+            "time": "2022-02-24T21:33:40+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -109,7 +109,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "494c274fc2b1096fb5e674c7f0e9cb9441c788db"
+                "reference": "50d8eb0c2a34b432804ba73294e90381d4e187e4"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
@@ -136,7 +136,7 @@
                 }
             ],
             "description": "Simple embeddable HTML editor",
-            "time": "2022-02-22T22:26:57+00:00"
+            "time": "2022-02-24T18:57:50+00:00"
         },
         {
             "name": "svanderburg/php-sblayout",
@@ -144,7 +144,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sblayout.git",
-                "reference": "ffb1172ab36b80615dde280d383b883f470c15f2"
+                "reference": "7b56951ac05dc73e57499c68680dd140d944e711"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.x"
@@ -184,7 +184,7 @@
                 }
             ],
             "description": "My custom website layout organiser framework for PHP",
-            "time": "2022-02-22T22:03:16+00:00"
+            "time": "2022-02-23T21:24:14+00:00"
         }
     ],
     "packages-dev": [],

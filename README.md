@@ -256,7 +256,7 @@ use SBGallery\Model\GalleryPermissionChecker;
 
 class MyGalleryPermissionChecker implements GalleryPermissionChecker
 {
-    public function checkWritePermissions()
+    public function checkWritePermissions(): bool
     {
         return ($_COOKIE["Password"] === "secret");
     }
@@ -271,6 +271,7 @@ object and permission checker:
 
 ```php
 use SBGallery\Model\Gallery;
+use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\Page\GalleryPage;
 
 class MyGalleryPage extends GalleryPage
@@ -280,12 +281,12 @@ class MyGalleryPage extends GalleryPage
         parent::__construct("Gallery");
     }
 
-    public function constructGallery()
+    public function constructGallery(): Gallery
     {
         return new Gallery(array(...));
     }
 
-    public function constructGalleryPermissionChecker()
+    public function constructGalleryPermissionChecker(): GalleryPermissionChecker
     {
         return new MyGalleryPermissionChecker();
     }
@@ -314,14 +315,14 @@ $application = new Application(
 
     /* Sections */
     array(
-        "header" => new StaticSection("header.inc.php"),
+        "header" => new StaticSection("header.php"),
         "menu" => new MenuSection(0),
         "contents" => new ContentsSection(true)
     ),
 
     /* Pages */
-    new StaticContentPage("Home", new Contents("home.inc.php"), array(
-        "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.inc.php")),
+    new StaticContentPage("Home", new Contents("home.php"), array(
+        "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.php")),
 
         "home" => new PageAlias("Home", ""),
         "gallery" => new MyGalleryPage()
@@ -366,15 +367,15 @@ class MyGalleryPage extends GalleryPage
 {
     public function __construct()
     {
-        parent::__construct("Gallery", null, "Pages", "gallery.inc.php");
+        parent::__construct("Gallery", null, "Pages", "gallery.php");
     }
 
-    public function constructGallery()
+    public function constructGallery(): Gallery
     {
         return new Gallery(array(...));
     }
 
-    public function constructGalleryPermissionChecker()
+    public function constructGalleryPermissionChecker(): GalleryPermissionChecker
     {
         return new MyGalleryPermissionChecker();
     }
@@ -405,15 +406,15 @@ $application = new Application(
 
         /* Sections */
         array(
-                "header" => new StaticSection("header.inc.php"),
+                "header" => new StaticSection("header.php"),
                 "menu" => new MenuSection(0),
-                "submenu" => new StaticSection("submenu.inc.php"),
+                "submenu" => new StaticSection("submenu.php"),
                 "contents" => new ContentsSection(true)
         ),
 
         /* Pages */
-        new StaticContentPage("Home", new Contents("home.inc.php"), array(
-                "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.inc.php")),
+        new StaticContentPage("Home", new Contents("home.php"), array(
+                "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.php")),
 
                 "home" => new PageAlias("Home", ""),
                 "gallery" => $galleryPage
@@ -425,7 +426,7 @@ In the above example, we compose a layout in a similar way except that we
 globally declare the gallery page and we add a `submenu` section whose
 responsibility is to display the available albums as menu options.
 
-The `submenu.inc.php` section module should be written as follows:
+The `submenu.php` section module should be written as follows:
 
 ```php
 <?php
@@ -525,10 +526,10 @@ This package contains two examples in the `example/` sub folder:
 API documentation
 =================
 This package includes API documentation that can be generated with
-[phpDocumentor](https://www.phpdoc.org):
+[Doxygen](https://www.doxygen.nl):
 
 ```bash
-$ vendor/bin/phpdoc
+$ doxygen
 ```
 
 License

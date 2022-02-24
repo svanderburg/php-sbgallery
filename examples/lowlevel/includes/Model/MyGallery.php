@@ -7,7 +7,8 @@ class MyGallery extends Gallery
 {
 	function __construct()
 	{
-		$dbh = new PDO("mysql:host=localhost;dbname=gallery", "root", "admin", array(
+		//$dbh = new PDO("mysql:host=localhost;dbname=gallery", "root", "admin", array(
+		$dbh = new PDO("mysql:unix_socket=/home/sander/var/run/mysqld/mysqld.sock;dbname=gallery", "root", "admin", array(
 			PDO::ATTR_PERSISTENT => true
 		));
 

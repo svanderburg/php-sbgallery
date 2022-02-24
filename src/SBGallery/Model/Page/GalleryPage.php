@@ -2,7 +2,10 @@
 namespace SBGallery\Model\Page;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
+use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\DynamicContentCRUDPage;
+use SBGallery\Model\Gallery;
+use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\CRUD\AlbumCRUDModel;
 use SBGallery\Model\CRUD\GalleryCRUDModel;
 
@@ -11,14 +14,14 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 	/**
 	 * Constructs a new gallery page
 	 *
-	 * @param string $title Title of the gallery page
-	 * @param array $sections An array mapping the name of content sections to a PHP file that should be displayed in it
-	 * @param string $view The kind of view it should use to display the gallery elements
-	 * @param string $gallerySectionContent PHP file that should be displayed when the gallery is opened
-	 * @param string $gallerySection The name of the content section that should display the gallery (defaults to: contents)
-	 * @param array $styles An array containing stylesheet files to include
+	 * @param $title Title of the gallery page
+	 * @param $sections An array mapping the name of content sections to a PHP file that should be displayed in it
+	 * @param $view The kind of view it should use to display the gallery elements
+	 * @param $gallerySectionContent PHP file that should be displayed when the gallery is opened
+	 * @param $gallerySection The name of the content section that should display the gallery (defaults to: contents)
+	 * @param $styles An array containing stylesheet files to include
 	 */
-	public function __construct($title, array $sections = null, $view = "HTML", $gallerySectionContent = null, $gallerySection = "contents", array $styles = null)
+	public function __construct(string $title, array $sections = array(), string $view = "HTML", string $gallerySectionContent = null, string $gallerySection = "contents", array $styles = array())
 	{
 		$baseURL = Page::computeBaseURL();
 
@@ -45,7 +48,7 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 			new AlbumPage($this, $sections, $view, $gallerySection, $styles));
 	}
 
-	public function constructCRUDModel()
+	public function constructCRUDModel(): CRUDModel
 	{
 		$gallery = $this->constructGallery();
 
@@ -64,8 +67,8 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 			return new GalleryCRUDModel($this, $gallery);
 	}
 
-	public abstract function constructGallery();
+	public abstract function constructGallery(): Gallery;
 
-	public abstract function constructGalleryPermissionChecker();
+	public abstract function constructGalleryPermissionChecker(): GalleryPermissionChecker;
 }
 ?>

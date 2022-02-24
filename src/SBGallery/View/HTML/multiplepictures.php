@@ -1,7 +1,19 @@
 <?php
+/**
+ * @file
+ * @brief View-HTML-PicturesUploader module
+ * @defgroup View-HTML-PicturesUploader
+ * @{
+ */
 namespace SBGallery\View\HTML;
 
-function displayPicturesUploader($albumId)
+/**
+ * Displays a form making it possible for the user to upload multiple pictures
+ * that get added to an album.
+ *
+ * @param $albumId ID of the album
+ */
+function displayPicturesUploader(string $albumId): void
 {
 	?>
 	<form action="<?php print(htmlspecialchars($_SERVER["PHP_SELF"])); ?>" method="post" enctype="multipart/form-data">
@@ -12,4 +24,8 @@ function displayPicturesUploader($albumId)
 	</form>
 	<?php
 }
+
+/**
+ * @}
+ */
 ?>

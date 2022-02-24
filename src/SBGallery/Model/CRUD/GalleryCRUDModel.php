@@ -4,12 +4,13 @@ namespace SBGallery\Model\CRUD;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\CRUDPage;
 use SBGallery\Model\Gallery;
+use SBGallery\Model\GalleryPermissionChecker;
 
 class GalleryCRUDModel extends CRUDModel
 {
-	public $gallery;
+	public Gallery $gallery;
 
-	public $checker;
+	public GalleryPermissionChecker $checker;
 
 	public function __construct(CRUDPage $crudPage, Gallery $gallery)
 	{
@@ -18,7 +19,7 @@ class GalleryCRUDModel extends CRUDModel
 		$this->checker = $crudPage->constructGalleryPermissionChecker();
 	}
 
-	public function executeOperation()
+	public function executeOperation(): void
 	{
 	}
 }
