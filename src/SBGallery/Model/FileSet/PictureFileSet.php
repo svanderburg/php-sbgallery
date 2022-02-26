@@ -108,7 +108,7 @@ class PictureFileSet
 		}
 	}
 
-	public static function renamePictures(string $albumDir, string $oldPictureId, string $newPictureId, string $oldFileType, string $newFileType): void
+	public static function renamePictures(string $albumDir, string $oldPictureId, string $newPictureId, ?string $oldFileType, string $newFileType): void
 	{
 		$fileType = ($oldFileType === null) ? $newFileType : $oldFileType;
 		

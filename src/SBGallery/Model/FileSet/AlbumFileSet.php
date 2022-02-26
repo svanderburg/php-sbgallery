@@ -3,7 +3,7 @@ namespace SBGallery\Model\FileSet;
 
 class AlbumFileSet
 {
-	public static function createAlbumDirectories($baseDir, $albumId, $dirPermissions)
+	public static function createAlbumDirectories(string $baseDir, string $albumId, string $dirPermissions): void
 	{
 		$albumDir = $baseDir."/".$albumId;
 		mkdir($albumDir);
@@ -16,7 +16,7 @@ class AlbumFileSet
 		chmod($picturesDir, $dirPermissions);
 	}
 
-	public static function removeAlbumDirectories($baseDir, $albumId)
+	public static function removeAlbumDirectories(string $baseDir, string $albumId): void
 	{
 		$albumDir = $baseDir."/".$albumId;
 		rmdir($albumDir."/pictures");
@@ -24,7 +24,7 @@ class AlbumFileSet
 		rmdir($albumDir);
 	}
 
-	public static function renameAlbumDirectory($baseDir, $oldAlbumId, $newAlbumId)
+	public static function renameAlbumDirectory(string $baseDir, string $oldAlbumId, string $newAlbumId)
 	{
 		if($oldAlbumId !== $newAlbumId) // Only rename when needed
 			rename($baseDir."/".$oldAlbumId, $baseDir."/".$newAlbumId);
