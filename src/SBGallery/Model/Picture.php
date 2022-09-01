@@ -22,7 +22,9 @@ class Picture
 		"Remove image" => "Remove image",
 		"Submit" => "Submit",
 		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
-		"Field invalid" => "This field is incorrectly specified!"
+		"Field invalid" => "This field is incorrectly specified!",
+		"Previous" => "Previous",
+		"Next" => "Next"
 	);
 
 	/** Database connection handler */

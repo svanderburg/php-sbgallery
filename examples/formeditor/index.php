@@ -26,7 +26,7 @@ if(count($_REQUEST) > 0)
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script type="text/javascript" src="scripts/htmleditor.js"></script>
 	</head>
-	
+
 	<body>
 		<?php
 		if(count($_REQUEST) > 0 && $valid)

@@ -72,18 +72,20 @@ function gallery_displayLayoutAlbumLink(Gallery $gallery, string $albumId, int $
  */
 function displayGallery(Gallery $gallery, string $viewType = "Conventional"): void
 {
-	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_'.$viewType.'AlbumLink';
-
-	$stmt = $gallery->queryAlbums(true);
-	while(($row = $stmt->fetch()) !== false)
-	{
-		?>
-		<div class="galleryitem"><?php displayGalleryThumbnail($gallery, $row, 0, $viewType); ?></div>
-		<?php
-	}
-	// Clear hack to allow the enclosing div to automatically adjust its height
 	?>
-	<div style="clear: both;"></div>
+	<div class="gallery">
+		<?php
+		$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_'.$viewType.'AlbumLink';
+
+		$stmt = $gallery->queryAlbums(true);
+		while(($row = $stmt->fetch()) !== false)
+		{
+			?>
+			<div class="galleryitem"><?php displayGalleryThumbnail($gallery, $row, 0, $viewType); ?></div>
+			<?php
+		}
+		?>
+	</div>
 	<?php
 }
 
@@ -109,50 +111,50 @@ function displayEditableGallery(Gallery $gallery, string $viewType = "Convention
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AlbumLink';
 	$displayAddAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AddAlbumLink';
 	?>
-	<div class="galleryitem">
-		<a href="<?php print($displayAddAlbumLinkFunction($gallery)); ?>">
-			<img src="<?php print($gallery->iconsPath); ?>/add.png" alt="<?php print($gallery->galleryLabels["Add album"]); ?>"><br>
-			<?php print($gallery->galleryLabels["Add album"]); ?>
-		</a>
-	</div>
-	<?php
-	$count = 0;
-
-	$stmt = $gallery->queryAlbums(false);
-	while(($row = $stmt->fetch()) !== false)
-	{
-		?>
+	<div class="gallery">
 		<div class="galleryitem">
-			<?php displayGalleryThumbnail($gallery, $row, $count, $viewType); ?>
-			<br>
-			<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "moveleft_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveleft.png" alt="<?php print($gallery->galleryLabels["Move left"]); ?>"></a>
-			<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "moveright_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveright.png" alt="<?php print($gallery->galleryLabels["Move right"]); ?>"></a>
-			<?php
-			$count_stmt = $gallery->queryPictureCount($row["ALBUM_ID"]);
-			while(($count_row = $count_stmt->fetch()) !== false)
-			{
-				if($count_row["count(*)"] == 0)
-				{
-					?>
-					<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "remove_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/delete.png" alt="<?php print($gallery->galleryLabels["Remove"]); ?>"></a>
-					<?php
-				}
-			}
-
-			if($gallery->displayAnchors)
-			{
-				?>
-				<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
-				<?php
-			}
-			?>
+			<a href="<?php print($displayAddAlbumLinkFunction($gallery)); ?>">
+				<img src="<?php print($gallery->iconsPath); ?>/add.png" alt="<?php print($gallery->galleryLabels["Add album"]); ?>"><br>
+				<?php print($gallery->galleryLabels["Add album"]); ?>
+			</a>
 		</div>
 		<?php
-		$count++;
-	}
-	// Clear hack to allow the enclosing div to automatically adjust its height
-	?>
-	<div style="clear: both;"></div>
+		$count = 0;
+
+		$stmt = $gallery->queryAlbums(false);
+		while(($row = $stmt->fetch()) !== false)
+		{
+			?>
+			<div class="galleryitem">
+				<?php displayGalleryThumbnail($gallery, $row, $count, $viewType); ?>
+				<br>
+				<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "moveleft_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveleft.png" alt="<?php print($gallery->galleryLabels["Move left"]); ?>"></a>
+				<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "moveright_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveright.png" alt="<?php print($gallery->galleryLabels["Move right"]); ?>"></a>
+				<?php
+				$count_stmt = $gallery->queryPictureCount($row["ALBUM_ID"]);
+				while(($count_row = $count_stmt->fetch()) !== false)
+				{
+					if($count_row["count(*)"] == 0)
+					{
+						?>
+						<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "remove_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/delete.png" alt="<?php print($gallery->galleryLabels["Remove"]); ?>"></a>
+						<?php
+					}
+				}
+
+				if($gallery->displayAnchors)
+				{
+					?>
+					<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+			$count++;
+		}
+		?>
+	</div>
 	<?php
 }
 

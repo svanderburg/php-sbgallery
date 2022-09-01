@@ -12,6 +12,7 @@ $myGallery = new MyGallery();
 	<head>
 		<title>Gallery</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="gallery.css">
 	</head>
 	<body>
 		<h1>Gallery</h1>

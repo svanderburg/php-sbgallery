@@ -9,11 +9,11 @@ use Examples\CRUD\Model\MyGalleryPermissionChecker;
 
 class MyGalleryPage extends GalleryPage
 {
-	private $dbh;
+	private PDO $dbh;
 
 	public function __construct(PDO $dbh)
 	{
-		parent::__construct("Gallery");
+		parent::__construct("Gallery", array(), "HTML", null, "contents", array("gallery.css"));
 		$this->dbh = $dbh;
 	}
 

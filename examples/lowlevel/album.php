@@ -71,6 +71,7 @@ catch(Exception $ex)
 	<head>
 		<title>Album</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="gallery.css">
 		<script type="text/javascript" src="scripts/htmleditor.js"></script>
 	</head>
 	<body>
