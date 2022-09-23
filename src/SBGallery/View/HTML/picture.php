@@ -54,31 +54,46 @@ function displayPictureBreadcrumbs(Picture $picture, string $galleryURL, string 
 	<?php
 }
 
+function displayNavigationButtons(Picture $picture, string $viewType): void
+{
+	$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
+
+	$stmt = $picture->queryPredecessor();
+
+	if(($row = $stmt->fetch()) === false)
+	{
+		?>
+		<img src="<?php print($picture->iconsPath); ?>/previous-disabled.png" alt="<?php print($picture->labels["Previous"]); ?>">
+		<?php
+	}
+	else
+	{
+		?>
+		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/previous.png" alt="<?php print($picture->labels["Previous"]); ?>"></a>
+		<?php
+	}
+
+	$stmt = $picture->querySuccessor();
+
+	if(($row = $stmt->fetch()) === false)
+	{
+		?>
+		<img src="<?php print($picture->iconsPath); ?>/next-disabled.png" alt="<?php print($picture->labels["Next"]); ?>">
+		<?php
+	}
+	else
+	{
+		?>
+		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/next.png" alt="<?php print($picture->labels["Next"]); ?>"></a>
+		<?php
+	}
+}
+
 function displayPictureNavigation(Picture $picture, string $viewType): void
 {
 	?>
 	<div class="picturenavigation">
-		<?php
-		$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
-
-		$stmt = $picture->queryPredecessor();
-
-		if(($row = $stmt->fetch()) !== false)
-		{
-			?>
-			<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/previous.png" alt="<?php print($picture->labels["Previous"]); ?>"></a>
-			<?php
-		}
-
-		$stmt = $picture->querySuccessor();
-
-		if(($row = $stmt->fetch()) !== false)
-		{
-			?>
-			<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/next.png" alt="<?php print($picture->labels["Next"]); ?>"></a>
-			<?php
-		}
-		?>
+		<?php displayNavigationButtons($picture, $viewType); ?>
 	</div>
 	<?php
 }
@@ -88,27 +103,10 @@ function displayEditablePictureNavigation(Picture $picture, string $viewType): v
 	?>
 	<div class="picturenavigation">
 		<?php
+		displayNavigationButtons($picture, $viewType);
 		$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
-
-		$stmt = $picture->queryPredecessor();
-
-		if(($row = $stmt->fetch()) !== false)
-		{
-			?>
-			<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/previous.png" alt="<?php print($picture->labels["Previous"]); ?>"></a>
-			<?php
-		}
-
-		$stmt = $picture->querySuccessor();
-
-		if(($row = $stmt->fetch()) !== false)
-		{
-			?>
-			<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/next.png" alt="<?php print($picture->labels["Next"]); ?>"></a>
-			<?php
-		}
 		?>
-		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $picture->entity["PICTURE_ID"], "remove_picture_image")); ?>"><img src="<?php print($picture->iconsPath); ?>/delete.png" alt="<?php print($picture->labels["Remove image"]); ?>"></a>
+		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $picture->entity["PICTURE_ID"], "remove_picture_image")); ?>"><img src="<?php print($picture->iconsPath); ?>/clear.png" alt="<?php print($picture->labels["Clear image"]); ?>"></a>
 	</div>
 	<?php
 }
