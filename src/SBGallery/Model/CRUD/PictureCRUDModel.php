@@ -25,7 +25,7 @@ class PictureCRUDModel extends CRUDModel
 
 	private function createPicture(): void
 	{
-		$this->picture->create($this->keyFields["albumId"]->value);
+		$this->picture->create($this->keyFields["albumId"]->exportValue());
 	}
 
 	private function insertPicture(): void
@@ -39,7 +39,7 @@ class PictureCRUDModel extends CRUDModel
 
 	private function viewPicture(): void
 	{
-		$this->picture->view($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->picture->view($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
 		$this->crudPage->title = $this->picture->entity["Title"];
 	}
 
@@ -56,40 +56,40 @@ class PictureCRUDModel extends CRUDModel
 			exit;
 		}
 
-		$this->crudPage->title = $this->form->fields["Title"]->value;
+		$this->crudPage->title = $this->form->fields["Title"]->exportValue();
 	}
 
 	private function removePicture(): void
 	{
-		$this->picture->remove($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->picture->remove($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
 	private function removePictureImage(): void
 	{
-		$this->picture->removePictureImage($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->picture->removePictureImage($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER']);
 		exit();
 	}
 
 	private function moveLeftPicture(): void
 	{
-		$this->picture->moveLeft($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->picture->moveLeft($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
 	private function moveRightPicture(): void
 	{
-		$this->picture->moveRight($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->picture->moveRight($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}
 
 	private function setAsThumbnailPicture(): void
 	{
-		$this->picture->setAsThumbnail($this->keyFields["pictureId"]->value, $this->keyFields["albumId"]->value);
+		$this->picture->setAsThumbnail($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
 		exit();
 	}

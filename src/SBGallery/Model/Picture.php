@@ -150,8 +150,8 @@ class Picture
 	public function create(string $albumId): void
 	{
 		$this->constructForm(false);
-		$this->form->fields["ALBUM_ID"]->value = $albumId;
-		$this->form->fields["__operation"]->value = "insert_picture";
+		$this->form->fields["ALBUM_ID"]->importValue($albumId);
+		$this->form->fields["__operation"]->importValue("insert_picture");
 	}
 
 	/**
@@ -170,8 +170,8 @@ class Picture
 		else
 		{
 			$this->form->importValues($this->entity);
-			$this->form->fields["__operation"]->value = "update_picture";
-			$this->form->fields["old_PICTURE_ID"]->value = $this->entity["PICTURE_ID"];
+			$this->form->fields["__operation"]->importValue("update_picture");
+			$this->form->fields["old_PICTURE_ID"]->importValue($this->entity["PICTURE_ID"]);
 		}
 	}
 
@@ -218,8 +218,8 @@ class Picture
 
 		if($this->form->checkValid())
 		{
-			$this->fetchEntity($this->form->fields["old_PICTURE_ID"]->value, $this->form->fields["ALBUM_ID"]->value); // Fetch again to find out what fileType it has
-			$oldPictureId = $this->form->fields["old_PICTURE_ID"]->value;
+			$this->fetchEntity($this->form->fields["old_PICTURE_ID"]->exportValue(), $this->form->fields["ALBUM_ID"]->exportValue()); // Fetch again to find out what fileType it has
+			$oldPictureId = $this->form->fields["old_PICTURE_ID"]->exportValue();
 			$oldFileType = $this->entity["FileType"];
 
 			/* Compose picture entity object */

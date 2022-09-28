@@ -51,7 +51,7 @@ class PicturePage extends StaticContentCRUDPage
 		{
 			$album = $this->parent->constructAlbum();
 			$keyFields = $this->getKeyFields();
-			return $album->constructPicture($keyFields["albumId"]->value);
+			return $album->constructPicture($keyFields["albumId"]->exportValue());
 		}
 	}
 

@@ -55,7 +55,7 @@ class AlbumPage extends DynamicContentCRUDPage
 				case "create_picture":
 				case "insert_picture":
 					$keyFields = $this->getKeyFields();
-					return new PictureCRUDModel($this, $album->constructPicture($keyFields["albumId"]->value));
+					return new PictureCRUDModel($this, $album->constructPicture($keyFields["albumId"]->exportValue()));
 				default:
 					return new AlbumCRUDModel($this, $album);
 			}

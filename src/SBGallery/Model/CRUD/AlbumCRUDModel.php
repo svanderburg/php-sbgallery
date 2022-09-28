@@ -39,7 +39,7 @@ class AlbumCRUDModel extends CRUDModel
 
 	private function viewAlbum(): void
 	{
-		$this->album->view($this->keyFields["albumId"]->value);
+		$this->album->view($this->keyFields["albumId"]->exportValue());
 		$this->crudPage->title = $this->album->entity["Title"];
 	}
 
@@ -56,34 +56,34 @@ class AlbumCRUDModel extends CRUDModel
 			exit;
 		}
 
-		$this->crudPage->title = $this->form->fields["Title"]->value;
+		$this->crudPage->title = $this->form->fields["Title"]->exportValue();
 	}
 
 	private function removeAlbum(): void
 	{
-		$this->album->remove($this->keyFields["albumId"]->value);
+		$this->album->remove($this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
 	private function moveLeftAlbum(): void
 	{
-		$this->album->moveLeft($this->keyFields["albumId"]->value);
+		$this->album->moveLeft($this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
 	private function moveRightAlbum(): void
 	{
-		$this->album->moveRight($this->keyFields["albumId"]->value);
+		$this->album->moveRight($this->keyFields["albumId"]->exportValue());
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
 		exit();
 	}
 
 	private function insertMultiplePictures(): void
 	{
-		$this->album->insertMultiplePictures($this->keyFields["albumId"]->value, "Image");
-		header("Location: ".$_SERVER["SCRIPT_NAME"]."/gallery/".$this->keyFields["albumId"]->value);
+		$this->album->insertMultiplePictures($this->keyFields["albumId"]->exportValue(), "Image");
+		header("Location: ".$_SERVER["SCRIPT_NAME"]."/gallery/".$this->keyFields["albumId"]->exportValue());
 		exit();
 	}
 

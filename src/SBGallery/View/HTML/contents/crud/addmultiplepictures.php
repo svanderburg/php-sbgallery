@@ -1,5 +1,5 @@
 <?php
 global $crudModel;
 
-\SBGallery\View\HTML\displayPicturesUploader($crudModel->keyFields["albumId"]->value);
+\SBGallery\View\HTML\displayPicturesUploader($crudModel->keyFields["albumId"]->exportValue());
 ?>
