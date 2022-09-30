@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "7d51bbb5d987a679cc6e19cae5e5a307529fa9f9"
+                "reference": "e19d9e92d57847fa3ee6ed20f11f5a02e8bb4ca2"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "669665068a1b1ad00be2dd6d6234bddd5f2bec4f"
+                "reference": "a303b7a75e6f5d4d62889eb99748a882dd34c073"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -75,6 +75,7 @@
                     "src/SBData/View/HTML/Field/generictextfield.php",
                     "src/SBData/View/HTML/Field/generictextareafield.php",
                     "src/SBData/View/HTML/Field/keylinkfield.php",
+                    "src/SBData/View/HTML/Field/metadatafield.php",
                     "src/SBData/View/HTML/Field/rawtextareafield.php",
                     "src/SBData/View/HTML/Field/rawtextfield.php",
                     "src/SBData/View/HTML/Field/readonlynumericinttextfield.php",
@@ -109,7 +110,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-09-29T23:05:28+00:00"
+            "time": "2022-10-03T16:47:45+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -117,7 +118,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "e3b8780c230257e9b1c931e4289a854666ae9614"
+                "reference": "378e2cc4919c0880de3a863fa3a7acecb7036cea"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
@@ -144,7 +145,7 @@
                 }
             ],
             "description": "Simple embeddable HTML editor",
-            "time": "2022-09-29T23:12:03+00:00"
+            "time": "2022-09-30T16:17:56+00:00"
         },
         {
             "name": "svanderburg/php-sblayout",
