@@ -19,9 +19,17 @@ class AlbumFileSet
 	public static function removeAlbumDirectories(string $baseDir, string $albumId): void
 	{
 		$albumDir = $baseDir."/".$albumId;
-		rmdir($albumDir."/pictures");
-		rmdir($albumDir."/thumbnails");
-		rmdir($albumDir);
+
+		$picturesDir = $albumDir."/pictures";
+		if(file_exists($picturesDir))
+			rmdir($picturesDir);
+
+		$thumbnailsDir = $albumDir."/thumbnails";
+		if(file_exists($thumbnailsDir))
+			rmdir($thumbnailsDir);
+
+		if(file_exists($albumDir))
+			rmdir($albumDir);
 	}
 
 	public static function renameAlbumDirectory(string $baseDir, string $oldAlbumId, string $newAlbumId)

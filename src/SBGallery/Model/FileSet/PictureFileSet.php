@@ -103,8 +103,13 @@ class PictureFileSet
 	{
 		if($fileType !== null)
 		{
-			unlink($albumDir."/thumbnails/".$id.".".$fileType);
-			unlink($albumDir."/pictures/".$id.".".$fileType);
+			$thumbnailPath = $albumDir."/thumbnails/".$id.".".$fileType;
+			if(file_exists($thumbnailPath))
+				unlink($thumbnailPath);
+
+			$picturePath = $albumDir."/pictures/".$id.".".$fileType;
+			if(file_exists($picturePath))
+				unlink($picturePath);
 		}
 	}
 
