@@ -18,7 +18,7 @@ class MyGallery extends Gallery
 			"height" => 20
 		);
 
-		parent::__construct($dbh, $baseURL."/gallery", $baseURL."/album.php", $baseURL."/picture.php", $baseURL."/multiplepictures.php", $baseURL."/image/gallery", "gallery", 160, 120, 1280, 960, null, null, null, $editorSettings);
+		parent::__construct($dbh, $baseURL."/gallery", $baseURL."/album.php", $baseURL."/picture.php", $baseURL."/multiplepictures.php", $baseURL."/image/gallery", "gallery", 160, 160, 1280, 1280, null, null, null, $editorSettings);
 	}
 }
 ?>

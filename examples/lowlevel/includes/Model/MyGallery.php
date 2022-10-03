@@ -11,7 +11,7 @@ class MyGallery extends Gallery
 			PDO::ATTR_PERSISTENT => true
 		));
 
-		parent::__construct($dbh, "gallery", "album.php", "picture.php", "multiplepictures.php", "image/gallery", "gallery", 160, 120, 1280, 960);
+		parent::__construct($dbh, "gallery", "album.php", "picture.php", "multiplepictures.php", "image/gallery", "gallery", 160, 160, 1280, 1280);
 	}
 }
 ?>
