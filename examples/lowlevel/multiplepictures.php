@@ -10,11 +10,20 @@ $myGallery = new MyGallery();
 $album = $myGallery->constructAlbum();
 
 /* Controller */
+$error = null;
+
 if(array_key_exists("__operation", $_REQUEST) && $_REQUEST["__operation"] == "insert_multiple_pictures")
 {
-	$album->insertMultiplePictures($_REQUEST["ALBUM_ID"], "Image");
-	header("Location: album.php?ALBUM_ID=".$_REQUEST["ALBUM_ID"]);
-	exit;
+	try
+	{
+		$album->insertMultiplePictures($_REQUEST["ALBUM_ID"], "Image");
+		header("Location: album.php?ALBUM_ID=".$_REQUEST["ALBUM_ID"]);
+		exit;
+	}
+	catch(Exception $ex)
+	{
+		$error = $ex->getMessage();
+	}
 }
 ?>
 <!DOCTYPE html>
@@ -26,6 +35,11 @@ if(array_key_exists("__operation", $_REQUEST) && $_REQUEST["__operation"] == "in
 	<body>
 		<h1>Pictures</h1>
 
-		<?php \SBGallery\View\HTML\displayPicturesUploader($_REQUEST["ALBUM_ID"]); ?>
+		<?php
+		if($error === null)
+			\SBGallery\View\HTML\displayPicturesUploader($_REQUEST["ALBUM_ID"]);
+		else
+			print($error);
+		?>
 	</body>
 </html>

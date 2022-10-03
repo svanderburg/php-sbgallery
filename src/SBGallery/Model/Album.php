@@ -28,7 +28,8 @@ class Album
 		"Remove" => "Remove",
 		"Submit" => "Submit",
 		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
-		"Field invalid" => "This field is incorrectly specified!"
+		"Field invalid" => "This field is incorrectly specified!",
+		"Invalid file" => "Invalid file"
 	);
 
 	/** Database connection handler */
@@ -279,6 +280,7 @@ class Album
 	 *
 	 * @param $albumId ID of the album
 	 * @param $key Key of the field that uploads the file
+	 * @throws An exception in case something went wrong with processing any of the files
 	 */
 	public function insertMultiplePictures(string $albumId, string $key): void
 	{
@@ -286,7 +288,7 @@ class Album
 		{
 			/* Compose picture entity object */
 			$title = pathinfo($name, PATHINFO_FILENAME);
-			
+
 			$picture = array(
 				"PICTURE_ID" => $title,
 				"Title" => $title,
@@ -295,8 +297,13 @@ class Album
 				"ALBUM_ID" => $albumId
 			);
 
-			PictureEntity::insert($this->dbh, $picture, $this->picturesTable); /* Insert picture record into the database */
-			PictureFileSet::generatePictures($_FILES[$key]["tmp_name"][$i], $this->baseDir."/".$albumId, $picture["PICTURE_ID"], $picture["FileType"], $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->filePermissions);
+			if($_FILES[$key]["error"][$i] === UPLOAD_ERR_OK)
+			{
+				PictureEntity::insert($this->dbh, $picture, $this->picturesTable); /* Insert picture record into the database */
+				PictureFileSet::generatePictures($_FILES[$key]["tmp_name"][$i], $this->baseDir."/".$albumId, $picture["PICTURE_ID"], $picture["FileType"], $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->filePermissions);
+			}
+			else
+				throw new Exception($this->albumLabels["Invalid file"].": ".$name);
 		}
 	}
 

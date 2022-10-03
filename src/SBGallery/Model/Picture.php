@@ -159,6 +159,7 @@ class Picture
 	 *
 	 * @param $pictureId ID of the picture
 	 * @param $albumId ID of the album where the picture belongs to
+	 * @throws An exception in case of an error
 	 */
 	public function view(string $pictureId, string $albumId): void
 	{
@@ -166,7 +167,7 @@ class Picture
 		$this->fetchEntity($pictureId, $albumId);
 
 		if($this->entity === false)
-			throw new Exception(array_key_exists("cannotFindPicture", $this->albumLabels) ? $this->albumLabels["cannotFindPicture"] : "Cannot find requested picture!");
+			throw new Exception(array_key_exists("cannotFindPicture", $this->labels) ? $this->albumLabels["cannotFindPicture"] : "Cannot find requested picture!");
 		else
 		{
 			$this->form->importValues($this->entity);
@@ -181,6 +182,7 @@ class Picture
 	 *
 	 * @param $picture Array with properties of a picture
 	 * @return true if the picture was successfully inserted, else false
+	 * @throws An exception if the insert process fails
 	 */
 	public function insert(array $picture): bool
 	{
@@ -209,6 +211,7 @@ class Picture
 	 *
 	 * @param $picture Array with properties of a picture.
 	 * @return true if the pictures was updated, else false
+	 * @throws An exception if the insert process fails
 	 */
 	public function update(array $picture): bool
 	{

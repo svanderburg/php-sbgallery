@@ -1,19 +1,34 @@
 <?php
 namespace SBGallery\Model\FileSet;
+use Exception;
 
 class AlbumFileSet
 {
-	public static function createAlbumDirectories(string $baseDir, string $albumId, string $dirPermissions): void
+	private static function createDirectoryWithPermissions(string $filePath, int $permissions): void
+	{
+		if(mkdir($filePath, $permissions) === false)
+			throw new Exception("Cannot create directory: ".$filePath);
+	}
+
+	public static function createAlbumDirectories(string $baseDir, string $albumId, int $dirPermissions): void
 	{
 		$albumDir = $baseDir."/".$albumId;
-		mkdir($albumDir);
-		chmod($albumDir, $dirPermissions);
+		AlbumFileSet::createDirectoryWithPermissions($albumDir, $dirPermissions);
+
 		$thumbnailsDir = $albumDir."/thumbnails";
-		mkdir($thumbnailsDir);
-		chmod($thumbnailsDir, $dirPermissions);
+		AlbumFileSet::createDirectoryWithPermissions($albumDir, $dirPermissions);
+
 		$picturesDir = $albumDir."/pictures";
-		mkdir($picturesDir);
-		chmod($picturesDir, $dirPermissions);
+		AlbumFileSet::createDirectoryWithPermissions($picturesDir, $dirPermissions);
+	}
+
+	private static function removeEmptyDirectory(string $filePath): void
+	{
+		if(file_exists($filePath))
+		{
+			if(rmdir($filePath) === false)
+				throw new Exception("Cannot remove empty directory: ".$filePath);
+		}
 	}
 
 	public static function removeAlbumDirectories(string $baseDir, string $albumId): void
@@ -21,21 +36,24 @@ class AlbumFileSet
 		$albumDir = $baseDir."/".$albumId;
 
 		$picturesDir = $albumDir."/pictures";
-		if(file_exists($picturesDir))
-			rmdir($picturesDir);
+		AlbumFileSet::removeEmptyDirectory($picturesDir);
 
 		$thumbnailsDir = $albumDir."/thumbnails";
-		if(file_exists($thumbnailsDir))
-			rmdir($thumbnailsDir);
+		AlbumFileSet::removeEmptyDirectory($thumbnailsDir);
 
-		if(file_exists($albumDir))
-			rmdir($albumDir);
+		AlbumFileSet::removeEmptyDirectory($albumDir);
 	}
 
-	public static function renameAlbumDirectory(string $baseDir, string $oldAlbumId, string $newAlbumId)
+	private static function rename(string $oldFilePath, string $newFilePath): void
+	{
+		if(rename($oldFilePath, $newFilePath) === false)
+			throw new Exception("Cannot rename: ".$oldFilePath." to: ".$newFilePath);
+	}
+
+	public static function renameAlbumDirectory(string $baseDir, string $oldAlbumId, string $newAlbumId): void
 	{
 		if($oldAlbumId !== $newAlbumId) // Only rename when needed
-			rename($baseDir."/".$oldAlbumId, $baseDir."/".$newAlbumId);
+			AlbumFileSet::rename($baseDir."/".$oldAlbumId, $baseDir."/".$newAlbumId);
 	}
 }
 ?>

@@ -1,12 +1,14 @@
 <?php
 namespace SBGallery\Model\FileSet;
+use Exception;
 
 class PictureFileSet
 {
 	private static function scaleImageInBox(string $sourceFile, string $destinationFile, string $fileType, int $boxWidth, int $boxHeight, int $filePermissions): void
 	{
 		/* Get dimensions of the source image */
-		list($width, $height) = getimagesize($sourceFile);
+		if((list($width, $height) = getimagesize($sourceFile)) === false)
+			throw new Exception("Cannot get the image size of: ".$sourceFile);
 
 		/*
 		 * Take the longest edge (width or height) and adapt the
@@ -16,12 +18,12 @@ class PictureFileSet
 		if($width >= $height)
 		{
 			$newWidth = $width < $boxWidth ? $width : $boxWidth;
-			$newHeight = round($height * ($newWidth / $width));
+			$newHeight = round($height * $newWidth / $width);
 		}
 		else
 		{
 			$newHeight = $height < $boxHeight ? $height : $boxHeight;
-			$newWidth = round($width * ($newHeight / $height));
+			$newWidth = round($width * $newHeight / $height);
 		}
 
 		/* Open the uploaded image */
@@ -29,34 +31,50 @@ class PictureFileSet
 		{
 			case "gif":
 				$sourceImage = imagecreatefromgif($sourceFile);
+				if($sourceImage === false)
+					throw new Exception("Cannot create GIF image from: ".$sourceFile);
 				break;
 			case "jpg":
 				$sourceImage = imagecreatefromjpeg($sourceFile);
+				if($sourceImage === false)
+					throw new Exception("Cannot create JPEG image from: ".$sourceFile);
 				break;
 			case "png":
 				$sourceImage = imagecreatefrompng($sourceFile);
+				if($sourceImage === false)
+					throw new Exception("Cannot create PNG image from: ".$sourceFile);
 				break;
+			default:
+				throw new Exception("Uploaded image: ".$sourceFile." is of unknown type");
 		}
 
 		/* Create a scaled image */
 		$destinationImage = imagecreatetruecolor($newWidth, $newHeight);
-		imagecopyresampled($destinationImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+		if($destinationImage === false)
+			throw new Exception("Cannot create image: ".$destinationFile);
+
+		if(imagecopyresampled($destinationImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height) === false)
+			throw new Exception("Cannot scale image: ".$sourceFile);
 
 		/* Write scaled image */
 		switch($fileType)
 		{
 			case "gif":
-				imagegif($destinationImage, $destinationFile);
+				if(imagegif($destinationImage, $destinationFile) === false)
+					throw new Exception("Cannot write GIF image: ".$destinationFile);
 				break;
 			case "jpg":
-				imagejpeg($destinationImage, $destinationFile, 98);
+				if(imagejpeg($destinationImage, $destinationFile, 98) === false)
+					throw new Exception("Cannot write JPEG image: ".$destinationFile);
 				break;
 			case "png":
-				imagepng($destinationImage, $destinationFile);
+				if(imagepng($destinationImage, $destinationFile) === false)
+					throw new Exception("Cannot write PNG image: ".$destinationFile);
 				break;
 		}
 
-		chmod($destinationFile, $filePermissions);
+		if(chmod($destinationFile, $filePermissions) === false)
+			throw new Exception("Cannot change file permissions of file: ".$destinationFile);
 	}
 
 	private static function composePicturePath(string $albumDir, string $type, string $id, string $fileType): string
@@ -99,33 +117,42 @@ class PictureFileSet
 			return null;
 	}
 
+	private static function delete(string $filePath): void
+	{
+		if(file_exists($filePath))
+		{
+			if(unlink($filePath) === false)
+				throw new Exception("Cannot delete: ".$filePath);
+		}
+	}
+
 	public static function deletePictures(string $albumDir, string $id, ?string $fileType): void
 	{
 		if($fileType !== null)
 		{
 			$thumbnailPath = $albumDir."/thumbnails/".$id.".".$fileType;
-			if(file_exists($thumbnailPath))
-				unlink($thumbnailPath);
+			PictureFileSet::delete($thumbnailPath);
 
 			$picturePath = $albumDir."/pictures/".$id.".".$fileType;
-			if(file_exists($picturePath))
-				unlink($picturePath);
+			PictureFileSet::delete($picturePath);
 		}
 	}
 
-	public static function renamePictures(string $albumDir, string $oldPictureId, string $newPictureId, ?string $oldFileType, string $newFileType): void
+	public static function renamePictures(string $albumDir, string $oldPictureId, string $newPictureId, ?string $oldFileType, ?string $newFileType): void
 	{
 		$fileType = ($oldFileType === null) ? $newFileType : $oldFileType;
-		
+
 		if($fileType !== null)
 		{
 			$oldPath = PictureFileSet::composePicturePath($albumDir, "thumbnails", $oldPictureId, $fileType);
 			$newPath = PictureFileSet::composePicturePath($albumDir, "thumbnails", $newPictureId, $fileType);
-			rename($oldPath, $newPath);
+			if(rename($oldPath, $newPath) === false)
+				throw new Exception("Cannot rename: ".$oldPath." to: ".$newPath);
 
 			$oldPath = PictureFileSet::composePicturePath($albumDir, "pictures", $oldPictureId, $fileType);
 			$newPath = PictureFileSet::composePicturePath($albumDir, "pictures", $newPictureId, $fileType);
-			rename($oldPath, $newPath);
+			if(rename($oldPath, $newPath) === false)
+				throw new Exception("Cannot rename: ".$oldPath." to: ".$newPath);
 		}
 	}
 }
