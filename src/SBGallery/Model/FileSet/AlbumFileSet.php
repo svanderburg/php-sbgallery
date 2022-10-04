@@ -16,7 +16,7 @@ class AlbumFileSet
 		AlbumFileSet::createDirectoryWithPermissions($albumDir, $dirPermissions);
 
 		$thumbnailsDir = $albumDir."/thumbnails";
-		AlbumFileSet::createDirectoryWithPermissions($albumDir, $dirPermissions);
+		AlbumFileSet::createDirectoryWithPermissions($thumbnailsDir, $dirPermissions);
 
 		$picturesDir = $albumDir."/pictures";
 		AlbumFileSet::createDirectoryWithPermissions($picturesDir, $dirPermissions);
