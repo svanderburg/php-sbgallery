@@ -174,7 +174,16 @@ function displayEditableAlbum(Album $album, string $submitLabel, string $general
 			{
 				?>
 				<div class="albumitem">
-					<?php displayAlbumThumbnail($album, $row, $count, $viewType); ?>
+					<?php
+					if($album->displayAnchors)
+					{
+						?>
+						<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+						<?php
+					}
+
+					displayAlbumThumbnail($album, $row, $count, $viewType);
+					?>
 					<br>
 					<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "moveleft_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/moveleft.png" alt="<?php print($album->albumLabels["Move left"]); ?>"></a>
 					<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "moveright_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/moveright.png" alt="<?php print($album->albumLabels["Move right"]); ?>"></a>
@@ -187,14 +196,6 @@ function displayEditableAlbum(Album $album, string $submitLabel, string $general
 					}
 					?>
 					<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "remove_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/delete.png" alt="<?php print($album->albumLabels["Remove"]); ?>"></a>
-					<?php
-					if($album->displayAnchors)
-					{
-						?>
-						<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
-						<?php
-					}
-					?>
 				</div>
 				<?php
 				$count++;

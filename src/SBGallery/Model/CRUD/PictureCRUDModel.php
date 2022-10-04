@@ -62,7 +62,7 @@ class PictureCRUDModel extends CRUDModel
 	private function removePicture(): void
 	{
 		$this->picture->remove($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
-		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composePreviousRowFragment("picture"));
 		exit();
 	}
 
@@ -75,15 +75,23 @@ class PictureCRUDModel extends CRUDModel
 
 	private function moveLeftPicture(): void
 	{
-		$this->picture->moveLeft($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
-		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
+		if($this->picture->moveLeft($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue()))
+			$rowFragment = AnchorRow::composePreviousRowFragment("picture");
+		else
+			$rowFragment = AnchorRow::composeRowFragment("picture");
+
+		header("Location: ".$_SERVER['HTTP_REFERER'].$rowFragment);
 		exit();
 	}
 
 	private function moveRightPicture(): void
 	{
-		$this->picture->moveRight($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue());
-		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("picture"));
+		if($this->picture->moveRight($this->keyFields["pictureId"]->exportValue(), $this->keyFields["albumId"]->exportValue()))
+			$rowFragment = AnchorRow::composeNextRowFragment("picture");
+		else
+			$rowFragment = AnchorRow::composeRowFragment("picture");
+
+		header("Location: ".$_SERVER['HTTP_REFERER'].$rowFragment);
 		exit();
 	}
 

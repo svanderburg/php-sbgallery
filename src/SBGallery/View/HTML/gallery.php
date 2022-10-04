@@ -126,7 +126,16 @@ function displayEditableGallery(Gallery $gallery, string $viewType = "Convention
 		{
 			?>
 			<div class="galleryitem">
-				<?php displayGalleryThumbnail($gallery, $row, $count, $viewType); ?>
+				<?php
+				if($gallery->displayAnchors)
+				{
+					?>
+					<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+					<?php
+				}
+
+				displayGalleryThumbnail($gallery, $row, $count, $viewType);
+				?>
 				<br>
 				<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "moveleft_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveleft.png" alt="<?php print($gallery->galleryLabels["Move left"]); ?>"></a>
 				<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "moveright_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveright.png" alt="<?php print($gallery->galleryLabels["Move right"]); ?>"></a>
@@ -140,13 +149,6 @@ function displayEditableGallery(Gallery $gallery, string $viewType = "Convention
 						<a href="<?php print($displayAlbumLinkFunction($gallery, $row["ALBUM_ID"], $count, "remove_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/delete.png" alt="<?php print($gallery->galleryLabels["Remove"]); ?>"></a>
 						<?php
 					}
-				}
-
-				if($gallery->displayAnchors)
-				{
-					?>
-					<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
-					<?php
 				}
 				?>
 			</div>

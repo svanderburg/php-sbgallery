@@ -273,10 +273,11 @@ class Picture
 	 *
 	 * @param $pictureId ID of the picture
 	 * @param $albumId ID of the album where the picture belongs to
+	 * @return true if the picture was moved, false if it remained in the same position
 	 */
-	public function moveLeft(string $pictureId, string $albumId): void
+	public function moveLeft(string $pictureId, string $albumId): bool
 	{
-		PictureEntity::moveLeft($this->dbh, $pictureId, $albumId, $this->picturesTable);
+		return PictureEntity::moveLeft($this->dbh, $pictureId, $albumId, $this->picturesTable);
 	}
 
 	/**
@@ -284,10 +285,11 @@ class Picture
 	 *
 	 * @param $pictureId ID of the picture
 	 * @param $albumId ID of the album where the picture belongs to
+	 * @return true if the picture was moved, false if it remained in the same position
 	 */
-	public function moveRight(string $pictureId, string $albumId): void
+	public function moveRight(string $pictureId, string $albumId): bool
 	{
-		PictureEntity::moveRight($this->dbh, $pictureId, $albumId, $this->picturesTable);
+		return PictureEntity::moveRight($this->dbh, $pictureId, $albumId, $this->picturesTable);
 	}
 
 	/**

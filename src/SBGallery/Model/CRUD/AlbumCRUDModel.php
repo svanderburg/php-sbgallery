@@ -62,21 +62,29 @@ class AlbumCRUDModel extends CRUDModel
 	private function removeAlbum(): void
 	{
 		$this->album->remove($this->keyFields["albumId"]->exportValue());
-		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
+		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composePreviousRowFragment("album"));
 		exit();
 	}
 
 	private function moveLeftAlbum(): void
 	{
-		$this->album->moveLeft($this->keyFields["albumId"]->exportValue());
-		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
+		if($this->album->moveLeft($this->keyFields["albumId"]->exportValue()))
+			$rowFragment = AnchorRow::composePreviousRowFragment("album");
+		else
+			$rowFragment = AnchorRow::composeRowFragment("album");
+
+		header("Location: ".$_SERVER['HTTP_REFERER'].$rowFragment);
 		exit();
 	}
 
 	private function moveRightAlbum(): void
 	{
-		$this->album->moveRight($this->keyFields["albumId"]->exportValue());
-		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composeRowFragment("album"));
+		if($this->album->moveRight($this->keyFields["albumId"]->exportValue()))
+			$rowFragment = AnchorRow::composeNextRowFragment("album");
+		else
+			$rowFragment = AnchorRow::composeRowFragment("album");
+
+		header("Location: ".$_SERVER['HTTP_REFERER'].$rowFragment);
 		exit();
 	}
 

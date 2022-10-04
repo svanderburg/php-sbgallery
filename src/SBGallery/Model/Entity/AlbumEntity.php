@@ -115,8 +115,9 @@ class AlbumEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function moveLeft(PDO $dbh, string $id, string $albumsTable = "albums"): void
+	public static function moveLeft(PDO $dbh, string $id, string $albumsTable = "albums"): bool
 	{
+		$status = false;
 		$dbh->beginTransaction();
 
 		try
@@ -136,10 +137,14 @@ class AlbumEntity
 				}
 
 				if(($previousAlbum = $stmt->fetch()) !== false)
+				{
 					AlbumEntity::switchAlbumOrdering($dbh, $album, $previousAlbum, $albumsTable);
+					$status = true;
+				}
 			}
 
 			$dbh->commit();
+			return $status;
 		}
 		catch(Exception $ex)
 		{
@@ -148,8 +153,9 @@ class AlbumEntity
 		}
 	}
 
-	public static function moveRight(PDO $dbh, string $id, string $albumsTable = "albums"): void
+	public static function moveRight(PDO $dbh, string $id, string $albumsTable = "albums"): bool
 	{
+		$status = false;
 		$dbh->beginTransaction();
 
 		try
@@ -169,10 +175,14 @@ class AlbumEntity
 				}
 
 				if(($nextAlbum = $stmt->fetch()) !== false)
+				{
 					AlbumEntity::switchAlbumOrdering($dbh, $album, $nextAlbum, $albumsTable);
+					$status = true;
+				}
 			}
 
 			$dbh->commit();
+			return $status;
 		}
 		catch(Exception $ex)
 		{

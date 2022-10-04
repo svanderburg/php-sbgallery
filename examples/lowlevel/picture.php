@@ -40,7 +40,7 @@ try
 		{
 			$picture->remove($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composePreviousRowFragment("picture"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "remove_picture_image")
@@ -59,16 +59,22 @@ try
 		}
 		else if($_REQUEST["__operation"] == "moveleft_picture")
 		{
-			$picture->moveLeft($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
+			if($picture->moveLeft($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]))
+				$rowFragment = AnchorRow::composePreviousRowFragment("picture");
+			else
+				$rowFragment = AnchorRow::composeRowFragment("picture");
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
+			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveright_picture")
 		{
-			$picture->moveRight($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
+			if($picture->moveRight($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]))
+				$rowFragment = AnchorRow::composeNextRowFragment("picture");
+			else
+				$rowFragment = AnchorRow::composeRowFragment("picture");
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
+			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
 			exit;
 		}
 		else

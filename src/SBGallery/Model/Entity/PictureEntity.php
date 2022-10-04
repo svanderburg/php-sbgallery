@@ -140,8 +140,9 @@ class PictureEntity
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
-	public static function moveLeft(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): void
+	public static function moveLeft(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): bool
 	{
+		$status = false;
 		$dbh->beginTransaction();
 
 		try
@@ -153,10 +154,14 @@ class PictureEntity
 				$stmt = PictureEntity::queryPredecessor($dbh, $albumId, $picture["Ordering"], $picturesTable);
 
 				if(($previousPicture = $stmt->fetch()) !== false)
+				{
 					PictureEntity::switchPictureOrdering($dbh, $albumId, $picture, $previousPicture, $picturesTable);
+					$status = true;
+				}
 			}
 
 			$dbh->commit();
+			return $status;
 		}
 		catch(Exception $ex)
 		{
@@ -165,8 +170,9 @@ class PictureEntity
 		}
 	}
 
-	public static function moveRight(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): void
+	public static function moveRight(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): bool
 	{
+		$status = false;
 		$dbh->beginTransaction();
 
 		try
@@ -178,10 +184,14 @@ class PictureEntity
 				$stmt = PictureEntity::querySuccessor($dbh, $albumId, $picture["Ordering"], $picturesTable);
 
 				if(($nextPicture = $stmt->fetch()) !== false)
+				{
 					PictureEntity::switchPictureOrdering($dbh, $albumId, $picture, $nextPicture, $picturesTable);
+					$status = true;
+				}
 			}
 
 			$dbh->commit();
+			return $status;
 		}
 		catch(Exception $ex)
 		{

@@ -37,19 +37,27 @@ try
 		{
 			$album->remove($_REQUEST["ALBUM_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("album"));
+			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composePreviousRowFragment("album"));
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveleft_album")
 		{
-			$album->moveLeft($_REQUEST["ALBUM_ID"]);
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("album"));
+			if($album->moveLeft($_REQUEST["ALBUM_ID"]))
+				$rowFragment = AnchorRow::composePreviousRowFragment("album");
+			else
+				$rowFragment = AnchorRow::composeRowFragment("album");
+
+			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
 			exit;
 		}
 		else if($_REQUEST["__operation"] == "moveright_album")
 		{
-			$album->moveRight($_REQUEST["ALBUM_ID"]);
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("album"));
+			if($album->moveRight($_REQUEST["ALBUM_ID"]))
+				$rowFragment = AnchorRow::composeNextRowFragment("album");
+			else
+				$rowFragment = AnchorRow::composeRowFragment("album");
+
+			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
 			exit;
 		}
 		else

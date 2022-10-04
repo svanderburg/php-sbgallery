@@ -311,20 +311,22 @@ class Album
 	 * Moves the album left in the overview of albums
 	 *
 	 * @param $albumId ID of the album
+	 * @return true if the album was moved, false if it remained in the same position
 	 */
-	public function moveLeft(string $albumId): void
+	public function moveLeft(string $albumId): bool
 	{
-		AlbumEntity::moveLeft($this->dbh, $albumId, $this->albumsTable);
+		return AlbumEntity::moveLeft($this->dbh, $albumId, $this->albumsTable);
 	}
 
 	/**
 	 * Moves the album right in the overview of albums
 	 *
 	 * @param $albumId ID of the album
+	 * @return true if the album was moved, false if it remained in the same position
 	 */
-	public function moveRight(string $albumId): void
+	public function moveRight(string $albumId): bool
 	{
-		AlbumEntity::moveRight($this->dbh, $albumId, $this->albumsTable);
+		return AlbumEntity::moveRight($this->dbh, $albumId, $this->albumsTable);
 	}
 }
 ?>
