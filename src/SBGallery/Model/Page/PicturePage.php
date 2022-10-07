@@ -3,7 +3,7 @@ namespace SBGallery\Model\Page;
 use Exception;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
-use SBData\Model\Field\TextField;
+use SBData\Model\Value\Value;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\StaticContentCRUDPage;
 use SBGallery\Model\Picture;
@@ -22,10 +22,10 @@ class PicturePage extends StaticContentCRUDPage
 		$htmlEditorJsPath = $baseURL."/scripts/htmleditor.js";
 
 		parent::__construct("Picture",
-			/* Key fields */
+			/* Key values */
 			array(
-				"albumId" => new TextField(true, 20, 255),
-				"pictureId" => new TextField(true, 20, 255)
+				"albumId" => new Value(true, 255),
+				"pictureId" => new Value(true, 255)
 			),
 			/* Default contents */
 			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."picture.php"), null, $styles, array($htmlEditorJsPath)),
@@ -50,8 +50,8 @@ class PicturePage extends StaticContentCRUDPage
 		else
 		{
 			$album = $this->parent->constructAlbum();
-			$keyFields = $this->getKeyFields();
-			return $album->constructPicture($keyFields["albumId"]->exportValue());
+			$keyValues = $this->getKeyValues();
+			return $album->constructPicture($keyValues["albumId"]->value);
 		}
 	}
 

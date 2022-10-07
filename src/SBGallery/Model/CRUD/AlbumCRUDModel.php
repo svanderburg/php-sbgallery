@@ -39,7 +39,7 @@ class AlbumCRUDModel extends CRUDModel
 
 	private function viewAlbum(): void
 	{
-		$this->album->view($this->keyFields["albumId"]->exportValue());
+		$this->album->view($this->keyValues["albumId"]->value);
 		$this->crudPage->title = $this->album->entity["Title"];
 	}
 
@@ -61,14 +61,14 @@ class AlbumCRUDModel extends CRUDModel
 
 	private function removeAlbum(): void
 	{
-		$this->album->remove($this->keyFields["albumId"]->exportValue());
+		$this->album->remove($this->keyValues["albumId"]->value);
 		header("Location: ".$_SERVER['HTTP_REFERER'].AnchorRow::composePreviousRowFragment("album"));
 		exit();
 	}
 
 	private function moveLeftAlbum(): void
 	{
-		if($this->album->moveLeft($this->keyFields["albumId"]->exportValue()))
+		if($this->album->moveLeft($this->keyValues["albumId"]->value))
 			$rowFragment = AnchorRow::composePreviousRowFragment("album");
 		else
 			$rowFragment = AnchorRow::composeRowFragment("album");
@@ -79,7 +79,7 @@ class AlbumCRUDModel extends CRUDModel
 
 	private function moveRightAlbum(): void
 	{
-		if($this->album->moveRight($this->keyFields["albumId"]->exportValue()))
+		if($this->album->moveRight($this->keyValues["albumId"]->value))
 			$rowFragment = AnchorRow::composeNextRowFragment("album");
 		else
 			$rowFragment = AnchorRow::composeRowFragment("album");
@@ -90,8 +90,8 @@ class AlbumCRUDModel extends CRUDModel
 
 	private function insertMultiplePictures(): void
 	{
-		$this->album->insertMultiplePictures($this->keyFields["albumId"]->exportValue(), "Image");
-		header("Location: ".$_SERVER["SCRIPT_NAME"]."/gallery/".$this->keyFields["albumId"]->exportValue());
+		$this->album->insertMultiplePictures($this->keyValues["albumId"]->value, "Image");
+		header("Location: ".$_SERVER["SCRIPT_NAME"]."/gallery/".$this->keyValues["albumId"]->value);
 		exit();
 	}
 

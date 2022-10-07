@@ -5,7 +5,7 @@ use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\DynamicContentCRUDPage;
-use SBData\Model\Field\TextField;
+use SBData\Model\Value\Value;
 use SBGallery\Model\Album;
 use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\CRUD\AlbumCRUDModel;
@@ -25,9 +25,9 @@ class AlbumPage extends DynamicContentCRUDPage
 		parent::__construct("Album",
 			/* Parameter name */
 			"pictureId",
-			/* Key fields */
+			/* Key values */
 			array(
-				"albumId" => new TextField(true, 20, 255)
+				"albumId" => new Value(true, 255)
 			),
 			/* Default contents */
 			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."album.php"), null, $styles, array($htmlEditorJsPath)),
@@ -54,8 +54,8 @@ class AlbumPage extends DynamicContentCRUDPage
 			{
 				case "create_picture":
 				case "insert_picture":
-					$keyFields = $this->getKeyFields();
-					return new PictureCRUDModel($this, $album->constructPicture($keyFields["albumId"]->exportValue()));
+					$keyValues = $this->getKeyValues();
+					return new PictureCRUDModel($this, $album->constructPicture($keyValues["albumId"]->value));
 				default:
 					return new AlbumCRUDModel($this, $album);
 			}

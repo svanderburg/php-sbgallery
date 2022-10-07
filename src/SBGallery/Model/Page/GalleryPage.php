@@ -34,7 +34,7 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 		parent::__construct($title,
 			/* Parameter name */
 			"albumId",
-			/* Key fields */
+			/* Key values */
 			array(),
 			/* Default contents */
 			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $gallerySectionContent), null, $styles),
