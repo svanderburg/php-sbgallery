@@ -11,7 +11,9 @@ use SBGallery\Model\Album;
 
 function album_displayConventionalAlbumLink(Album $album, string $albumURL): string
 {
-	return $albumURL."?ALBUM_ID=".$album->entity["ALBUM_ID"];
+	return $albumURL."?".http_build_query(array(
+		"ALBUM_ID" => $album->entity["ALBUM_ID"]
+	), "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function album_displayLayoutAlbumLink(Album $album, string $albumURL): string
@@ -52,30 +54,33 @@ function displayAlbumThumbnail(Album $album, array $picture, int $count, string 
 
 function album_displayConventionalPictureLink(Album $album, string $albumId, string $pictureId, int $count, string $operation = null): string
 {
-	if($operation === null)
-		$operationParam = "";
-	else
+	$params = array(
+		"ALBUM_ID" => $albumId,
+		"PICTURE_ID" => $pictureId
+	);
+
+	if($operation !== null)
 	{
-		$operationParam = "&amp;__operation=".$operation;
+		$params["__operation"] = $operation;
 		if($album->displayAnchors)
-			$operationParam .= "&amp;__id=".$count;
+			$params["__id"] = $count;
 	}
 
-	return $album->pictureDisplayURL."?ALBUM_ID=".$albumId."&amp;PICTURE_ID=".$pictureId.$operationParam;
+	return $album->pictureDisplayURL."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function album_displayLayoutPictureLink(Album $album, string $albumId, string $pictureId, int $count, string $operation = null): string
 {
-	if($operation === null)
-		$operationParam = "";
-	else
+	$params = array();
+
+	if($operation !== null)
 	{
-		$operationParam = "?__operation=".$operation;
+		$params["__operation"] = $operation;
 		if($album->displayAnchors)
-			$operationParam .= "&amp;__id=".$count;
+			$params["__id"] = $count;
 	}
 
-	return $_SERVER["PHP_SELF"]."/".$pictureId.$operationParam;
+	return $_SERVER["PHP_SELF"]."/".$pictureId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 /**
@@ -115,7 +120,9 @@ function displayAlbum(Album $album, string $viewType = "Conventional"): void
 
 function album_displayConventionalAddPictureLink(Album $album): string
 {
-	return $album->pictureDisplayURL."?ALBUM_ID=".$album->entity["ALBUM_ID"];
+	return $album->pictureDisplayURL."?".http_build_query(array(
+		"ALBUM_ID" => $album->entity["ALBUM_ID"]
+	), "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function album_displayLayoutAddPictureLink(Album $album): string
@@ -125,7 +132,9 @@ function album_displayLayoutAddPictureLink(Album $album): string
 
 function album_displayConventionalAddMultiplePicturesLink(Album $album): string
 {
-	return $album->addMultiplePicturesURL."?ALBUM_ID=".$album->entity["ALBUM_ID"];
+	return $album->addMultiplePicturesURL."?".http_build_query(array(
+		"ALBUM_ID" => $album->entity["ALBUM_ID"]
+	), "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function album_displayLayoutAddMultiplePicturesLink(Album $album): string

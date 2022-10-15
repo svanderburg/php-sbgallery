@@ -10,12 +10,17 @@ use SBGallery\Model\Picture;
 
 function picture_displayConventionalAlbumLink(Picture $picture, string $albumURL): string
 {
-	return $albumURL."?ALBUM_ID=".$picture->entity["ALBUM_ID"];
+	return $albumURL."?".http_build_query(array(
+		"ALBUM_ID" => $picture->entity["ALBUM_ID"]
+	), "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function picture_displayConventionalPictureLink(Picture $picture, string $pictureURL): string
 {
-	return $pictureURL."?ALBUM_ID=".$picture->entity["ALBUM_ID"]."&amp;PICTURE_ID=".$picture->entity["PICTURE_ID"];
+	return $pictureURL."?".http_build_query(array(
+		"ALBUM_ID" => $picture->entity["ALBUM_ID"],
+		"PICTURE_ID" => $picture->entity["PICTURE_ID"]
+	), "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function picture_displayLayoutAlbumLink(Picture $picture, string $url): string
@@ -145,22 +150,25 @@ function displayPicture(Picture $picture, string $viewType = "Conventional"): vo
 
 function picture_displayConventionalImageLink(string $albumId, string $pictureId, string $operation = null): string
 {
-	if($operation === null)
-		$operationParam = "";
-	else
-		$operationParam = "&amp;__operation=".$operation;
+	$params = array(
+		"ALBUM_ID" => $albumId,
+		"PICTURE_ID" => $pictureId
+	);
 
-	return $_SERVER["PHP_SELF"]."?ALBUM_ID=".$albumId."&amp;PICTURE_ID=".$pictureId.$operationParam;
+	if($operation !== null)
+		$params["__operation"] = $operation;
+
+	return $_SERVER["PHP_SELF"]."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function picture_displayLayoutImageLink(string $albumId, string $pictureId, string $operation = null): string
 {
-	if($operation === null)
-		$operationParam = "";
-	else
-		$operationParam = "?__operation=".$operation;
+	$params = array();
 
-	return dirname($_SERVER["PHP_SELF"])."/".$pictureId.$operationParam;
+	if($operation !== null)
+		$params["__operation"] = $operation;
+
+	return dirname($_SERVER["PHP_SELF"])."/".$pictureId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 /**

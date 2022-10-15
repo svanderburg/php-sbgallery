@@ -36,32 +36,34 @@ function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, int $count,
 
 function gallery_displayConventionalAlbumLink(Gallery $gallery, string $albumId, int $count, string $operation = null): string
 {
-	if($operation === null)
-		$operationParam = "";
-	else
+	$params = array(
+		"ALBUM_ID" => $albumId
+	);
+
+	if($operation !== null)
 	{
-		$operationParam = "&amp;__operation=".$operation;
+		$params["__operation"] = $operation;
 
 		if($gallery->displayAnchors)
-			$operationParam .= "&amp;__id=".$count;
+			$params["__id"] = $count;
 	}
 
-	return $gallery->albumDisplayURL."?ALBUM_ID=".$albumId.$operationParam;
+	return $gallery->albumDisplayURL."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function gallery_displayLayoutAlbumLink(Gallery $gallery, string $albumId, int $count, string $operation = null): string
 {
-	if($operation === null)
-		$operationParam = "";
-	else
+	$params = array();
+
+	if($operation !== null)
 	{
-		$operationParam = "?__operation=".$operation;
+		$params["__operation"] = $operation;
 
 		if($gallery->displayAnchors)
-			$operationParam .= "&amp;__id=".$count;
+			$params["__id"] = $count;
 	}
 
-	return $_SERVER["PHP_SELF"]."/".$albumId.$operationParam;
+	return $_SERVER["PHP_SELF"]."/".$albumId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 /**

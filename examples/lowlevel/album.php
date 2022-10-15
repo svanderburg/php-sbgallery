@@ -21,7 +21,9 @@ try
 		{
 			if($album->insert($_REQUEST))
 			{
-				header("Location: ".$_SERVER["PHP_SELF"]."?ALBUM_ID=".$album->entity["ALBUM_ID"]);
+				header("Location: ".$_SERVER["PHP_SELF"]."?".http_build_query(array(
+					"ALBUM_ID" => $album->entity["ALBUM_ID"]
+				), "", null, PHP_QUERY_RFC3986));
 				exit;
 			}
 		}
@@ -29,7 +31,9 @@ try
 		{
 			if($album->update($_REQUEST))
 			{
-				header("Location: ".$_SERVER["PHP_SELF"]."?ALBUM_ID=".$album->entity["ALBUM_ID"]);
+				header("Location: ".$_SERVER["PHP_SELF"]."?".http_build_query(array(
+					"ALBUM_ID" => $album->entity["ALBUM_ID"]
+				), "", null, PHP_QUERY_RFC3986));
 				exit;
 			}
 		}

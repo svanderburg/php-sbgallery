@@ -17,7 +17,9 @@ if(array_key_exists("__operation", $_REQUEST) && $_REQUEST["__operation"] == "in
 	try
 	{
 		$album->insertMultiplePictures($_REQUEST["ALBUM_ID"], "Image");
-		header("Location: album.php?ALBUM_ID=".$_REQUEST["ALBUM_ID"]);
+		header("Location: album.php?".http_build_query(array(
+			"ALBUM_ID" => $_REQUEST["ALBUM_ID"]
+		), "", null, PHP_QUERY_RFC3986));
 		exit;
 	}
 	catch(Exception $ex)
