@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "baec489db8994b7bb1863014121fa42839ec8a56"
+                "reference": "a294aec4e3196aa79940128e42980f99e84c13dd"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -41,7 +41,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2022-10-07T17:38:54+00:00"
+            "time": "2022-10-16T00:24:59+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "a762a1e7e85e7c10b82ecf682694e9fccf37c033"
+                "reference": "125b3f9cdc540959c6b2b2a715b6b4f298369314"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -110,7 +110,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-10-04T22:22:59+00:00"
+            "time": "2022-10-15T13:38:19+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -118,7 +118,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "81dd24557596513132ab236a50096c424ba8a838"
+                "reference": "e5ea1cde3e440284b1411c5a7eeb96cec5bc1ab4"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
