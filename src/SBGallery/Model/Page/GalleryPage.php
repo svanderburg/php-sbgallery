@@ -2,6 +2,7 @@
 namespace SBGallery\Model\Page;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
+use SBData\Model\ParameterMap;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\DynamicContentCRUDPage;
 use SBGallery\Model\Gallery;
@@ -35,7 +36,9 @@ abstract class GalleryPage extends DynamicContentCRUDPage
 			/* Parameter name */
 			"albumId",
 			/* Key values */
-			array(),
+			new ParameterMap(),
+			/* Request values */
+			new ParameterMap(),
 			/* Default contents */
 			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $gallerySectionContent), null, $styles),
 			/* Error contents */

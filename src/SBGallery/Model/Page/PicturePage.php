@@ -3,6 +3,7 @@ namespace SBGallery\Model\Page;
 use Exception;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
+use SBData\Model\ParameterMap;
 use SBData\Model\Value\Value;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\StaticContentCRUDPage;
@@ -23,10 +24,12 @@ class PicturePage extends StaticContentCRUDPage
 
 		parent::__construct("Picture",
 			/* Key values */
-			array(
+			new ParameterMap(array(
 				"albumId" => new Value(true, 255),
 				"pictureId" => new Value(true, 255)
-			),
+			)),
+			/* Request values */
+			new ParameterMap(),
 			/* Default contents */
 			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."picture.php"), null, $styles, array($htmlEditorJsPath)),
 			/* Error contents */
@@ -50,8 +53,8 @@ class PicturePage extends StaticContentCRUDPage
 		else
 		{
 			$album = $this->parent->constructAlbum();
-			$keyValues = $this->getKeyValues();
-			return $album->constructPicture($keyValues["albumId"]->value);
+			$keyParameterMap = $this->getKeyParameterMap();
+			return $album->constructPicture($keyParameterMap->values["albumId"]->value);
 		}
 	}
 
