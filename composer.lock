@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "a294aec4e3196aa79940128e42980f99e84c13dd"
+                "reference": "63b864007e9c8fe2cea180483fb08ceb5bd5ea7d"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -41,7 +41,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2022-10-16T00:24:59+00:00"
+            "time": "2022-10-26T21:08:17+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "125b3f9cdc540959c6b2b2a715b6b4f298369314"
+                "reference": "502b053ea3475f4e562f8f7ede48904ee65f8e7e"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -63,6 +63,8 @@
                 },
                 "files": [
                     "src/SBData/View/HTML/table.php",
+                    "src/SBData/View/HTML/pager.php",
+                    "src/SBData/View/HTML/pageddbtable.php",
                     "src/SBData/View/HTML/form.php",
                     "src/SBData/View/HTML/field.php",
                     "src/SBData/View/HTML/Field/arraycomboboxfield.php",
@@ -93,7 +95,8 @@
             "autoload-dev": {
                 "psr-4": {
                     "Examples\\Books\\": "examples/books/includes",
-                    "Examples\\CAPTCHA\\": "examples/captcha/includes"
+                    "Examples\\CAPTCHA\\": "examples/captcha/includes",
+                    "Examples\\TodoList\\": "examples/todolist/includes"
                 },
                 "files": [
                     "examples/captcha/includes/View/HTML/Field/captchafield.php"
@@ -110,7 +113,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-10-15T13:38:19+00:00"
+            "time": "2022-10-24T21:42:42+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -118,7 +121,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "e5ea1cde3e440284b1411c5a7eeb96cec5bc1ab4"
+                "reference": "e470f3a40110123f39d377d3d16a760710cfcf3e"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
