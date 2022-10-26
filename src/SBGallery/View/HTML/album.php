@@ -83,6 +83,13 @@ function album_displayLayoutPictureLink(Album $album, string $albumId, string $p
 	return $_SERVER["PHP_SELF"]."/".$pictureId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
+function displayAlbumItem(Album $album, array $pictureObject, string $viewType): void
+{
+	?>
+	<div class="albumitem"><?php displayAlbumThumbnail($album, $pictureObject, 0, $viewType); ?></div>
+	<?php
+}
+
 /**
  * Displays a non-editable album.
  *
@@ -106,12 +113,8 @@ function displayAlbum(Album $album, string $viewType = "Conventional"): void
 		<div class="album">
 			<?php
 			$stmt = $album->queryPictures();
-			while(($row = $stmt->fetch()) !== false)
-			{
-				?>
-				<div class="albumitem"><?php displayAlbumThumbnail($album, $row, 0, $viewType); ?></div>
-				<?php
-			}
+			while(($pictureObject = $stmt->fetch()) !== false)
+				displayAlbumItem($album, $pictureObject, $viewType);
 			?>
 		</div>
 		<?php
@@ -142,6 +145,66 @@ function album_displayLayoutAddMultiplePicturesLink(Album $album): string
 	return $_SERVER["PHP_SELF"]."?__operation=add_multiple_pictures";
 }
 
+function displayAddPictureButton(Album $album, string $viewType): void
+{
+	$displayAddPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddPictureLink';
+
+	?>
+	<div class="albumitem">
+		<a href="<?php print($displayAddPictureLinkFunction($album)); ?>">
+			<img src="<?php print($album->iconsPath); ?>/add.png" alt="<?php print($album->albumLabels["Add picture"]); ?>"><br>
+			<?php print($album->albumLabels["Add picture"]); ?>
+		</a>
+	</div>
+	<?php
+}
+
+function displayAddMultiplePicturesButton(Album $album, string $viewType): void
+{
+	$displayAddMultiplePicturesLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddMultiplePicturesLink';
+
+	?>
+	<div class="albumitem">
+		<a href="<?php print($displayAddMultiplePicturesLinkFunction($album)); ?>">
+			<img src="<?php print($album->iconsPath); ?>/add-multiple.png" alt="<?php print($album->albumLabels["Add multiple pictures"]); ?>"><br>
+			<?php print($album->albumLabels["Add multiple pictures"]); ?>
+		</a>
+	</div>
+	<?php
+}
+
+function displayEditableAlbumItem(Album $album, array $pictureObject, int $count, string $viewType, string $anchorPrefix): void
+{
+	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
+
+	?>
+	<div class="albumitem">
+		<?php
+		if($album->displayAnchors)
+		{
+			?>
+			<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+			<?php
+		}
+
+		displayAlbumThumbnail($album, $pictureObject, $count, $viewType);
+		?>
+		<br>
+		<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "moveleft_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/moveleft.png" alt="<?php print($album->albumLabels["Move left"]); ?>"></a>
+		<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "moveright_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/moveright.png" alt="<?php print($album->albumLabels["Move right"]); ?>"></a>
+		<?php
+		if($pictureObject["FileType"] !== null)
+		{
+			?>
+			<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "setasthumbnail_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/setasthumbnail.png" alt="<?php print($album->albumLabels["Set as album thumbnail"]); ?>"></a>
+			<?php
+		}
+		?>
+		<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "remove_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/delete.png" alt="<?php print($album->albumLabels["Remove"]); ?>"></a>
+	</div>
+	<?php
+}
+
 /**
  * Displays an editable album.
  *
@@ -154,59 +217,21 @@ function album_displayLayoutAddMultiplePicturesLink(Album $album): string
  */
 function displayEditableAlbum(Album $album, string $submitLabel, string $generalErrorMessage, string $fieldErrorMessage, string $viewType = "Conventional", string $anchorPrefix = "picture"): void
 {
-	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
-	$displayAddPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddPictureLink';
-	$displayAddMultiplePicturesLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddMultiplePicturesLink';
-
 	\SBData\View\HTML\displayEditableForm($album->form, $submitLabel, $generalErrorMessage, $fieldErrorMessage);
 
 	if($album->entity !== false)
 	{
 		?>
 		<div class="album">
-			<div class="albumitem">
-				<a href="<?php print($displayAddPictureLinkFunction($album)); ?>">
-					<img src="<?php print($album->iconsPath); ?>/add.png" alt="<?php print($album->albumLabels["Add picture"]); ?>"><br>
-					<?php print($album->albumLabels["Add picture"]); ?>
-				</a>
-			</div>
-			<div class="albumitem">
-				<a href="<?php print($displayAddMultiplePicturesLinkFunction($album)); ?>">
-					<img src="<?php print($album->iconsPath); ?>/add-multiple.png" alt="<?php print($album->albumLabels["Add multiple pictures"]); ?>"><br>
-					<?php print($album->albumLabels["Add multiple pictures"]); ?>
-				</a>
-			</div>
 			<?php
+			displayAddPictureButton($album, $viewType);
+			displayAddMultiplePicturesButton($album, $viewType);
+
 			$count = 0;
 			$stmt = $album->queryPictures();
-			while(($row = $stmt->fetch()) !== false)
+			while(($pictureObject = $stmt->fetch()) !== false)
 			{
-				?>
-				<div class="albumitem">
-					<?php
-					if($album->displayAnchors)
-					{
-						?>
-						<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
-						<?php
-					}
-
-					displayAlbumThumbnail($album, $row, $count, $viewType);
-					?>
-					<br>
-					<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "moveleft_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/moveleft.png" alt="<?php print($album->albumLabels["Move left"]); ?>"></a>
-					<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "moveright_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/moveright.png" alt="<?php print($album->albumLabels["Move right"]); ?>"></a>
-					<?php
-					if($row["FileType"] !== null)
-					{
-						?>
-						<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "setasthumbnail_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/setasthumbnail.png" alt="<?php print($album->albumLabels["Set as album thumbnail"]); ?>"></a>
-						<?php
-					}
-					?>
-					<a href="<?php print($displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $row["PICTURE_ID"], $count, "remove_picture")); ?>"><img src="<?php print($album->iconsPath); ?>/delete.png" alt="<?php print($album->albumLabels["Remove"]); ?>"></a>
-				</div>
-				<?php
+				displayEditableAlbumItem($album, $pictureObject, $count, $viewType, $anchorPrefix);
 				$count++;
 			}
 			?>
