@@ -32,14 +32,14 @@ function displayAlbumMenuSection(GalleryPage $galleryPage): void
 		else
 			$active = "";
 		?>
-		<a href="<?php print($gallery->albumDisplayURL."/".$row["ALBUM_ID"]); ?>"<?php print($active); ?>><?php print($row["Title"]); ?></a>
+		<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>"<?= $active ?>><?= $row["Title"] ?></a>
 		<?php
 		if($authenticated)
 		{
 			?>
 			<div class="album-buttons">
-				<a href="<?php print($gallery->albumDisplayURL."/".$row["ALBUM_ID"]); ?>?__operation=moveleft_album"><img src="<?php print($gallery->iconsPath); ?>/moveleft.png" alt="<?php print($gallery->galleryLabels["Move left"]); ?>"></a>
-				<a href="<?php print($gallery->albumDisplayURL."/".$row["ALBUM_ID"]); ?>?__operation=moveright_album"><img src="<?php print($gallery->iconsPath); ?>/moveright.png" alt="<?php print($gallery->galleryLabels["Move right"]); ?>"></a>
+				<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>?__operation=moveleft_album"><img src="<?= $gallery->iconsPath ?>/moveleft.png" alt="<?= $gallery->galleryLabels["Move left"] ?>"></a>
+				<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>?__operation=moveright_album"><img src="<?= $gallery->iconsPath ?>/moveright.png" alt="<?= $gallery->galleryLabels["Move right"] ?>"></a>
 				<?php
 				$count_stmt = $gallery->queryPictureCount($row["ALBUM_ID"]);
 				while(($count_row = $count_stmt->fetch()) !== false)
@@ -47,7 +47,7 @@ function displayAlbumMenuSection(GalleryPage $galleryPage): void
 					if($count_row["count(*)"] == 0)
 					{
 						?>
-						<a href="<?php print($gallery->albumDisplayURL."/".$row["ALBUM_ID"]); ?>?__operation=remove_album"><img src="<?php print($gallery->iconsPath); ?>/delete.png" alt="<?php print($gallery->galleryLabels["Remove"]); ?>"></a>
+						<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>?__operation=remove_album"><img src="<?= $gallery->iconsPath ?>/delete.png" alt="<?= $gallery->galleryLabels["Remove"] ?>"></a>
 						<?php
 					}
 				}
@@ -60,7 +60,7 @@ function displayAlbumMenuSection(GalleryPage $galleryPage): void
 	if($authenticated)
 	{
 		?>
-		<a class="create-album" href="<?php print($gallery->albumDisplayURL); ?>?__operation=create_album"><?php print($gallery->galleryLabels["Add album"]); ?></a>
+		<a class="create-album" href="<?= $gallery->albumDisplayURL ?>?__operation=create_album"><?= $gallery->galleryLabels["Add album"] ?></a>
 		<?php
 	}
 }

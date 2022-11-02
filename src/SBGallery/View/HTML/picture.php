@@ -39,7 +39,7 @@ function displayPictureBreadcrumbs(Picture $picture, string $galleryURL, string 
 	$displayPictureLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'PictureLink';
 	?>
 	<p>
-		<a href="<?php print($galleryURL); ?>"><?php print($picture->labels["Gallery"]); ?></a>
+		<a href="<?= $galleryURL ?>"><?= $picture->labels["Gallery"] ?></a>
 		<?php
 		if($picture->entity !== false)
 		{
@@ -47,11 +47,11 @@ function displayPictureBreadcrumbs(Picture $picture, string $galleryURL, string 
 			if(($row = $stmt->fetch()) !== false)
 			{
 				?>
-				&raquo; <a href="<?php print($displayAlbumLinkFunction($picture, $albumURL)); ?>"><?php print($row["Title"]); ?></a>
+				&raquo; <a href="<?= $displayAlbumLinkFunction($picture, $albumURL) ?>"><?= $row["Title"] ?></a>
 				<?php
 			}
 			?>
-			&raquo; <a href="<?php print($displayPictureLinkFunction($picture, $pictureURL)); ?>"><?php print($picture->entity["Title"]); ?></a>
+			&raquo; <a href="<?= $displayPictureLinkFunction($picture, $pictureURL) ?>"><?= $picture->entity["Title"] ?></a>
 			<?php
 		}
 		?>
@@ -68,13 +68,13 @@ function displayNavigationButtons(Picture $picture, string $viewType): void
 	if(($row = $stmt->fetch()) === false)
 	{
 		?>
-		<img src="<?php print($picture->iconsPath); ?>/previous-disabled.png" alt="<?php print($picture->labels["Previous"]); ?>">
+		<img src="<?= $picture->iconsPath ?>/previous-disabled.png" alt="<?= $picture->labels["Previous"] ?>">
 		<?php
 	}
 	else
 	{
 		?>
-		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/previous.png" alt="<?php print($picture->labels["Previous"]); ?>"></a>
+		<a href="<?= $displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"]) ?>"><img src="<?= $picture->iconsPath ?>/previous.png" alt="<?= $picture->labels["Previous"] ?>"></a>
 		<?php
 	}
 
@@ -83,13 +83,13 @@ function displayNavigationButtons(Picture $picture, string $viewType): void
 	if(($row = $stmt->fetch()) === false)
 	{
 		?>
-		<img src="<?php print($picture->iconsPath); ?>/next-disabled.png" alt="<?php print($picture->labels["Next"]); ?>">
+		<img src="<?= $picture->iconsPath ?>/next-disabled.png" alt="<?= $picture->labels["Next"] ?>">
 		<?php
 	}
 	else
 	{
 		?>
-		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"])); ?>"><img src="<?php print($picture->iconsPath); ?>/next.png" alt="<?php print($picture->labels["Next"]); ?>"></a>
+		<a href="<?= $displayImageLinkFunction($picture->entity["ALBUM_ID"], $row["PICTURE_ID"]) ?>"><img src="<?= $picture->iconsPath ?>/next.png" alt="<?= $picture->labels["Next"] ?>"></a>
 		<?php
 	}
 }
@@ -111,7 +111,7 @@ function displayEditablePictureNavigation(Picture $picture, string $viewType): v
 		displayNavigationButtons($picture, $viewType);
 		$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';
 		?>
-		<a href="<?php print($displayImageLinkFunction($picture->entity["ALBUM_ID"], $picture->entity["PICTURE_ID"], "remove_picture_image")); ?>"><img src="<?php print($picture->iconsPath); ?>/clear.png" alt="<?php print($picture->labels["Clear image"]); ?>"></a>
+		<a href="<?= $displayImageLinkFunction($picture->entity["ALBUM_ID"], $picture->entity["PICTURE_ID"], "remove_picture_image") ?>"><img src="<?= $picture->iconsPath ?>/clear.png" alt="<?= $picture->labels["Clear image"] ?>"></a>
 	</div>
 	<?php
 }
@@ -129,7 +129,7 @@ function displayPicture(Picture $picture, string $viewType = "Conventional"): vo
 	if($picture->entity === false)
 	{
 		?>
-		<p><strong>Cannot find picture with id: <?php print($picture->entity["PICTURE_ID"]); ?></strong></p>
+		<p><strong>Cannot find picture with id: <?= $picture->entity["PICTURE_ID"] ?></strong></p>
 		<?php
 	}
 	else
@@ -140,9 +140,9 @@ function displayPicture(Picture $picture, string $viewType = "Conventional"): vo
 			displayPictureNavigation($picture, $viewType);
 			?>
 			<p>
-				<img src="<?php print($picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"]); ?>" alt="<?php print($picture->entity["Title"]); ?>">
+				<img src="<?= $picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"] ?>" alt="<?= $picture->entity["Title"] ?>">
 			</p>
-			<div><?php print($picture->entity["Description"]); ?></div>
+			<div><?= $picture->entity["Description"] ?></div>
 		</div>
 		<?php
 	}
@@ -195,7 +195,7 @@ function displayEditablePicture(Picture $picture, string $submitLabel, string $g
 			{
 				?>
 				<p>
-					<img src="<?php print($picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"]); ?>" alt="<?php print($picture->entity["Title"]); ?>">
+					<img src="<?= $picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"] ?>" alt="<?= $picture->entity["Title"] ?>">
 				</p>
 				<?php
 			}

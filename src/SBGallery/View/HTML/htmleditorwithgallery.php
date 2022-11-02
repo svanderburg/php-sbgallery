@@ -25,7 +25,7 @@ namespace SBGallery\View\HTML;
 function displayHTMLEditorWithGallery(string $id, string $name, string $galleryIframePage, string $editorIframePage, string $iconsPath, string $contents = NULL, int $width = 60, int $galleryHeight = 10, int $editorHeight = 20): void
 {
 	?>
-	<iframe src="<?php print($galleryIframePage); ?>" style="width: <?php print($width); ?>em; height: <?php print($galleryHeight); ?>em;"></iframe>
+	<iframe src="<?= $galleryIframePage ?>" style="width: <?= $width ?>em; height: <?= $galleryHeight ?>em;"></iframe>
 	<?php
 	\SBEditor\View\HTML\displayHTMLEditor($id, $name, $editorIframePage, $iconsPath, $contents, $width, $editorHeight);
 }

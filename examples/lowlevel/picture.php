@@ -126,7 +126,7 @@ catch(Exception $ex)
 		else
 		{
 			?>
-			<p><?php print($error); ?></p>
+			<p><?= $error ?></p>
 			<?php
 		}
 		?>

@@ -31,14 +31,14 @@ function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gall
 				foreach($styles as $style)
 				{
 					?>
-					<link rel="stylesheet" type="text/css" href="<?php print($style); ?>">
+					<link rel="stylesheet" type="text/css" href="<?= $style ?>">
 					<?php
 				}
 			}
 			?>
 			<meta name="robots" content="noindex, nofollow">
-			<script type="text/javascript" src="<?php print($htmlEditorJs); ?>"></script>
-			<script type="text/javascript" src="<?php print($galleryJs); ?>"></script>
+			<script type="text/javascript" src="<?= $htmlEditorJs ?>"></script>
+			<script type="text/javascript" src="<?= $galleryJs ?>"></script>
 		</head>
 
 		<body>
@@ -46,7 +46,7 @@ function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gall
 			if(array_key_exists("ALBUM_ID", $_REQUEST))
 			{
 				?>
-				<p><a href="<?php print($_SERVER["PHP_SELF"]); ?>">&laquo; <?php print($galleryLabel); ?></a></p>
+				<p><a href="<?= $_SERVER["PHP_SELF"] ?>">&laquo; <?= $galleryLabel ?></a></p>
 				<div class="album">
 					<?php
 					$album = $gallery->constructAlbum();
@@ -65,7 +65,7 @@ function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gall
 								$imageURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
 								$pictureURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/pictures/".$row["PICTURE_ID"].".".$row["FileType"];
 								?>
-								<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?php print($pictureURL); ?>', '<?php print($row["Title"]); ?>'); return false;"><img src="<?php print($imageURL); ?>" alt="<?php print($row["Title"]); ?>"></a>
+								<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?= $pictureURL ?>', '<?= $row["Title"] ?>'); return false;"><img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"></a>
 								<?php
 							}
 							?>
@@ -87,15 +87,15 @@ function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gall
 					{
 						?>
 						<div class="galleryitem">
-							<a href="<?php print($_SERVER["PHP_SELF"]); ?>?ALBUM_ID=<?php print($row["ALBUM_ID"]); ?>">
+							<a href="<?= $_SERVER["PHP_SELF"] ?>?ALBUM_ID=<?= $row["ALBUM_ID"] ?>">
 							<?php
 							if($row["FileType"] === null)
 								$imageURL = $gallery->iconsPath."/thumbnail.png";
 							else
 								$imageURL = $gallery->baseURL."/".$row["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
 							?>
-							<img src="<?php print($imageURL); ?>" alt="<?php print($row["Title"]); ?>"><br>
-							<?php print($row["Title"]); ?>
+							<img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"><br>
+							<?= $row["Title"] ?>
 							</a>
 						</div>
 						<?php

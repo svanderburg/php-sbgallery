@@ -33,8 +33,8 @@ if(count($_REQUEST) > 0)
 		{
 			?>
 			<p>You have submitted:</p>
-			<h1><?php print($form->fields["title"]->exportValue()); ?></h1>
-			<div><?php print($form->fields["contents"]->exportValue()); ?></div>
+			<h1><?= $form->fields["title"]->exportValue() ?></h1>
+			<div><?= $form->fields["contents"]->exportValue() ?></div>
 			<?php
 		}
 

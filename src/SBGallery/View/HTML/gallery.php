@@ -12,7 +12,7 @@ function displayGalleryBreadcrumbs(Gallery $gallery, string $galleryURL): void
 {
 	?>
 	<p>
-		<a href="<?php print($galleryURL); ?>"><?php print($gallery->galleryLabels["Gallery"]); ?></a>
+		<a href="<?= $galleryURL ?>"><?= $gallery->galleryLabels["Gallery"] ?></a>
 	</p>
 	<?php
 }
@@ -22,15 +22,15 @@ function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, int $count,
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AlbumLink';
 
 	?>
-	<a href="<?php print($displayAlbumLinkFunction($gallery, $thumbnail["ALBUM_ID"], $count)); ?>">
+	<a href="<?= $displayAlbumLinkFunction($gallery, $thumbnail["ALBUM_ID"], $count) ?>">
 	<?php
 	if($thumbnail["FileType"] === null)
 		$imageURL = $gallery->iconsPath."/thumbnail.png";
 	else
 		$imageURL = $gallery->baseURL."/".$thumbnail["ALBUM_ID"]."/thumbnails/".$thumbnail["PICTURE_ID"].".".$thumbnail["FileType"];
 	?>
-	<img src="<?php print($imageURL); ?>" alt="<?php print($thumbnail["Title"]); ?>"><br>
-	<?php print($thumbnail["Title"]); ?>
+	<img src="<?= $imageURL ?>" alt="<?= $thumbnail["Title"] ?>"><br>
+	<?= $thumbnail["Title"] ?>
 	</a>
 	<?php
 }
@@ -109,9 +109,9 @@ function displayAddAlbumButton(Gallery $gallery, string $viewType): void
 
 	?>
 	<div class="galleryitem">
-		<a href="<?php print($displayAddAlbumLinkFunction($gallery)); ?>">
-			<img src="<?php print($gallery->iconsPath); ?>/add.png" alt="<?php print($gallery->galleryLabels["Add album"]); ?>"><br>
-			<?php print($gallery->galleryLabels["Add album"]); ?>
+		<a href="<?= $displayAddAlbumLinkFunction($gallery) ?>">
+			<img src="<?= $gallery->iconsPath ?>/add.png" alt="<?= $gallery->galleryLabels["Add album"] ?>"><br>
+			<?= $gallery->galleryLabels["Add album"] ?>
 		</a>
 	</div>
 	<?php
@@ -127,15 +127,15 @@ function displayEditableGalleryItem(Gallery $gallery, array $albumObject, int $c
 		if($gallery->displayAnchors)
 		{
 			?>
-			<a name="<?php print($anchorPrefix."-".$count); ?>"></a>
+			<a name="<?= $anchorPrefix."-".$count ?>"></a>
 			<?php
 		}
 
 		displayGalleryThumbnail($gallery, $albumObject, $count, $viewType);
 		?>
 		<br>
-		<a href="<?php print($displayAlbumLinkFunction($gallery, $albumObject["ALBUM_ID"], $count, "moveleft_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveleft.png" alt="<?php print($gallery->galleryLabels["Move left"]); ?>"></a>
-		<a href="<?php print($displayAlbumLinkFunction($gallery, $albumObject["ALBUM_ID"], $count, "moveright_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/moveright.png" alt="<?php print($gallery->galleryLabels["Move right"]); ?>"></a>
+		<a href="<?= $displayAlbumLinkFunction($gallery, $albumObject["ALBUM_ID"], $count, "moveleft_album") ?>"><img src="<?= $gallery->iconsPath ?>/moveleft.png" alt="<?= $gallery->galleryLabels["Move left"] ?>"></a>
+		<a href="<?= $displayAlbumLinkFunction($gallery, $albumObject["ALBUM_ID"], $count, "moveright_album") ?>"><img src="<?= $gallery->iconsPath ?>/moveright.png" alt="<?= $gallery->galleryLabels["Move right"] ?>"></a>
 		<?php
 		$count_stmt = $gallery->queryPictureCount($albumObject["ALBUM_ID"]);
 		while(($count_row = $count_stmt->fetch()) !== false)
@@ -143,7 +143,7 @@ function displayEditableGalleryItem(Gallery $gallery, array $albumObject, int $c
 			if($count_row["count(*)"] == 0)
 			{
 				?>
-				<a href="<?php print($displayAlbumLinkFunction($gallery, $albumObject["ALBUM_ID"], $count, "remove_album")); ?>"><img src="<?php print($gallery->iconsPath); ?>/delete.png" alt="<?php print($gallery->galleryLabels["Remove"]); ?>"></a>
+				<a href="<?= $displayAlbumLinkFunction($gallery, $albumObject["ALBUM_ID"], $count, "remove_album") ?>"><img src="<?= $gallery->iconsPath ?>/delete.png" alt="<?= $gallery->galleryLabels["Remove"] ?>"></a>
 				<?php
 			}
 		}

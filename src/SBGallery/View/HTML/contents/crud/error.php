@@ -1,1 +1,1 @@
-<p><?php print($GLOBALS["error"]); ?></p>
+<p><?= $GLOBALS["error"] ?></p>
