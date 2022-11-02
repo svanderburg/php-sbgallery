@@ -56,7 +56,7 @@ class AlbumCRUDModel extends CRUDModel
 			exit;
 		}
 
-		$this->crudPage->title = $this->form->fields["Title"]->exportValue();
+		$this->crudPage->title = $this->album->form->fields["Title"]->exportValue();
 	}
 
 	private function removeAlbum(): void
