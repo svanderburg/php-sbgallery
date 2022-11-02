@@ -6,7 +6,7 @@ use SBLayout\Model\Page\Content\Contents;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\DynamicContentCRUDPage;
 use SBData\Model\ParameterMap;
-use SBData\Model\Value\Value;
+use SBData\Model\Value\AcceptableFileNameValue;
 use SBGallery\Model\Album;
 use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\CRUD\AlbumCRUDModel;
@@ -28,7 +28,7 @@ class AlbumPage extends DynamicContentCRUDPage
 			"pictureId",
 			/* Key parameters */
 			new ParameterMap(array(
-				"albumId" => new Value(true, 255)
+				"albumId" => new AcceptableFileNameValue(true, 255)
 			)),
 			/* Request parameters */
 			new ParameterMap(),

@@ -4,7 +4,7 @@ use Exception;
 use SBLayout\Model\Page\Page;
 use SBLayout\Model\Page\Content\Contents;
 use SBData\Model\ParameterMap;
-use SBData\Model\Value\Value;
+use SBData\Model\Value\AcceptableFileNameValue;
 use SBCrud\Model\CRUDModel;
 use SBCrud\Model\Page\StaticContentCRUDPage;
 use SBGallery\Model\Picture;
@@ -25,8 +25,8 @@ class PicturePage extends StaticContentCRUDPage
 		parent::__construct("Picture",
 			/* Key values */
 			new ParameterMap(array(
-				"albumId" => new Value(true, 255),
-				"pictureId" => new Value(true, 255)
+				"albumId" => new AcceptableFileNameValue(true, 255),
+				"pictureId" => new AcceptableFileNameValue(true, 255)
 			)),
 			/* Request values */
 			new ParameterMap(),
