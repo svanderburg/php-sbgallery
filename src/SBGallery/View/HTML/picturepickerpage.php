@@ -8,6 +8,69 @@
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Gallery;
 
+function displayAlbumsForPicturePickerPage(Gallery $gallery, string $galleryLabel): void
+{
+	?>
+	<p><a href="<?= $_SERVER["PHP_SELF"] ?>">&laquo; <?= $galleryLabel ?></a></p>
+	<div class="album">
+		<?php
+		$album = $gallery->constructAlbum();
+		$album->entity = array();
+		$album->entity["ALBUM_ID"] = $_REQUEST["ALBUM_ID"];
+
+		$stmt = $album->queryPictures();
+
+		while(($row = $stmt->fetch()) !== false)
+		{
+			?>
+			<div class="albumitem">
+				<?php
+				if($row["FileType"] !== null)
+				{
+					$thumbnailURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
+					$pictureURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/pictures/".$row["PICTURE_ID"].".".$row["FileType"];
+					?>
+					<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?= $pictureURL ?>', '<?= $row["Title"] ?>'); return false;"><img src="<?= $thumbnailURL ?>" alt="<?= $row["Title"] ?>"></a>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+		}
+		?>
+	</div>
+	<?php
+}
+
+function displayPicturesForPicturePickerPage(Gallery $gallery): void
+{
+	?>
+	<div class="gallery">
+		<?php
+		$stmt = $gallery->queryAlbums(false);
+
+		while(($row = $stmt->fetch()) !== false)
+		{
+			?>
+			<div class="galleryitem">
+				<a href="<?= $_SERVER["PHP_SELF"] ?>?ALBUM_ID=<?= $row["ALBUM_ID"] ?>">
+					<?php
+					if($row["FileType"] === null)
+						$imageURL = $gallery->iconsPath."/thumbnail.png";
+					else
+						$imageURL = $gallery->baseURL."/".$row["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
+					?>
+					<img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"><br>
+					<?= $row["Title"] ?>
+				</a>
+			</div>
+			<?php
+		}
+		?>
+	</div>
+	<?php
+}
+
 /**
  * Displays a page that allows a user to pick an image from the gallery.
  *
@@ -44,66 +107,9 @@ function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gall
 		<body>
 			<?php
 			if(array_key_exists("ALBUM_ID", $_REQUEST))
-			{
-				?>
-				<p><a href="<?= $_SERVER["PHP_SELF"] ?>">&laquo; <?= $galleryLabel ?></a></p>
-				<div class="album">
-					<?php
-					$album = $gallery->constructAlbum();
-					$album->entity = array();
-					$album->entity["ALBUM_ID"] = $_REQUEST["ALBUM_ID"];
-
-					$stmt = $album->queryPictures();
-
-					while(($row = $stmt->fetch()) !== false)
-					{
-						?>
-						<div class="albumitem">
-							<?php
-							if($row["FileType"] !== null)
-							{
-								$imageURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
-								$pictureURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/pictures/".$row["PICTURE_ID"].".".$row["FileType"];
-								?>
-								<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?= $pictureURL ?>', '<?= $row["Title"] ?>'); return false;"><img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"></a>
-								<?php
-							}
-							?>
-						</div>
-						<?php
-					}
-					?>
-				</div>
-				<?php
-			}
+				displayAlbumsForPicturePickerPage($gallery, $galleryLabel);
 			else
-			{
-				?>
-				<div class="gallery">
-					<?php
-					$stmt = $gallery->queryAlbums(false);
-
-					while(($row = $stmt->fetch()) !== false)
-					{
-						?>
-						<div class="galleryitem">
-							<a href="<?= $_SERVER["PHP_SELF"] ?>?ALBUM_ID=<?= $row["ALBUM_ID"] ?>">
-							<?php
-							if($row["FileType"] === null)
-								$imageURL = $gallery->iconsPath."/thumbnail.png";
-							else
-								$imageURL = $gallery->baseURL."/".$row["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
-							?>
-							<img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"><br>
-							<?= $row["Title"] ?>
-							</a>
-						</div>
-						<?php
-					}
-					?>
-				</div>
-				<?php
-			}
+				displayPicturesForPicturePickerPage($gallery);
 			?>
 		</body>
 	</html>
