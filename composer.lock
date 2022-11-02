@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "63b864007e9c8fe2cea180483fb08ceb5bd5ea7d"
+                "reference": "13d9c9fc224a0436e0dfc23159211a4e40a45321"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -41,7 +41,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2022-10-26T21:08:17+00:00"
+            "time": "2022-11-02T00:22:08+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "502b053ea3475f4e562f8f7ede48904ee65f8e7e"
+                "reference": "fedfaf3a04498befd1e63d08f8d24892e49ecc5d"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -67,6 +67,7 @@
                     "src/SBData/View/HTML/pageddbtable.php",
                     "src/SBData/View/HTML/form.php",
                     "src/SBData/View/HTML/field.php",
+                    "src/SBData/View/HTML/Field/acceptablefilenamefield.php",
                     "src/SBData/View/HTML/Field/arraycomboboxfield.php",
                     "src/SBData/View/HTML/Field/textareafield.php",
                     "src/SBData/View/HTML/Field/checkboxfield.php",
@@ -87,6 +88,7 @@
                     "src/SBData/View/HTML/Field/textfield.php",
                     "src/SBData/View/HTML/Field/hiddenfield.php",
                     "src/SBData/View/HTML/Field/hiddennumericintfield.php",
+                    "src/SBData/View/HTML/Field/hiddenacceptablefilenamefield.php",
                     "src/SBData/View/HTML/Field/numericintkeylinkfield.php",
                     "src/SBData/View/HTML/Field/dbcomboboxfield.php",
                     "src/SBData/View/HTML/Field/urlfield.php"
@@ -113,7 +115,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-10-24T21:42:42+00:00"
+            "time": "2022-11-02T17:39:40+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -121,7 +123,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "e470f3a40110123f39d377d3d16a760710cfcf3e"
+                "reference": "704bccf00a0487d40290a66cd740279477c41c1f"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
@@ -148,7 +150,7 @@
                 }
             ],
             "description": "Simple embeddable HTML editor",
-            "time": "2022-09-30T16:17:56+00:00"
+            "time": "2022-11-02T00:28:54+00:00"
         },
         {
             "name": "svanderburg/php-sblayout",
@@ -156,7 +158,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sblayout.git",
-                "reference": "fcbba66c36af3ab258b50dc5f396b82d2170851c"
+                "reference": "db265a949119dc000ae0a2d0db93e54127e82fde"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.x"
@@ -197,7 +199,7 @@
                 }
             ],
             "description": "My custom website layout organiser framework for PHP",
-            "time": "2022-08-30T22:30:03+00:00"
+            "time": "2022-11-01T17:42:41+00:00"
         }
     ],
     "packages-dev": [],
