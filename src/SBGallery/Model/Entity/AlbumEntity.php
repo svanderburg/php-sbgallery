@@ -148,8 +148,8 @@ class AlbumEntity
 		}
 		catch(Exception $ex)
 		{
-			throw $ex;
 			$dbh->rollBack();
+			throw $ex;
 		}
 	}
 
@@ -186,8 +186,8 @@ class AlbumEntity
 		}
 		catch(Exception $ex)
 		{
-			throw $ex;
 			$dbh->rollBack();
+			throw $ex;
 		}
 	}
 }
