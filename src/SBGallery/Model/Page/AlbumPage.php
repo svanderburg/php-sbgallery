@@ -1,89 +1,71 @@
 <?php
 namespace SBGallery\Model\Page;
-use Exception;
-use SBLayout\Model\Page\Page;
-use SBLayout\Model\Page\Content\Contents;
-use SBCrud\Model\CRUDModel;
-use SBCrud\Model\Page\DynamicContentCRUDPage;
-use SBData\Model\ParameterMap;
+use SBLayout\Model\PageNotFoundException;
+use SBLayout\Model\Page\ContentPage;
+use SBData\Model\Value\Value;
 use SBData\Model\Value\AcceptableFileNameValue;
-use SBGallery\Model\Album;
+use SBCrud\Model\Page\CRUDMasterPage;
+use SBCrud\Model\Page\OperationPage;
+use SBGallery\Model\Gallery;
 use SBGallery\Model\GalleryPermissionChecker;
-use SBGallery\Model\CRUD\AlbumCRUDModel;
-use SBGallery\Model\CRUD\PictureCRUDModel;
+use SBGallery\Model\Album;
+use SBGallery\Model\Page\Content\AlbumContents;
+use SBGallery\Model\Page\Content\PictureContents;
 
-class AlbumPage extends DynamicContentCRUDPage
+class AlbumPage extends CRUDMasterPage
 {
-	private ?GalleryPage $parent;
+	public GalleryPage $galleryPage;
 
-	public function __construct(GalleryPage $parent = null, array $sections = array(), string $view = "HTML", string $gallerySection = "contents", array $styles = array())
+	private PictureContents $pictureContents;
+
+	public string $albumId;
+
+	public Album $album;
+
+	public function __construct(GalleryPage $galleryPage, string $albumId, string $title = "Album", AlbumContents $contents = null)
 	{
-		$baseURL = Page::computeBaseURL();
+		if($contents === null)
+			$contents = new AlbumContents();
 
-		$contentsPath = dirname(__FILE__)."/../../View/".$view."/contents/crud/";
-		$htmlEditorJsPath = $baseURL."/scripts/htmleditor.js";
+		$pictureContents = $contents->constructPictureContents();
 
-		parent::__construct("Album",
-			/* Parameter name */
-			"pictureId",
-			/* Key parameters */
-			new ParameterMap(array(
-				"albumId" => new AcceptableFileNameValue(true, 255)
-			)),
-			/* Request parameters */
-			new ParameterMap(),
-			/* Default contents */
-			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."album.php"), null, $styles, array($htmlEditorJsPath)),
-			/* Error contents */
-			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."error.php"), null, $styles),
-			/* Contents per operation */
-			array(
-				"create_picture" => new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."picture.php"), null, $styles, array($htmlEditorJsPath)),
-				"insert_picture" => new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."picture.php"), null, $styles, array($htmlEditorJsPath)),
-				"add_multiple_pictures" => new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."addmultiplepictures.php"), null, $styles)
-			),
-			new PicturePage($this, $sections, $view, $gallerySection, $styles));
+		$this->album = $galleryPage->gallery->constructAlbum();
 
-		$this->parent = $parent;
+		parent::__construct($title, "pictureId", $contents, array(
+			"create_picture" => new GalleryOperationPage($this, $this->album->albumLabels["Add picture"], $pictureContents),
+			"insert_picture" => new GalleryOperationPage($this, $this->album->albumLabels["Insert picture"], $pictureContents),
+			"update_album" => new GalleryOperationPage($this, $this->album->albumLabels["Update album"], $contents),
+			"remove_album" => new GalleryOperationPage($this, $this->album->albumLabels["Remove album"], $contents),
+			"moveleft_album" => new GalleryOperationPage($this, $this->album->albumLabels["Move left"], $contents),
+			"moveright_album" => new GalleryOperationPage($this, $this->album->albumLabels["Move right"], $contents),
+			"add_multiple_pictures" => new OperationPage($this->album->albumLabels["Add multiple pictures"], $contents->constructMultiplePictureContents()),
+			"insert_multiple_pictures" => new GalleryOperationPage($this, $this->album->albumLabels["Insert multiple pictures"], $contents)
+		));
+
+		$this->galleryPage = $galleryPage;
+		$this->albumId = $albumId;
+		$this->pictureContents = $pictureContents;
+
+		$this->album->fetchEntity($albumId);
+		if($this->album->entity === false)
+			throw new PageNotFoundException($this->album->albumLabels["Cannot find album:"]." ".$albumId);
+		else
+			$this->title = $this->album->entity["Title"];
 	}
 
-	public function constructCRUDModel(): CRUDModel
+	public function createParamValue(): Value
 	{
-		$album = $this->constructAlbum();
-
-		if(array_key_exists("__operation", $_REQUEST))
-		{
-			switch($_REQUEST["__operation"])
-			{
-				case "create_picture":
-				case "insert_picture":
-					$keyParameterMap = $this->getKeyParameterMap();
-					return new PictureCRUDModel($this, $album->constructPicture($keyParameterMap->values["albumId"]->value));
-				default:
-					return new AlbumCRUDModel($this, $album);
-			}
-		}
-		else
-			return new AlbumCRUDModel($this, $album);
+		return new AcceptableFileNameValue(true, 255);
 	}
 
-	public function constructAlbum(): Album
+	public function createDetailPage(array $query): ?ContentPage
 	{
-		if($this->parent === null)
-			throw new Exception("Can't construct an album");
-		else
-		{
-			$gallery = $this->parent->constructGallery();
-			return $gallery->constructAlbum();
-		}
+		return new PicturePage($this, $this->album, $query["pictureId"], $this->albumId, "Picture", $this->pictureContents);
 	}
 
 	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
 	{
-		if($this->parent === null)
-			throw new Exception("Can't construct a permission checker");
-		else
-			return $this->parent->constructGalleryPermissionChecker();
+		return $this->galleryPage->constructGalleryPermissionChecker();
 	}
 }
 ?>

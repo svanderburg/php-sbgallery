@@ -270,20 +270,21 @@ Then we must construct our sub class from `GalleryPage` that provides a Gallery
 object and permission checker:
 
 ```php
+use PDO;
 use SBGallery\Model\Gallery;
 use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\Page\GalleryPage;
 
 class MyGalleryPage extends GalleryPage
 {
-    public function __construct()
+    public function __construct(PDO $dbh)
     {
-        parent::__construct("Gallery");
+        parent::__construct($dbh, "Gallery");
     }
 
-    public function constructGallery(): Gallery
+    public function constructGallery(PDO $dbh): Gallery
     {
-        return new Gallery(array(...));
+        return new Gallery($dbh, array(...));
     }
 
     public function constructGalleryPermissionChecker(): GalleryPermissionChecker

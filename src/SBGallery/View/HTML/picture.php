@@ -33,32 +33,6 @@ function picture_displayLayoutPictureLink(Picture $picture, string $url): string
 	return $url;
 }
 
-function displayPictureBreadcrumbs(Picture $picture, string $galleryURL, string $albumURL, string $pictureURL, string $viewType = "Conventional"): void
-{
-	$displayAlbumLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'AlbumLink';
-	$displayPictureLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'PictureLink';
-	?>
-	<p>
-		<a href="<?= $galleryURL ?>"><?= $picture->labels["Gallery"] ?></a>
-		<?php
-		if($picture->entity !== false)
-		{
-			$stmt = $picture->queryAlbum();
-			if(($row = $stmt->fetch()) !== false)
-			{
-				?>
-				&raquo; <a href="<?= $displayAlbumLinkFunction($picture, $albumURL) ?>"><?= $row["Title"] ?></a>
-				<?php
-			}
-			?>
-			&raquo; <a href="<?= $displayPictureLinkFunction($picture, $pictureURL) ?>"><?= $picture->entity["Title"] ?></a>
-			<?php
-		}
-		?>
-	</p>
-	<?php
-}
-
 function displayNavigationButtons(Picture $picture, string $viewType): void
 {
 	$displayImageLinkFunction = '\SBGallery\View\HTML\picture_display'.$viewType.'ImageLink';

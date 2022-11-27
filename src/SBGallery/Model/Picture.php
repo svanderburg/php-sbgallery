@@ -24,7 +24,14 @@ class Picture
 		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
 		"Field invalid" => "This field is incorrectly specified!",
 		"Previous" => "Previous",
-		"Next" => "Next"
+		"Next" => "Next",
+		"Update picture" => "Update picture",
+		"Remove picture" => "Remove picture",
+		"Remove picture image" => "Remove picture image",
+		"Move left" => "Move left",
+		"Move right" => "Move right",
+		"Set picture as thumbnail" => "Set picture as thumbnail",
+		"Cannot find picture:" => "Cannot find picture:"
 	);
 
 	/** Database connection handler */
@@ -67,7 +74,7 @@ class Picture
 	public PictureForm $form;
 
 	/** Stores the properties of an individual picture */
-	public $entity = false;
+	public array|bool $entity = false;
 
 	/** Name of the database table storing picture properties */
 	public string $picturesTable;
@@ -136,7 +143,7 @@ class Picture
 	 * @param $picture ID of the picture
 	 * @param $albumId ID of the album where the picture belongs to
 	 */
-	private function fetchEntity(string $pictureId, string $albumId): void
+	public function fetchEntity(string $pictureId, string $albumId): void
 	{
 		$stmt = PictureEntity::queryOne($this->dbh, $pictureId, $albumId, $this->picturesTable);
 		$this->entity = $stmt->fetch();

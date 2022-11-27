@@ -6,19 +6,20 @@
  * @{
  */
 namespace SBGallery\View\Pages;
+use PDO;
 use SBGallery\Model\Page\GalleryPage;
-use SBGallery\Model\CRUD\GalleryCRUDModel;
-use SBGallery\Model\CRUD\AlbumCRUDModel;
-use SBGallery\Model\CRUD\PictureCRUDModel;
+use SBGallery\Model\Page\AlbumPage;
+use SBGallery\Model\Page\PicturePage;
+use SBGallery\Model\Page\GalleryOperationPage;
 
 /**
  * Displays a menu section with links derived from the albums stored in the gallery.
  *
  * @param $galleryPage Gallery page to display
  */
-function displayAlbumMenuSection(GalleryPage $galleryPage): void
+function displayAlbumMenuSection(GalleryPage $galleryPage, PDO $dbh): void
 {
-	$gallery = $galleryPage->constructGallery();
+	$gallery = $galleryPage->constructGallery($dbh);
 	$checker = $galleryPage->constructGalleryPermissionChecker();
 
 	$authenticated = $checker->checkWritePermissions();
@@ -72,7 +73,7 @@ function displayAlbumMenuSection(GalleryPage $galleryPage): void
  */
 function visitedGallerySubPage(): bool
 {
-	return (array_key_exists("crudModel", $GLOBALS) && ($GLOBALS["crudModel"] instanceof GalleryCRUDModel || $GLOBALS["crudModel"] instanceof AlbumCRUDModel || $GLOBALS["crudModel"] instanceof PictureCRUDModel));
+	return ($GLOBALS["currentPage"] instanceof GalleryPage || $GLOBALS["currentPage"] instanceof AlbumPage || $GLOBALS["currentPage"] instanceof PicturePage || $GLOBALS["currentPage"] instanceof GalleryOperationPage);
 }
 
 /**

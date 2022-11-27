@@ -21,24 +21,6 @@ function album_displayLayoutAlbumLink(Album $album, string $albumURL): string
 	return $albumURL;
 }
 
-function displayAlbumBreadcrumbs(Album $album, string $galleryURL, string $albumURL, string $viewType = "Conventional"): void
-{
-	$displayAlbumLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AlbumLink';
-	?>
-	<p>
-		<a href="<?= $galleryURL ?>"><?= $album->albumLabels["Gallery"] ?></a>
-		<?php
-		if($album->entity !== false)
-		{
-			?>
-			&raquo; <a href="<?= $displayAlbumLinkFunction($album, $albumURL) ?>"><?= $album->entity["Title"] ?></a>
-			<?php
-		}
-		?>
-	</p>
-	<?php
-}
-
 function displayAlbumThumbnail(Album $album, array $picture, int $count, string $viewType): void
 {
 	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';

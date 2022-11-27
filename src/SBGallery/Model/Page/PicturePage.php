@@ -1,69 +1,47 @@
 <?php
 namespace SBGallery\Model\Page;
-use Exception;
-use SBLayout\Model\Page\Page;
-use SBLayout\Model\Page\Content\Contents;
-use SBData\Model\ParameterMap;
-use SBData\Model\Value\AcceptableFileNameValue;
-use SBCrud\Model\CRUDModel;
-use SBCrud\Model\Page\StaticContentCRUDPage;
+use SBLayout\Model\PageNotFoundException;
+use SBCrud\Model\Page\CRUDDetailPage;
+use SBCrud\Model\Page\OperationPage;
+use SBGallery\Model\Album;
 use SBGallery\Model\Picture;
 use SBGallery\Model\GalleryPermissionChecker;
-use SBGallery\Model\CRUD\PictureCRUDModel;
+use SBGallery\Model\Page\Content\PictureContents;
 
-class PicturePage extends StaticContentCRUDPage
+class PicturePage extends CRUDDetailPage
 {
-	private ?AlbumPage $parent;
+	public AlbumPage $albumPage;
 
-	public function __construct(AlbumPage $parent = null, array $sections = array(), string $view = "HTML", string $gallerySection = "contents", array $styles = array())
+	public Picture $picture;
+
+	public function __construct(AlbumPage $albumPage, Album $album, string $pictureId, string $albumId, string $title = "Picture", PictureContents $contents = null)
 	{
-		$baseURL = Page::computeBaseURL();
+		if($contents === null)
+			$contents = new PictureContents();
 
-		$contentsPath = dirname(__FILE__)."/../../View/".$view."/contents/crud/";
-		$htmlEditorJsPath = $baseURL."/scripts/htmleditor.js";
+		$this->picture = $album->constructPicture($albumId);
 
-		parent::__construct("Picture",
-			/* Key values */
-			new ParameterMap(array(
-				"albumId" => new AcceptableFileNameValue(true, 255),
-				"pictureId" => new AcceptableFileNameValue(true, 255)
-			)),
-			/* Request values */
-			new ParameterMap(),
-			/* Default contents */
-			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."picture.php"), null, $styles, array($htmlEditorJsPath)),
-			/* Error contents */
-			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."error.php"), null, $styles),
-			/* Contents per operation */
-			array(),
-			array());
+		parent::__construct($title, $contents, array(
+			"update_picture" => new GalleryOperationPage($this, $this->picture->labels["Update picture"], $contents),
+			"remove_picture" => new GalleryOperationPage($this, $this->picture->labels["Remove picture"], $contents),
+			"remove_picture_image" => new GalleryOperationPage($this, $this->picture->labels["Remove picture image"], $contents),
+			"moveleft_picture" => new GalleryOperationPage($this, $this->picture->labels["Move left"], $contents),
+			"moveright_picture" => new GalleryOperationPage($this, $this->picture->labels["Move right"], $contents),
+			"setasthumbnail_picture" => new GalleryOperationPage($this, $this->picture->labels["Set picture as thumbnail"], $contents)
+		));
 
-		$this->parent = $parent;
-	}
+		$this->albumPage = $albumPage;
 
-	public function constructCRUDModel(): CRUDModel
-	{
-		return new PictureCRUDModel($this, $this->constructPicture());
-	}
-
-	public function constructPicture(): Picture
-	{
-		if($this->parent === null)
-			throw new Exception("Can't construct picture!");
+		$this->picture->fetchEntity($pictureId, $albumId);
+		if($this->picture->entity === false)
+			throw new PageNotFoundException($this->picture->labels["Cannot find picture:"]." ".$pictureId);
 		else
-		{
-			$album = $this->parent->constructAlbum();
-			$keyParameterMap = $this->getKeyParameterMap();
-			return $album->constructPicture($keyParameterMap->values["albumId"]->value);
-		}
+			$this->title = $this->picture->entity["Title"];
 	}
 
 	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
 	{
-		if($this->parent === null)
-			throw new Exception("Can't construct a permission checker");
-		else
-			return $this->parent->constructGalleryPermissionChecker();
+		return $this->albumPage->galleryPage->constructGalleryPermissionChecker();
 	}
 }
 ?>

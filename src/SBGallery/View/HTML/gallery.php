@@ -8,15 +8,6 @@
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Gallery;
 
-function displayGalleryBreadcrumbs(Gallery $gallery, string $galleryURL): void
-{
-	?>
-	<p>
-		<a href="<?= $galleryURL ?>"><?= $gallery->galleryLabels["Gallery"] ?></a>
-	</p>
-	<?php
-}
-
 function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, int $count, string $viewType): void
 {
 	$displayAlbumLinkFunction = '\SBGallery\View\HTML\gallery_display'.$viewType.'AlbumLink';

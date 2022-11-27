@@ -1,1 +1,0 @@
-<p><?= $GLOBALS["error"] ?></p>

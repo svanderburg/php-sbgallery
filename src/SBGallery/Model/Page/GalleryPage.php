@@ -1,76 +1,49 @@
 <?php
 namespace SBGallery\Model\Page;
-use SBLayout\Model\Page\Page;
-use SBLayout\Model\Page\Content\Contents;
-use SBData\Model\ParameterMap;
-use SBCrud\Model\CRUDModel;
-use SBCrud\Model\Page\DynamicContentCRUDPage;
+use PDO;
+use SBLayout\Model\Page\ContentPage;
+use SBData\Model\Value\Value;
+use SBData\Model\Value\AcceptableFileNameValue;
+use SBCrud\Model\Page\CRUDMasterPage;
+use SBCrud\Model\Page\OperationPage;
 use SBGallery\Model\Gallery;
 use SBGallery\Model\GalleryPermissionChecker;
-use SBGallery\Model\CRUD\AlbumCRUDModel;
-use SBGallery\Model\CRUD\GalleryCRUDModel;
+use SBGallery\Model\Page\Content\GalleryContents;
+use SBGallery\Model\Page\Content\AlbumContents;
 
-abstract class GalleryPage extends DynamicContentCRUDPage
+abstract class GalleryPage extends CRUDMasterPage
 {
-	/**
-	 * Constructs a new gallery page
-	 *
-	 * @param $title Title of the gallery page
-	 * @param $sections An array mapping the name of content sections to a PHP file that should be displayed in it
-	 * @param $view The kind of view it should use to display the gallery elements
-	 * @param $gallerySectionContent PHP file that should be displayed when the gallery is opened
-	 * @param $gallerySection The name of the content section that should display the gallery (defaults to: contents)
-	 * @param $styles An array containing stylesheet files to include
-	 */
-	public function __construct(string $title, array $sections = array(), string $view = "HTML", string $gallerySectionContent = null, string $gallerySection = "contents", array $styles = array())
+	private AlbumContents $albumContents;
+
+	public Gallery $gallery;
+
+	public function __construct(PDO $dbh, string $title = "Gallery", GalleryContents $contents = null)
 	{
-		$baseURL = Page::computeBaseURL();
+		if($contents === null)
+			$contents = new GalleryContents();
 
-		$contentsPath = dirname(__FILE__)."/../../View/".$view."/contents/crud/";
-		$htmlEditorJsPath = $baseURL."/scripts/htmleditor.js";
+		$albumContents = $contents->constructAlbumContents($dbh);
 
-		if($gallerySectionContent === null)
-			$gallerySectionContent = $contentsPath."gallery.php";
+		$this->gallery = $this->constructGallery($dbh);
 
-		parent::__construct($title,
-			/* Parameter name */
-			"albumId",
-			/* Key values */
-			new ParameterMap(),
-			/* Request values */
-			new ParameterMap(),
-			/* Default contents */
-			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $gallerySectionContent), null, $styles),
-			/* Error contents */
-			new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."error.php"), null, $styles),
-			/* Contents per operation */
-			array(
-				"create_album" => new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."album.php"), null, $styles, array($htmlEditorJsPath)),
-				"insert_album" => new Contents(\SBGallery\Model\Page\Util\composeGalleryContents($sections, $gallerySection, $contentsPath."album.php"), null, $styles, array($htmlEditorJsPath))
-			),
-			new AlbumPage($this, $sections, $view, $gallerySection, $styles));
+		parent::__construct($title, "albumId", $contents, array(
+			"create_album" => new GalleryOperationPage($this, $this->gallery->galleryLabels["Add album"], $albumContents),
+			"insert_album" => new GalleryOperationPage($this, $this->gallery->galleryLabels["Insert album"], $albumContents)
+		));
+		$this->albumContents = $albumContents;
 	}
 
-	public function constructCRUDModel(): CRUDModel
+	public function createParamValue(): Value
 	{
-		$gallery = $this->constructGallery();
-
-		if(array_key_exists("__operation", $_REQUEST))
-		{
-			switch($_REQUEST["__operation"])
-			{
-				case "create_album":
-				case "insert_album":
-					return new AlbumCRUDModel($this, $gallery->constructAlbum());
-				default:
-					return new GalleryCRUDModel($this, $gallery);
-			}
-		}
-		else
-			return new GalleryCRUDModel($this, $gallery);
+		return new AcceptableFileNameValue(true, 255);
 	}
 
-	public abstract function constructGallery(): Gallery;
+	public function createDetailPage(array $query): ?ContentPage
+	{
+		return new AlbumPage($this, $query["albumId"], "Album", $this->albumContents);
+	}
+
+	public abstract function constructGallery(PDO $dbh): Gallery;
 
 	public abstract function constructGalleryPermissionChecker(): GalleryPermissionChecker;
 }

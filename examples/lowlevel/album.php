@@ -68,7 +68,10 @@ try
 			throw new Exception("Unknown operation: ".$_REQUEST["__operation"]);
 	}
 	else
+	{
+		$album->fetchEntity($_REQUEST["ALBUM_ID"]);
 		$album->view($_REQUEST["ALBUM_ID"]);
+	}
 
 	$error = null;
 }
@@ -93,8 +96,6 @@ catch(Exception $ex)
 
 		if($error === null)
 		{
-			\SBGallery\View\HTML\displayAlbumBreadcrumbs($album, "gallery.php", "album.php");
-
 			if(array_key_exists("view", $_GET) && $_GET["view"] == "1")
 				\SBGallery\View\HTML\displayAlbum($album);
 			else

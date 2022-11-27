@@ -21,7 +21,11 @@ class Album
 		"Visible" => "Visible",
 		"Description" => "Description",
 		"Add picture" => "Add picture",
+		"Insert picture" => "Insert picture",
+		"Update album" => "Update album",
+		"Remove album" => "Remove album",
 		"Add multiple pictures" => "Add multiple pictures",
+		"Insert multiple pictures" => "Insert multiple pictures",
 		"Move left" => "Move left",
 		"Move right" => "Move right",
 		"Set as album thumbnail" => "Set as album thumbnail",
@@ -29,7 +33,8 @@ class Album
 		"Submit" => "Submit",
 		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
 		"Field invalid" => "This field is incorrectly specified!",
-		"Invalid file" => "Invalid file"
+		"Invalid file" => "Invalid file",
+		"Cannot find album:" => "Cannot find album:"
 	);
 
 	/** Database connection handler */
@@ -81,7 +86,7 @@ class Album
 	public int $filePermissions;
 
 	/** Stores the properties of an individual album */
-	public $entity = false;
+	public array|bool $entity = false;
 
 	/** Form that can be used to validate and display an album's properties */
 	public AlbumForm $form;
@@ -149,7 +154,7 @@ class Album
 	 *
 	 * @param $albumId ID of the album
 	 */
-	private function fetchEntity($albumId): void
+	public function fetchEntity($albumId): void
 	{
 		$stmt = AlbumEntity::queryOne($this->dbh, $albumId, $this->albumsTable);
 		$this->entity = $stmt->fetch();
@@ -205,7 +210,7 @@ class Album
 	public function view(string $albumId): void
 	{
 		$this->constructForm(true);
-		$this->fetchEntity($albumId);
+		//$this->fetchEntity($albumId);
 
 		if($this->entity === false)
 			throw new Exception(array_key_exists("cannotFindAlbum", $this->albumLabels) ? $this->albumLabels["cannotFindAlbum"] : "Cannot find requested album!");

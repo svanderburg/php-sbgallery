@@ -111,8 +111,6 @@ catch(Exception $ex)
 		if($error === null)
 		{
 			/* View the picture */
-			\SBGallery\View\HTML\displayPictureBreadcrumbs($picture, "gallery.php", "album.php", "picture.php");
-
 			if(array_key_exists("view", $_GET) && $_GET["view"] == "1")
 				\SBGallery\View\HTML\displayPicture($picture);
 			else

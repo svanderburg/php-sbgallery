@@ -12,6 +12,7 @@ class Gallery
 	private static array $referenceLabels = array(
 		"Gallery" => "Gallery",
 		"Add album" => "Add album",
+		"Insert album" => "Insert album",
 		"Move left" => "Move left",
 		"Move right" => "Move right",
 		"Remove" => "Remove"

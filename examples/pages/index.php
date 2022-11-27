@@ -38,6 +38,7 @@ $application = new Application(
 
 	/* Pages */
 	new StaticContentPage("Home", new Contents("home.php"), array(
+		"400" => new HiddenStaticContentPage("Bad request", new Contents("error/400.php")),
 		"404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.php")),
 
 		"home" => new PageAlias("Home", ""),
