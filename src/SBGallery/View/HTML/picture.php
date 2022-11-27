@@ -114,7 +114,7 @@ function displayPicture(Picture $picture, string $viewType = "Conventional"): vo
 			displayPictureNavigation($picture, $viewType);
 			?>
 			<p>
-				<img src="<?= $picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"] ?>" alt="<?= $picture->entity["Title"] ?>">
+				<img src="<?= $picture->baseURL."/pictures/".rawurlencode($picture->entity["PICTURE_ID"]).".".$picture->entity["FileType"] ?>" alt="<?= $picture->entity["Title"] ?>">
 			</p>
 			<div><?= $picture->entity["Description"] ?></div>
 		</div>
@@ -142,7 +142,12 @@ function picture_displayLayoutImageLink(string $albumId, string $pictureId, stri
 	if($operation !== null)
 		$params["__operation"] = $operation;
 
-	return dirname($_SERVER["PHP_SELF"])."/".$pictureId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	if(count($params) > 0)
+		$extraParams = "?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	else
+		$extraParams = "";
+
+	return dirname($_SERVER["PHP_SELF"])."/".rawurlencode($pictureId).$extraParams;
 }
 
 /**
@@ -169,7 +174,7 @@ function displayEditablePicture(Picture $picture, string $submitLabel, string $g
 			{
 				?>
 				<p>
-					<img src="<?= $picture->baseURL."/pictures/".$picture->entity["PICTURE_ID"].".".$picture->entity["FileType"] ?>" alt="<?= $picture->entity["Title"] ?>">
+					<img src="<?= $picture->baseURL."/pictures/".rawurlencode($picture->entity["PICTURE_ID"]).".".$picture->entity["FileType"] ?>" alt="<?= $picture->entity["Title"] ?>">
 				</p>
 				<?php
 			}

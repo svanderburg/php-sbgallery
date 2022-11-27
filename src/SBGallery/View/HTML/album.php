@@ -28,7 +28,7 @@ function displayAlbumThumbnail(Album $album, array $picture, int $count, string 
 	if($picture["FileType"] === null)
 		$imageURL = $album->iconsPath."/thumbnail.png";
 	else
-		$imageURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/thumbnails/".$picture["PICTURE_ID"].".".$picture["FileType"];
+		$imageURL = $album->baseURL."/".rawurlencode($album->entity["ALBUM_ID"])."/thumbnails/".rawurlencode($picture["PICTURE_ID"]).".".$picture["FileType"];
 	?>
 	<a href="<?= $displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $picture["PICTURE_ID"], $count) ?>"><img src="<?= $imageURL ?>" alt="<?= $picture["Title"] ?>"></a>
 	<?php
@@ -62,7 +62,12 @@ function album_displayLayoutPictureLink(Album $album, string $albumId, string $p
 			$params["__id"] = $count;
 	}
 
-	return $_SERVER["PHP_SELF"]."/".$pictureId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	if(count($params) > 0)
+		$extraParams = "?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	else
+		$extraParams = "";
+
+	return $_SERVER["PHP_SELF"]."/".rawurlencode($pictureId).$extraParams;
 }
 
 function displayAlbumItem(Album $album, array $pictureObject, string $viewType): void

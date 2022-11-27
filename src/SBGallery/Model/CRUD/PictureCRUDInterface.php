@@ -2,6 +2,7 @@
 namespace SBGallery\Model\CRUD;
 use Exception;
 use SBLayout\Model\Route;
+use SBLayout\Model\PageForbiddenException;
 use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\CRUD\CRUDInterface;
 use SBCrud\Model\Page\CRUDPage;

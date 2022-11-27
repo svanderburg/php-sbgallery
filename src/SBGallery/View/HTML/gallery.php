@@ -18,7 +18,7 @@ function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, int $count,
 	if($thumbnail["FileType"] === null)
 		$imageURL = $gallery->iconsPath."/thumbnail.png";
 	else
-		$imageURL = $gallery->baseURL."/".$thumbnail["ALBUM_ID"]."/thumbnails/".$thumbnail["PICTURE_ID"].".".$thumbnail["FileType"];
+		$imageURL = $gallery->baseURL."/".rawurlencode($thumbnail["ALBUM_ID"])."/thumbnails/".rawurlencode($thumbnail["PICTURE_ID"]).".".$thumbnail["FileType"];
 	?>
 	<img src="<?= $imageURL ?>" alt="<?= $thumbnail["Title"] ?>"><br>
 	<?= $thumbnail["Title"] ?>
@@ -55,7 +55,12 @@ function gallery_displayLayoutAlbumLink(Gallery $gallery, string $albumId, int $
 			$params["__id"] = $count;
 	}
 
-	return $_SERVER["PHP_SELF"]."/".$albumId."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	if(count($params) > 0)
+		$extraParams = "?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	else
+		$extraParams = "";
+
+	return $_SERVER["PHP_SELF"]."/".rawurlencode($albumId).$extraParams;
 }
 
 function displayGalleryItem(Gallery $gallery, array $albumObject, string $viewType): void
