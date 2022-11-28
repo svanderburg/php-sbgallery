@@ -13,7 +13,6 @@
   "autoload": {
       "psr-4": { "SBGallery\\": "src/SBGallery" },
       "files": [
-          "src/SBGallery/Model/Page/Util/composegallerycontents.php",
           "src/SBGallery/View/HTML/multiplepictures.php",
           "src/SBGallery/View/HTML/gallery.php",
           "src/SBGallery/View/HTML/album.php",
