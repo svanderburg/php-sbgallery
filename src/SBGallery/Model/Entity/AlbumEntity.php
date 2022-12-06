@@ -64,7 +64,7 @@ class AlbumEntity
 			"Description = ? ".
 			"where ALBUM_ID = ?");
 
-		if(!$stmt->execute(array($album["ALBUM_ID"], $album["Title"], $album["Visible"], $album["Description"], $id)))
+		if(!$stmt->execute(array($album["ALBUM_ID"], $album["Title"], $album["Visible"] == 1 ? 1 : 0, $album["Description"], $id)))
 			throw new Exception($stmt->errorInfo()[2]);
 	}
 
