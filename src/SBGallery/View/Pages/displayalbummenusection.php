@@ -33,14 +33,14 @@ function displayAlbumMenuSection(GalleryPage $galleryPage, PDO $dbh): void
 		else
 			$active = "";
 		?>
-		<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>"<?= $active ?>><?= $row["Title"] ?></a>
+		<a href="<?= $gallery->albumDisplayURL."/".rawurlencode($row["ALBUM_ID"]) ?>"<?= $active ?>><?= $row["Title"] ?></a>
 		<?php
 		if($authenticated)
 		{
 			?>
 			<div class="album-buttons">
-				<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>?__operation=moveleft_album"><img src="<?= $gallery->iconsPath ?>/moveleft.png" alt="<?= $gallery->galleryLabels["Move left"] ?>"></a>
-				<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>?__operation=moveright_album"><img src="<?= $gallery->iconsPath ?>/moveright.png" alt="<?= $gallery->galleryLabels["Move right"] ?>"></a>
+				<a href="<?= $gallery->albumDisplayURL."/".rawurlencode($row["ALBUM_ID"]) ?>?__operation=moveleft_album"><img src="<?= $gallery->iconsPath ?>/moveleft.png" alt="<?= $gallery->galleryLabels["Move left"] ?>"></a>
+				<a href="<?= $gallery->albumDisplayURL."/".rawurlencode($row["ALBUM_ID"]) ?>?__operation=moveright_album"><img src="<?= $gallery->iconsPath ?>/moveright.png" alt="<?= $gallery->galleryLabels["Move right"] ?>"></a>
 				<?php
 				$count_stmt = $gallery->queryPictureCount($row["ALBUM_ID"]);
 				while(($count_row = $count_stmt->fetch()) !== false)
@@ -48,7 +48,7 @@ function displayAlbumMenuSection(GalleryPage $galleryPage, PDO $dbh): void
 					if($count_row["count(*)"] == 0)
 					{
 						?>
-						<a href="<?= $gallery->albumDisplayURL."/".$row["ALBUM_ID"] ?>?__operation=remove_album"><img src="<?= $gallery->iconsPath ?>/delete.png" alt="<?= $gallery->galleryLabels["Remove"] ?>"></a>
+						<a href="<?= $gallery->albumDisplayURL."/".rawurlencode($row["ALBUM_ID"]) ?>?__operation=remove_album"><img src="<?= $gallery->iconsPath ?>/delete.png" alt="<?= $gallery->galleryLabels["Remove"] ?>"></a>
 						<?php
 					}
 				}

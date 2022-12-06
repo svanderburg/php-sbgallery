@@ -4,6 +4,7 @@ use Exception;
 use SBLayout\Model\Route;
 use SBLayout\Model\PageForbiddenException;
 use SBData\Model\Table\Anchor\AnchorRow;
+use SBCrud\Model\RouteUtils;
 use SBCrud\Model\Page\CRUDPage;
 use SBCrud\Model\CRUD\CRUDInterface;
 use SBGallery\Model\Album;
@@ -39,7 +40,7 @@ class AlbumCRUDInterface extends CRUDInterface
 
 		if($this->album->insert($_REQUEST))
 		{
-			header("Location: ".$_SERVER["PHP_SELF"]."/".rawurlencode($this->album->entity["ALBUM_ID"]));
+			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->album->entity["ALBUM_ID"]));
 			exit;
 		}
 	}
@@ -101,7 +102,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		$this->album = $this->crudPage->parentPage->album;
 
 		$this->album->insertMultiplePictures($GLOBALS["query"]["albumId"], "Image");
-		header("Location: ".$_SERVER["PHP_SELF"]);
+		header("Location: ".RouteUtils::composeSelfURL());
 		exit();
 	}
 

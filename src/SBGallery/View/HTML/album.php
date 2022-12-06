@@ -7,6 +7,7 @@
  */
 
 namespace SBGallery\View\HTML;
+use SBCrud\Model\RouteUtils;
 use SBGallery\Model\Album;
 
 function album_displayConventionalAlbumLink(Album $album, string $albumURL): string
@@ -67,7 +68,7 @@ function album_displayLayoutPictureLink(Album $album, string $albumId, string $p
 	else
 		$extraParams = "";
 
-	return $_SERVER["PHP_SELF"]."/".rawurlencode($pictureId).$extraParams;
+	return RouteUtils::composeSelfURL()."/".rawurlencode($pictureId).$extraParams;
 }
 
 function displayAlbumItem(Album $album, array $pictureObject, string $viewType): void
@@ -117,7 +118,7 @@ function album_displayConventionalAddPictureLink(Album $album): string
 
 function album_displayLayoutAddPictureLink(Album $album): string
 {
-	return $_SERVER["PHP_SELF"]."?__operation=create_picture";
+	return "?__operation=create_picture";
 }
 
 function album_displayConventionalAddMultiplePicturesLink(Album $album): string
@@ -129,7 +130,7 @@ function album_displayConventionalAddMultiplePicturesLink(Album $album): string
 
 function album_displayLayoutAddMultiplePicturesLink(Album $album): string
 {
-	return $_SERVER["PHP_SELF"]."?__operation=add_multiple_pictures";
+	return "?__operation=add_multiple_pictures";
 }
 
 function displayAddPictureButton(Album $album, string $viewType): void

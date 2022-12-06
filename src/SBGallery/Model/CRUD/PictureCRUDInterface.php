@@ -4,6 +4,7 @@ use Exception;
 use SBLayout\Model\Route;
 use SBLayout\Model\PageForbiddenException;
 use SBData\Model\Table\Anchor\AnchorRow;
+use SBCrud\Model\RouteUtils;
 use SBCrud\Model\CRUD\CRUDInterface;
 use SBCrud\Model\Page\CRUDPage;
 use SBGallery\Model\Picture;
@@ -39,7 +40,7 @@ class PictureCRUDInterface extends CRUDInterface
 
 		if($this->picture->insert($_REQUEST))
 		{
-			header("Location: ".$_SERVER["PHP_SELF"]."/".rawurlencode($this->picture->entity["PICTURE_ID"]));
+			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->picture->entity["PICTURE_ID"]));
 			exit;
 		}
 	}
@@ -75,7 +76,7 @@ class PictureCRUDInterface extends CRUDInterface
 		$this->picture = $this->crudPage->parentPage->picture;
 
 		$this->picture->removePictureImage($GLOBALS["query"]["pictureId"], $GLOBALS["query"]["albumId"]);
-		header("Location: ".$_SERVER["PHP_SELF"]);
+		header("Location: ".RouteUtils::composeSelfURL());
 		exit();
 	}
 

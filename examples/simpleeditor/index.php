@@ -30,7 +30,7 @@ require_once("../../vendor/autoload.php");
 		else
 			$contents = NULL;
 		?>
-		<form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
+		<form action="" method="post">
 			<?php
 			\SBGallery\View\HTML\displayHTMLEditorWithGallery("editor1", "contents", "picturepicker.php", "iframepage.html", "image/editor", $contents);
 			?>

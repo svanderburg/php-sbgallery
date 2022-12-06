@@ -6,6 +6,7 @@
  * @{
  */
 namespace SBGallery\View\HTML;
+use SBCrud\Model\RouteUtils;
 use SBGallery\Model\Picture;
 
 function picture_displayConventionalAlbumLink(Picture $picture, string $albumURL): string
@@ -132,7 +133,7 @@ function picture_displayConventionalImageLink(string $albumId, string $pictureId
 	if($operation !== null)
 		$params["__operation"] = $operation;
 
-	return $_SERVER["PHP_SELF"]."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	return RouteUtils::composeSelfURL()."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function picture_displayLayoutImageLink(string $albumId, string $pictureId, string $operation = null): string
@@ -147,7 +148,7 @@ function picture_displayLayoutImageLink(string $albumId, string $pictureId, stri
 	else
 		$extraParams = "";
 
-	return dirname($_SERVER["PHP_SELF"])."/".rawurlencode($pictureId).$extraParams;
+	return dirname(RouteUtils::composeSelfURL())."/".rawurlencode($pictureId).$extraParams;
 }
 
 /**

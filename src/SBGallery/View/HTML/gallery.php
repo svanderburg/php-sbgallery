@@ -6,6 +6,7 @@
  * @{
  */
 namespace SBGallery\View\HTML;
+use SBCrud\Model\RouteUtils;
 use SBGallery\Model\Gallery;
 
 function displayGalleryThumbnail(Gallery $gallery, array $thumbnail, int $count, string $viewType): void
@@ -40,7 +41,7 @@ function gallery_displayConventionalAlbumLink(Gallery $gallery, string $albumId,
 			$params["__id"] = $count;
 	}
 
-	return $gallery->albumDisplayURL."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
+	return htmlspecialchars($gallery->albumDisplayURL)."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
 }
 
 function gallery_displayLayoutAlbumLink(Gallery $gallery, string $albumId, int $count, string $operation = null): string
@@ -60,7 +61,7 @@ function gallery_displayLayoutAlbumLink(Gallery $gallery, string $albumId, int $
 	else
 		$extraParams = "";
 
-	return $_SERVER["PHP_SELF"]."/".rawurlencode($albumId).$extraParams;
+	return RouteUtils::composeSelfURL()."/".rawurlencode($albumId).$extraParams;
 }
 
 function displayGalleryItem(Gallery $gallery, array $albumObject, string $viewType): void
@@ -96,7 +97,7 @@ function gallery_displayConventionalAddAlbumLink(Gallery $gallery): string
 
 function gallery_displayLayoutAddAlbumLink(Gallery $gallery): string
 {
-	return $_SERVER["PHP_SELF"]."?__operation=create_album";
+	return "?__operation=create_album";
 }
 
 function displayAddAlbumButton(Gallery $gallery, string $viewType): void

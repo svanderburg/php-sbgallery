@@ -11,7 +11,7 @@ use SBGallery\Model\Gallery;
 function displayAlbumsForPicturePickerPage(Gallery $gallery, string $galleryLabel): void
 {
 	?>
-	<p><a href="<?= $_SERVER["PHP_SELF"] ?>">&laquo; <?= $galleryLabel ?></a></p>
+	<p><a href="?">&laquo; <?= $galleryLabel ?></a></p>
 	<div class="album">
 		<?php
 		$album = $gallery->constructAlbum();
@@ -27,8 +27,8 @@ function displayAlbumsForPicturePickerPage(Gallery $gallery, string $galleryLabe
 				<?php
 				if($row["FileType"] !== null)
 				{
-					$thumbnailURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
-					$pictureURL = $album->baseURL."/".$album->entity["ALBUM_ID"]."/pictures/".$row["PICTURE_ID"].".".$row["FileType"];
+					$thumbnailURL = $album->baseURL."/".rawurlencode($album->entity["ALBUM_ID"])."/thumbnails/".rawurlencode($row["PICTURE_ID"]).".".$row["FileType"];
+					$pictureURL = $album->baseURL."/".rawurlencode($album->entity["ALBUM_ID"])."/pictures/".rawurlencode($row["PICTURE_ID"]).".".$row["FileType"];
 					?>
 					<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?= $pictureURL ?>', '<?= $row["Title"] ?>'); return false;"><img src="<?= $thumbnailURL ?>" alt="<?= $row["Title"] ?>"></a>
 					<?php
@@ -53,12 +53,12 @@ function displayPicturesForPicturePickerPage(Gallery $gallery): void
 		{
 			?>
 			<div class="galleryitem">
-				<a href="<?= $_SERVER["PHP_SELF"] ?>?ALBUM_ID=<?= $row["ALBUM_ID"] ?>">
+				<a href="?ALBUM_ID=<?= $row["ALBUM_ID"] ?>">
 					<?php
 					if($row["FileType"] === null)
 						$imageURL = $gallery->iconsPath."/thumbnail.png";
 					else
-						$imageURL = $gallery->baseURL."/".$row["ALBUM_ID"]."/thumbnails/".$row["PICTURE_ID"].".".$row["FileType"];
+						$imageURL = $gallery->baseURL."/".rawurlencode($row["ALBUM_ID"])."/thumbnails/".rawurlencode($row["PICTURE_ID"]).".".$row["FileType"];
 					?>
 					<img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"><br>
 					<?= $row["Title"] ?>

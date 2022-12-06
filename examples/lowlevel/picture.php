@@ -24,7 +24,7 @@ try
 		{
 			if($picture->insert($_REQUEST))
 			{
-				header("Location: ".$_SERVER["PHP_SELF"]."?".http_build_query(array(
+				header("Location: ?".http_build_query(array(
 					"ALBUM_ID" => $picture->entity["ALBUM_ID"],
 					"PICTURE_ID" => $picture->entity["PICTURE_ID"]
 				), "", null, PHP_QUERY_RFC3986));
@@ -35,7 +35,7 @@ try
 		{
 			if($picture->update($_REQUEST))
 			{
-				header("Location: ".$_SERVER["PHP_SELF"]."?".http_build_query(array(
+				header("Location: ?".http_build_query(array(
 					"ALBUM_ID" => $picture->entity["ALBUM_ID"],
 					"PICTURE_ID" => $picture->entity["PICTURE_ID"]
 				), "", null, PHP_QUERY_RFC3986));

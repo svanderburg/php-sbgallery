@@ -166,7 +166,7 @@ class Album
 	 *
 	 * @param $updateMode Whether the form should be used for updating an existing album
 	 */
-	private function constructForm($updateMode): void
+	private function constructForm(bool $updateMode): void
 	{
 		$this->form = new AlbumForm($updateMode, $this->albumLabels, $this->editorSettings);
 	}
@@ -180,7 +180,7 @@ class Album
 	 */
 	public function constructPicture($albumId): Picture
 	{
-		return new Picture($this->dbh, $this->baseURL."/".$albumId, $this->baseDir."/".$albumId, $this->pictureDisplayURL, $this->iconsPath, $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->pictureLabels, $this->editorSettings, $this->filePermissions, $this->picturesTable, $this->thumbnailsTable, $this->albumsTable);
+		return new Picture($this->dbh, $this->baseURL."/".rawurlencode($albumId), $this->baseDir."/".$albumId, $this->pictureDisplayURL, $this->iconsPath, $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->pictureLabels, $this->editorSettings, $this->filePermissions, $this->picturesTable, $this->thumbnailsTable, $this->albumsTable);
 	}
 
 	/**
