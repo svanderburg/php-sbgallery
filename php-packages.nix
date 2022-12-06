@@ -5,37 +5,37 @@ let
     "svanderburg/php-sbcrud" = {
       targetDir = "";
       src = fetchgit {
-        name = "svanderburg-php-sbcrud-f7e086d2e27fbec73f36f7932d2c51c6279957b7";
+        name = "svanderburg-php-sbcrud-336f427aaf2ac989ede3d0ce4c62d2a572d63ae9";
         url = "https://github.com/svanderburg/php-sbcrud.git";
-        rev = "f7e086d2e27fbec73f36f7932d2c51c6279957b7";
-        sha256 = "122yis2ihh3wfx0wn09z0vkk9ydp3pqim9i55yraijl87dxfcn2n";
+        rev = "336f427aaf2ac989ede3d0ce4c62d2a572d63ae9";
+        sha256 = "0aq1agln96cqi3j51q2lmqpqm2hsw6218wrfpqngsfxw5l8zk35v";
       };
     };
     "svanderburg/php-sbdata" = {
       targetDir = "";
       src = fetchgit {
-        name = "svanderburg-php-sbdata-ee777698c697ddee23e060db9621487022f76c11";
+        name = "svanderburg-php-sbdata-abaed513ead847b98696797467bc8c8422a64d17";
         url = "https://github.com/svanderburg/php-sbdata.git";
-        rev = "ee777698c697ddee23e060db9621487022f76c11";
-        sha256 = "0l878g61d8kqmp3inwglxv2c50c6r0dmf4gi0p2n5ww59m3f29vx";
+        rev = "abaed513ead847b98696797467bc8c8422a64d17";
+        sha256 = "0f7m5ma3ffhybgq6h2zclmylhf5lmnhizgk5z8ip3cp4cigkcl2c";
       };
     };
     "svanderburg/php-sbeditor" = {
       targetDir = "";
       src = fetchgit {
-        name = "svanderburg-php-sbeditor-a231deb1f13ddc4aa40147385065da3a92ad3fe3";
+        name = "svanderburg-php-sbeditor-2d12764ff07d415f71f602eb0e08db2136ebf2d8";
         url = "https://github.com/svanderburg/php-sbeditor.git";
-        rev = "a231deb1f13ddc4aa40147385065da3a92ad3fe3";
-        sha256 = "19775i4q8gw1ah0zdl9vwpb67kbihjjcmq54ff1xrdp3ly1mhb56";
+        rev = "2d12764ff07d415f71f602eb0e08db2136ebf2d8";
+        sha256 = "1d4ymwx6v629z39f69z6lfl13m1z88m8sykx0njy7h80ywl5yzyw";
       };
     };
     "svanderburg/php-sblayout" = {
       targetDir = "";
       src = fetchgit {
-        name = "svanderburg-php-sblayout-1cf019759fed392d2a75e2caf5e5a929d7668267";
+        name = "svanderburg-php-sblayout-97546d499170396598338a62bc2043fb84ef24c1";
         url = "https://github.com/svanderburg/php-sblayout.git";
-        rev = "1cf019759fed392d2a75e2caf5e5a929d7668267";
-        sha256 = "0mr5v8jkkpksn6cvsswglyynkmdgqmc8gff2hi5a01i8wp5k60sx";
+        rev = "97546d499170396598338a62bc2043fb84ef24c1";
+        sha256 = "0qzh5yznqndalsd91pc1rdgla4a59y7ga72xcwnl1q4gyl83wmlg";
       };
     };
   };
