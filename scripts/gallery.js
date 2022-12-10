@@ -3,7 +3,8 @@
 
     function insertHTML(id, html) {
         var editorDivElement = parent.document.getElementById(id);
-        sbeditor.insertHTMLIntoEditorDivElement(editorDivElement, html);
+        var iframe = editorDivElement.getElementsByTagName("iframe")[0];
+        sbeditor.insertHTML(iframe, html);
     }
 
     /**
