@@ -323,6 +323,7 @@ $application = new Application(
 
     /* Pages */
     new StaticContentPage("Home", new Contents("home.php"), array(
+        "400" => new HiddenStaticContentPage("Bad request", new Contents("error/400.php")),
         "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.php")),
 
         "home" => new PageAlias("Home", ""),
@@ -355,25 +356,25 @@ By using albums as pages, we can use the gallery as a simple content manager
 allowing a user to dynamic construct sub pages of a web applications including
 the contents of the pages.
 
-When defining the gallery page, we must configure it to use the `pages` views
-(as opposed to the `html` views) and we must override the root of the gallery
-page to prevent the gallery overview from showing up:
+When defining the gallery page, we must configure it to inherit from the
+`TraversableGalleryPage` class:
 
 ```php
+use PDO;
 use SBGallery\Model\Gallery;
 use SBGallery\Model\GalleryPermissionChecker;
-use SBGallery\Model\Page\GalleryPage;
+use SBGallery\Model\Page\TraversableGalleryPage;
 
-class MyGalleryPage extends GalleryPage
+class MyGalleryPage extends TraversableGalleryPage
 {
-    public function __construct()
+    public function __construct(PDO $dbh)
     {
-        parent::__construct("Gallery", null, "Pages", "gallery.php");
+        parent::__construct($dbh, "Gallery");
     }
 
-    public function constructGallery(): Gallery
+    public function constructGallery(PDO $dbh): Gallery
     {
-        return new Gallery(array(...));
+        return new Gallery($dbh, array(...));
     }
 
     public function constructGalleryPermissionChecker(): GalleryPermissionChecker
@@ -383,62 +384,8 @@ class MyGalleryPage extends GalleryPage
 }
 ```
 
-Composing the application layout is done in a similar way as the previous
-example:
-
-```php
-use SBLayout\Model\Application;
-use SBLayout\Model\Page\HiddenStaticContentPage;
-use SBLayout\Model\Page\PageAlias;
-use SBLayout\Model\Page\StaticContentPage;
-use SBLayout\Model\Page\Content\Contents;
-use SBLayout\Model\Section\ContentsSection;
-use SBLayout\Model\Section\MenuSection;
-use SBLayout\Model\Section\StaticSection;
-
-$galleryPage = new MyGalleryPage();
-
-$application = new Application(
-        /* Title */
-        "Gallery layout integration",
-
-        /* CSS stylesheets */
-        array("default.css"),
-
-        /* Sections */
-        array(
-                "header" => new StaticSection("header.php"),
-                "menu" => new MenuSection(0),
-                "submenu" => new StaticSection("submenu.php"),
-                "contents" => new ContentsSection(true)
-        ),
-
-        /* Pages */
-        new StaticContentPage("Home", new Contents("home.php"), array(
-                "404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.php")),
-
-                "home" => new PageAlias("Home", ""),
-                "gallery" => $galleryPage
-        ))
-);
-```
-
-In the above example, we compose a layout in a similar way except that we
-globally declare the gallery page and we add a `submenu` section whose
-responsibility is to display the available albums as menu options.
-
-The `submenu.php` section module should be written as follows:
-
-```php
-<?php
-if(\SBGallery\View\Pages\visitedGallerySubPage())
-    \SBGallery\View\Pages\displayAlbumMenuSection($GLOBALS["galleryPage"]);
-?>
-```
-
-The above code fragement checks whether the user is actually visiting one of the
-gallery's sub pages and if this is the case, it will display all the albums as
-menu options.
+Composing the application layout is done in exactly the same way as the previous
+example.
 
 Embedding a gallery into a HTML editor
 ======================================

@@ -19,8 +19,6 @@ $dbh = new PDO($config["dbDsn"], $config["dbUsername"], $config["dbPassword"], a
 	PDO::ATTR_PERSISTENT => true
 ));
 
-$galleryPage = new MyGalleryPage($dbh);
-
 $application = new Application(
 	/* Title */
 	"Gallery layout integration",
@@ -32,7 +30,7 @@ $application = new Application(
 	array(
 		"header" => new StaticSection("header.php"),
 		"menu" => new MenuSection(0),
-		"submenu" => new StaticSection("submenu.php"),
+		"submenu" => new MenuSection(1),
 		"contents" => new ContentsSection(true)
 	),
 
@@ -42,7 +40,7 @@ $application = new Application(
 		"404" => new HiddenStaticContentPage("Page not found", new Contents("error/404.php")),
 
 		"home" => new PageAlias("Home", ""),
-		"gallery" => $galleryPage
+		"gallery" => new MyGalleryPage($dbh)
 	))
 );
 

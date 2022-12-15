@@ -13,6 +13,8 @@ use SBGallery\Model\Page\Content\AlbumContents;
 
 abstract class GalleryPage extends CRUDMasterPage
 {
+	public PDO $dbh;
+
 	private AlbumContents $albumContents;
 
 	public Gallery $gallery;
@@ -30,6 +32,7 @@ abstract class GalleryPage extends CRUDMasterPage
 			"create_album" => new GalleryOperationPage($this, $this->gallery->galleryLabels["Add album"], $albumContents),
 			"insert_album" => new GalleryOperationPage($this, $this->gallery->galleryLabels["Insert album"], $albumContents)
 		));
+		$this->dbh = $dbh;
 		$this->albumContents = $albumContents;
 	}
 

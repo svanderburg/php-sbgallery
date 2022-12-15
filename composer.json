@@ -19,8 +19,7 @@
           "src/SBGallery/View/HTML/htmleditorwithgallery.php",
           "src/SBGallery/View/HTML/picturepickerpage.php",
           "src/SBGallery/View/HTML/picture.php",
-          "src/SBGallery/View/HTML/Field/htmleditorwithgalleryfield.php",
-          "src/SBGallery/View/Pages/displayalbummenusection.php"
+          "src/SBGallery/View/HTML/Field/htmleditorwithgalleryfield.php"
       ]
   },
   "autoload-dev": {

@@ -11,7 +11,7 @@ class GalleryOperationPage extends OperationPage
 
 	public function __construct(CRUDPage $parentPage, string $title, Contents $contents, string $operationParam = "__operation")
 	{
-		parent::__construct($title, $contents, $operationParam);
+		parent::__construct($title, $contents, $operationParam, dirname(__FILE__)."/../../View/HTML/menuitems/galleryoperation.php");
 		$this->parentPage = $parentPage;
 	}
 

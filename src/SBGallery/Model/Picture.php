@@ -140,7 +140,7 @@ class Picture
 	/**
 	 * Fetches a requested picture from the database
 	 *
-	 * @param $picture ID of the picture
+	 * @param $pictureId ID of the picture
 	 * @param $albumId ID of the album where the picture belongs to
 	 */
 	public function fetchEntity(string $pictureId, string $albumId): void

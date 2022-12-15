@@ -40,7 +40,7 @@ class AlbumPage extends CRUDMasterPage
 			"moveright_album" => new GalleryOperationPage($this, $this->album->albumLabels["Move right"], $contents),
 			"add_multiple_pictures" => new OperationPage($this->album->albumLabels["Add multiple pictures"], $contents->constructMultiplePictureContents()),
 			"insert_multiple_pictures" => new GalleryOperationPage($this, $this->album->albumLabels["Insert multiple pictures"], $contents)
-		));
+		), "Invalid query parameter:", "Invalid operation:", "__operation", dirname(__FILE__)."/../../View/HTML/menuitems/album.php");
 
 		$this->galleryPage = $galleryPage;
 		$this->albumId = $albumId;
