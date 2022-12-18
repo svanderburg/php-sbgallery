@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "336f427aaf2ac989ede3d0ce4c62d2a572d63ae9"
+                "reference": "25a22f640f11276b758efc5609027545576b659c"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2022-12-10T15:17:14+00:00"
+            "time": "2022-12-19T17:50:33+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -52,7 +52,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "abaed513ead847b98696797467bc8c8422a64d17"
+                "reference": "0a9c962dcb92dfade5015c43637b8ab8800f52c3"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -75,8 +75,10 @@
                     "src/SBData/View/HTML/Field/arraycomboboxfield.php",
                     "src/SBData/View/HTML/Field/textareafield.php",
                     "src/SBData/View/HTML/Field/checkboxfield.php",
-                    "src/SBData/View/HTML/Field/numericinttextfield.php",
+                    "src/SBData/View/HTML/Field/integertextfield.php",
+                    "src/SBData/View/HTML/Field/naturalnumbertextfield.php",
                     "src/SBData/View/HTML/Field/emailfield.php",
+                    "src/SBData/View/HTML/Field/ipaddressfield.php",
                     "src/SBData/View/HTML/Field/generichiddenfield.php",
                     "src/SBData/View/HTML/Field/generickeylinkfield.php",
                     "src/SBData/View/HTML/Field/generictextfield.php",
@@ -85,15 +87,19 @@
                     "src/SBData/View/HTML/Field/metadatafield.php",
                     "src/SBData/View/HTML/Field/rawtextareafield.php",
                     "src/SBData/View/HTML/Field/rawtextfield.php",
-                    "src/SBData/View/HTML/Field/readonlynumericinttextfield.php",
+                    "src/SBData/View/HTML/Field/readonlyintegertextfield.php",
+                    "src/SBData/View/HTML/Field/readonlynaturalnumbertextfield.php",
+                    "src/SBData/View/HTML/Field/naturalnumbertextfield.php",
                     "src/SBData/View/HTML/Field/filefield.php",
                     "src/SBData/View/HTML/Field/datefield.php",
                     "src/SBData/View/HTML/Field/passwordfield.php",
                     "src/SBData/View/HTML/Field/textfield.php",
                     "src/SBData/View/HTML/Field/hiddenfield.php",
-                    "src/SBData/View/HTML/Field/hiddennumericintfield.php",
+                    "src/SBData/View/HTML/Field/hiddenintegerfield.php",
+                    "src/SBData/View/HTML/Field/hiddennaturalnumberfield.php",
                     "src/SBData/View/HTML/Field/hiddenacceptablefilenamefield.php",
-                    "src/SBData/View/HTML/Field/numericintkeylinkfield.php",
+                    "src/SBData/View/HTML/Field/integerkeylinkfield.php",
+                    "src/SBData/View/HTML/Field/naturalnumberkeylinkfield.php",
                     "src/SBData/View/HTML/Field/dbcomboboxfield.php",
                     "src/SBData/View/HTML/Field/urlfield.php"
                 ]
@@ -119,7 +125,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-12-10T14:55:09+00:00"
+            "time": "2022-12-18T15:36:04+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -127,7 +133,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "2d12764ff07d415f71f602eb0e08db2136ebf2d8"
+                "reference": "07e246b65c7b2ea37ad3b8a7d1355974733c1102"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
@@ -154,7 +160,7 @@
                 }
             ],
             "description": "Simple embeddable HTML editor",
-            "time": "2022-12-10T15:34:08+00:00"
+            "time": "2022-12-20T20:43:43+00:00"
         },
         {
             "name": "svanderburg/php-sblayout",
