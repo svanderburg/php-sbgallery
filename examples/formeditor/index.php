@@ -25,6 +25,7 @@ if(count($_REQUEST) > 0)
 		<title>HTML editor with gallery integration test</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script type="text/javascript" src="scripts/htmleditor.js"></script>
+		<script type="text/javascript" src="../../scripts/htmleditorwithgallery.js"></script>
 	</head>
 
 	<body>

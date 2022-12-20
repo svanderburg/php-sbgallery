@@ -24,10 +24,12 @@ namespace SBGallery\View\HTML;
  */
 function displayHTMLEditorWithGallery(string $id, string $name, string $galleryIframePage, string $editorIframePage, string $iconsPath, string $contents = NULL, int $width = 60, int $galleryHeight = 10, int $editorHeight = 20): void
 {
+	\SBEditor\View\HTML\displayEditorTextAreaDiv($id, $name, $contents, $width, $editorHeight);
 	?>
-	<iframe src="<?= $galleryIframePage ?>" style="width: <?= $width ?>em; height: <?= $galleryHeight ?>em;"></iframe>
+	<script type="text/javascript">
+	sbeditorWithGallery.addEditorWithGalleryCapabilities('<?= $id ?>', '<?= $iconsPath ?>', '<?= $galleryIframePage ?>', '<?= $editorIframePage ?>', '<?= $width ?>', '<?= $galleryHeight ?>', '<?= $editorHeight ?>');
+	</script>
 	<?php
-	\SBEditor\View\HTML\displayHTMLEditor($id, $name, $editorIframePage, $iconsPath, $contents, $width, $editorHeight);
 }
 
 /**
