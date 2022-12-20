@@ -199,7 +199,7 @@ class Album
 	public function create(): void
 	{
 		$this->constructForm(false);
-		$this->form->fields["__operation"]->importValue("insert_album");
+		$this->form->setOperation("insert_album");
 	}
 
 	/**
@@ -217,8 +217,8 @@ class Album
 		else
 		{
 			$this->form->importValues($this->entity);
-			$this->form->fields["__operation"]->importValue("update_album");
 			$this->form->fields["old_ALBUM_ID"]->importValue($this->entity["ALBUM_ID"]);
+			$this->form->setOperation("update_album");
 		}
 	}
 

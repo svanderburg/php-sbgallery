@@ -1,14 +1,14 @@
 <?php
 namespace SBGallery\Model\Form;
-use SBData\Model\Form;
 use SBData\Model\Field\AcceptableFileNameField;
 use SBData\Model\Field\FileField;
 use SBData\Model\Field\HiddenField;
 use SBData\Model\Field\HiddenAcceptableFileNameField;
 use SBData\Model\Field\TextField;
+use SBCrud\Model\CRUDForm;
 use SBEditor\Model\Field\HTMLEditorField;
 
-class PictureForm extends Form
+class PictureForm extends CRUDForm
 {
 	private static array $editorSettings = array(
 		"id" => "editor1",
@@ -24,7 +24,6 @@ class PictureForm extends Form
 			$editorSettings = PictureForm::$editorSettings;
 
 		$args = array(
-			"__operation" => new HiddenField(true),
 			"ALBUM_ID" => new HiddenAcceptableFileNameField(true, 255),
 			"PICTURE_ID" => new AcceptableFileNameField($labels["PICTURE_ID"], true, 20, 255),
 			"Title" => new TextField($labels["Title"], true, 20, 255),

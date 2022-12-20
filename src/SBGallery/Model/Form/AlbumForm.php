@@ -1,13 +1,13 @@
 <?php
 namespace SBGallery\Model\Form;
-use SBData\Model\Form;
 use SBData\Model\Field\HiddenField;
 use SBData\Model\Field\CheckBoxField;
 use SBData\Model\Field\AcceptableFileNameField;
 use SBData\Model\Field\TextField;
+use SBCrud\Model\CRUDForm;
 use SBEditor\Model\Field\HTMLEditorField;
 
-class AlbumForm extends Form
+class AlbumForm extends CRUDForm
 {
 	private static array $editorSettings = array(
 		"id" => "editor1",
@@ -23,7 +23,6 @@ class AlbumForm extends Form
 			$editorSettings = AlbumForm::$editorSettings;
 
 		$args = array(
-			"__operation" => new HiddenField(true),
 			"ALBUM_ID" => new AcceptableFileNameField($labels["ALBUM_ID"], true, 20, 255),
 			"Title" => new TextField($labels["Title"], true, 20, 255),
 			"Visible" => new CheckBoxField($labels["Visible"]),

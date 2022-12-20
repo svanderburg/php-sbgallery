@@ -158,7 +158,7 @@ class Picture
 	{
 		$this->constructForm(false);
 		$this->form->fields["ALBUM_ID"]->importValue($albumId);
-		$this->form->fields["__operation"]->importValue("insert_picture");
+		$this->form->setOperation("insert_picture");
 	}
 
 	/**
@@ -178,8 +178,8 @@ class Picture
 		else
 		{
 			$this->form->importValues($this->entity);
-			$this->form->fields["__operation"]->importValue("update_picture");
 			$this->form->fields["old_PICTURE_ID"]->importValue($this->entity["PICTURE_ID"]);
+			$this->form->setOperation("update_picture");
 		}
 	}
 
