@@ -1,17 +1,11 @@
 <?php
-global $route, $crudInterface, $checker;
-
-$album = $crudInterface->album;
+global $route, $crudInterface, $currentPage;
 
 \SBLayout\View\HTML\displayBreadcrumbs($route, 0);
 
-if($checker->checkWritePermissions())
+if($currentPage->checker->checkWritePermissions())
 {
-	\SBGallery\View\HTML\displayEditableAlbum($album,
-		$album->albumLabels["Submit"],
-		$album->albumLabels["Form invalid"],
-		$album->albumLabels["Field invalid"],
-		"Layout");
+	\SBGallery\View\HTML\displayEditableAlbum($crudInterface->album);
 	?>
 	<script type="text/javascript">
 	sbeditor.initEditors();
@@ -19,5 +13,5 @@ if($checker->checkWritePermissions())
 	<?php
 }
 else
-	\SBGallery\View\HTML\displayAlbum($album, "Layout");
+	\SBGallery\View\HTML\displayAlbum($crudInterface->album);
 ?>

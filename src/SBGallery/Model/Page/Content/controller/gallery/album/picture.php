@@ -1,9 +1,8 @@
 <?php
 use SBGallery\Model\CRUD\PictureCRUDInterface;
 
-global $route, $currentPage, $checker, $crudInterface;
+global $route, $currentPage, $crudInterface;
 
-$checker = $currentPage->constructGalleryPermissionChecker();
-$crudInterface = new PictureCRUDInterface($route, $currentPage, $checker);
+$crudInterface = new PictureCRUDInterface($route, $currentPage);
 $crudInterface->executeOperation();
 ?>

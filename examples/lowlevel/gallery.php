@@ -2,10 +2,11 @@
 error_reporting(E_STRICT | E_ALL);
 
 require_once(dirname(__FILE__)."/../../vendor/autoload.php");
+require_once("includes/config.php");
 
 use Examples\LowLevel\Model\MyGallery;
 
-$myGallery = new MyGallery();
+$myGallery = new MyGallery($dbh);
 ?>
 <!DOCTYPE html>
 <html>

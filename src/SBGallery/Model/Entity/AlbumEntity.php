@@ -4,6 +4,9 @@ use Exception;
 use PDO;
 use PDOStatement;
 
+/**
+ * Contains methods that are related to the albums table
+ */
 class AlbumEntity
 {
 	public static function queryAll(PDO $dbh, string $albumsTable = "albums"): PDOStatement

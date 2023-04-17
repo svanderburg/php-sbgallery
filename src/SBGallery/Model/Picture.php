@@ -1,345 +1,129 @@
 <?php
 namespace SBGallery\Model;
-use Exception;
 use PDO;
-use PDOStatement;
-use SBGallery\Model\Form\PictureForm;
-use SBGallery\Model\Entity\AlbumEntity;
+use SBData\Model\Field\AcceptableFileNameField;
+use SBData\Model\Field\FileField;
+use SBData\Model\Field\HiddenField;
+use SBData\Model\Field\HiddenAcceptableFileNameField;
+use SBData\Model\Field\TextField;
+use SBEditor\Model\Field\HTMLEditorField;
+use SBCrud\Model\CRUDForm;
 use SBGallery\Model\Entity\PictureEntity;
-use SBGallery\Model\FileSet\PictureFileSet;
+use SBGallery\Model\Settings\PictureSettings;
 
 /**
- * A representation of a picture whose state can be modified.
+ * Representation of a configurable picture whose state can be modified.
  */
 class Picture
 {
-	private static array $referenceLabels = array(
-		"Gallery" => "Gallery",
-		"PICTURE_ID" => "Id",
-		"Title" => "Title",
-		"Description" => "Description",
-		"Image" => "Image",
-		"Clear image" => "Clear image",
-		"Submit" => "Submit",
-		"Form invalid" => "One or more fields are incorrectly specified and marked with a red color!",
-		"Field invalid" => "This field is incorrectly specified!",
-		"Previous" => "Previous",
-		"Next" => "Next",
-		"Update picture" => "Update picture",
-		"Remove picture" => "Remove picture",
-		"Remove picture image" => "Remove picture image",
-		"Move left" => "Move left",
-		"Move right" => "Move right",
-		"Set picture as thumbnail" => "Set picture as thumbnail",
-		"Cannot find picture:" => "Cannot find picture:"
-	);
-
-	/** Database connection handler */
+	/** Database connection to the gallery database */
 	public PDO $dbh;
 
-	/** Base URL of the album */
-	public string $baseURL;
+	/** Object that contains picture settings */
+	public PictureSettings $settings;
 
-	/** Directory in which the album's pictures reside */
-	public string $albumDir;
+	/** The ID of the album in which the picture is stored */
+	public string $albumId;
 
-	/** URL to the page that displays an individual picture */
-	public string $pictureDisplayURL;
+	/** The ID of the picture or null if it was not yet inserted into the database */
+	public ?string $pictureId;
 
-	/** URL to the base directory of the icons of the album */
-	public string $iconsPath;
+	public CRUDForm $form;
 
-	/** Maximum width of a thumbnail image */
-	public int $thumbnailWidth;
+	/** The file type of the image or null if it was not stored on disk */
+	public ?string $fileType;
 
-	/** Maximum height of a thumbnail image */
-	public int $thumbnailHeight;
-
-	/** Maximum width of a picture */
-	public int $pictureWidth;
-
-	/** Maximum height of a picture */
-	public int $pictureHeight;
-
-	/** The file permissions for the files stored in the base dir */
-	public int $filePermissions;
-
-	/** Message labels for translation of the picture properties */
-	public array $labels;
-
-	/** Configuration settings for the embedded editor */
-	public ?array $editorSettings;
-
-	/** Form that can be used to validate and display a picture's properties */
-	public PictureForm $form;
-
-	/** Stores the properties of an individual picture */
-	public array|bool $entity = false;
-
-	/** Name of the database table storing picture properties */
-	public string $picturesTable;
-
-	/** Name of the database table storing thumbnail properties */
-	public string $thumbnailsTable;
-
-	/** Name of the database table storing album properties */
-	public string $albumsTable;
+	/** The ordering index number of the picture */
+	public int $ordering;
 
 	/**
-	 * Creates a new picture object.
+	 * Constructs a new picture instance.
 	 *
-	 * @param $dbh Database connection handler
-	 * @param $baseURL Base URL of the album
-	 * @param $albumDir Directory in which the album's pictures reside
-	 * @param $pictureDisplayURL URL to the page that displays an individual picture
-	 * @param $iconsPath URL to the base directory of the icons of the album
-	 * @param $thumbnailWidth Maximum width of a thumbnail image
-	 * @param $thumbnailHeight Maximum height of a thumbnail image
-	 * @param $pictureWidth Maximum width of a picture
-	 * @param $pictureHeight Maximum height of a picture
-	 * @param $labels Message labels for translation of the picture properties
-	 * @param $editorSettings Configuration settings for the embedded editor
-	 * @param $filePermissions The file permissions for the files stored in the base dir
-	 * @param $picturesTable Name of the database table storing picture properties
-	 * @param $thumbnailsTable Name of the database table storing thumbnail properties
-	 * @param $albumsTable Name of the database table storing album properties
+	 * @param $dbh Database connection to the gallery database
+	 * @param $settings Object that contains picture settings
+	 * @param $albumId The ID of the album in which the picture is stored
+	 * @param $pictureId The ID of the picture
 	 */
-	public function __construct(PDO $dbh, string $baseURL, string $albumDir, string $pictureDisplayURL, string $iconsPath, int $thumbnailWidth, int $thumbnailHeight, int $pictureWidth, int $pictureHeight, array $labels = null, array $editorSettings = null, int $filePermissions = 0666, string $picturesTable = "pictures", string $thumbnailsTable = "thumbnails", string $albumsTable = "albums")
+	public function __construct(PDO $dbh, PictureSettings $settings, string $albumId, string $pictureId = null)
 	{
 		$this->dbh = $dbh;
-		$this->baseURL = $baseURL;
-		$this->albumDir = $albumDir;
-		$this->pictureDisplayURL = $pictureDisplayURL;
-		$this->iconsPath = $iconsPath;
-		$this->thumbnailWidth = $thumbnailWidth;
-		$this->thumbnailHeight = $thumbnailHeight;
-		$this->pictureWidth = $pictureWidth;
-		$this->pictureHeight = $pictureHeight;
-		$this->filePermissions = $filePermissions;
-		if($labels === null)
-			$this->labels = Picture::$referenceLabels;
-		else
-			$this->labels = $labels;
-		$this->editorSettings = $editorSettings;
-		$this->picturesTable = $picturesTable;
-		$this->thumbnailsTable = $thumbnailsTable;
-		$this->albumsTable = $albumsTable;
-	}
+		$this->settings = $settings;
+		$this->albumId = $albumId;
+		$this->pictureId = $pictureId;
 
-	/**
-	 * Constructs a form that can be used to validate and display a
-	 * picture's properties.
-	 *
-	 * @param $updateMode Whether the form should be used for updating an existing picture
-	 */
-	private function constructForm(bool $updateMode): void
-	{
-		$this->form = new PictureForm($updateMode, $this->labels, $this->editorSettings);
-	}
+		$this->form = new CRUDForm(array(
+			"ALBUM_ID" => new HiddenAcceptableFileNameField(true, 255),
+			"PICTURE_ID" => new AcceptableFileNameField($settings->labels->pictureId, true, 20, 255),
+			"Title" => new TextField($settings->labels->title, true, 20, 255),
+			"Description" => new HTMLEditorField($settings->editorSettings->id, $settings->labels->description, $settings->editorSettings->iframePage, $settings->editorSettings->iconsPath, false, $settings->editorSettings->width, $settings->editorSettings->height),
+			"Image" => new FileField($settings->labels->image, array("image/gif", "image/jpeg", "image/png"), false)
+		), $settings->operationParam, $settings->urlGenerator->generatePictureFormURL($albumId, $pictureId), $settings->labels->submit, $settings->labels->validationErrorMessage, $settings->labels->fieldErrorMessage);
 
-	/**
-	 * Fetches a requested picture from the database
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 */
-	public function fetchEntity(string $pictureId, string $albumId): void
-	{
-		$stmt = PictureEntity::queryOne($this->dbh, $pictureId, $albumId, $this->picturesTable);
-		$this->entity = $stmt->fetch();
-	}
+		$this->fileType = null;
 
-	/**
-	 * Modifies the state to support the creation of a new picture.
-	 *
-	 * @param $albumId ID of the album where the picture belongs to
-	 */
-	public function create(string $albumId): void
-	{
-		$this->constructForm(false);
 		$this->form->fields["ALBUM_ID"]->importValue($albumId);
-		$this->form->setOperation("insert_picture");
-	}
 
-	/**
-	 * Modifies the state to view a particular album.
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 * @throws An exception in case of an error
-	 */
-	public function view(string $pictureId, string $albumId): void
-	{
-		$this->constructForm(true);
-		$this->fetchEntity($pictureId, $albumId);
-
-		if($this->entity === false)
-			throw new Exception(array_key_exists("cannotFindPicture", $this->labels) ? $this->albumLabels["cannotFindPicture"] : "Cannot find requested picture!");
+		if($pictureId === null)
+			$this->form->setOperation("insert_picture");
 		else
-		{
-			$this->form->importValues($this->entity);
-			$this->form->fields["old_PICTURE_ID"]->importValue($this->entity["PICTURE_ID"]);
 			$this->form->setOperation("update_picture");
-		}
 	}
 
-	/**
-	 * Inserts a given picture into the database and uploads the files into
-	 * the gallery base dir.
-	 *
-	 * @param $picture Array with properties of a picture
-	 * @return true if the picture was successfully inserted, else false
-	 * @throws An exception if the insert process fails
-	 */
-	public function insert(array $picture): bool
+	public function importValues(array $values): void
 	{
-		$this->constructForm(false);
-		$this->form->importValues($picture);
+		$this->form->importValues($values);
+
+		if(array_key_exists("FileType", $values))
+			$this->fileType = $values["FileType"];
+
+		if(array_key_exists("Ordering", $values))
+			$this->ordering = $values["Ordering"];
+	}
+
+	public function exportValues(): array
+	{
+		$values = $this->form->exportValues();
+		$values["FileType"] = $this->fileType;
+		//$values["Ordering"] = $this->ordering;
+		return $values;
+	}
+
+	public function checkFields(): void
+	{
 		$this->form->checkFields();
+	}
 
-		if($this->form->checkValid())
-		{
-			/* Compose picture entity object */
-			$this->entity = $this->form->exportValues();
-			$this->entity["FileType"] = PictureFileSet::determineImageFileType("Image");
+	public function checkValid(): bool
+	{
+		return $this->form->checkValid();
+	}
 
-			PictureEntity::insert($this->dbh, $this->entity, $this->picturesTable); /* Insert picture record into the database */
-
-			/* Move or replace the image file if one has been provided */
-			PictureFileSet::generatePictures($_FILES["Image"]["tmp_name"], $this->albumDir, $this->entity["PICTURE_ID"], $this->entity["FileType"], $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->filePermissions);
-			return true;
-		}
+	/**
+	 * Queries the ID of the predecessor picture in the album.
+	 *
+	 * @return The ID of the predecessor picture or null if there is none
+	 */
+	public function queryPredecessorId(): ?string
+	{
+		$stmt = PictureEntity::queryPredecessor($this->dbh, $this->albumId, $this->ordering, $this->settings->picturesTable);
+		if(($row = $stmt->fetch()) === false)
+			return null;
 		else
-			return false;
+			return $row["PICTURE_ID"];
 	}
 
 	/**
-	 * Updates an existing picture in the database and the filesystem.
+	 * Queries the ID of the successor picture in the album.
 	 *
-	 * @param $picture Array with properties of a picture.
-	 * @return true if the pictures was updated, else false
-	 * @throws An exception if the insert process fails
+	 * @return The ID of the successor picture or null if there is none
 	 */
-	public function update(array $picture): bool
+	public function querySuccessorId(): ?string
 	{
-		$this->constructForm(true);
-		$this->form->importValues($picture);
-		$this->form->checkFields();
-
-		if($this->form->checkValid())
-		{
-			$this->fetchEntity($this->form->fields["old_PICTURE_ID"]->exportValue(), $this->form->fields["ALBUM_ID"]->exportValue()); // Fetch again to find out what fileType it has
-			$oldPictureId = $this->form->fields["old_PICTURE_ID"]->exportValue();
-			$oldFileType = $this->entity["FileType"];
-
-			/* Compose picture entity object */
-			$this->entity = $this->form->exportValues();
-			$this->entity["FileType"] = PictureFileSet::determineImageFileType("Image");
-
-			PictureEntity::update($this->dbh, $this->entity, $oldPictureId, $this->entity["ALBUM_ID"], $this->picturesTable); /* Update picture record in the database */
-
-			if($this->entity["FileType"] !== null && $oldFileType !== null && $oldFileType !== $this->entity["FileType"]) // If the filetype has changed, then delete the old pictures
-				PictureFileSet::deletePictures($this->albumDir, $this->entity["PICTURE_ID"], $this->entity["FileType"]);
-			else if($oldPictureId !== $this->entity["PICTURE_ID"]) // If the id has changed, we should change the filenames of the pictures as well
-				PictureFileSet::renamePictures($this->albumDir, $oldPictureId, $this->entity["PICTURE_ID"], $oldFileType, $this->entity["FileType"]);
-
-			/* Move or replace the image file if one has been provided */
-			PictureFileSet::generatePictures($_FILES["Image"]["tmp_name"], $this->albumDir, $this->entity["PICTURE_ID"], $this->entity["FileType"], $this->thumbnailWidth, $this->thumbnailHeight, $this->pictureWidth, $this->pictureHeight, $this->filePermissions);
-			return true;
-		}
+		$stmt = PictureEntity::querySuccessor($this->dbh, $this->albumId, $this->ordering, $this->settings->picturesTable);
+		if(($row = $stmt->fetch()) === false)
+			return null;
 		else
-			return false;
-	}
-
-	/**
-	 * Removes a picture from the database and the filesystem.
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 */
-	public function remove(string $pictureId, string $albumId): void
-	{
-		$this->fetchEntity($pictureId, $albumId); // Fetch picture entity object to determine the file type
-		PictureEntity::remove($this->dbh, $this->entity["PICTURE_ID"], $this->entity["ALBUM_ID"], $this->picturesTable);
-		PictureFileSet::deletePictures($this->albumDir, $this->entity["PICTURE_ID"], $this->entity["FileType"]);
-	}
-
-	/**
-	 * Sets a picture as default thumbnail image for the album.
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 */
-	public function setAsThumbnail(string $pictureId, string $albumId): void
-	{
-		AlbumEntity::setThumbnail($this->dbh, $pictureId, $albumId, $this->thumbnailsTable);
-	}
-
-	/**
-	 * Moves the picture left in the overview of pictures
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 * @return true if the picture was moved, false if it remained in the same position
-	 */
-	public function moveLeft(string $pictureId, string $albumId): bool
-	{
-		return PictureEntity::moveLeft($this->dbh, $pictureId, $albumId, $this->picturesTable);
-	}
-
-	/**
-	 * Moves the picture right in the overview of pictures
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 * @return true if the picture was moved, false if it remained in the same position
-	 */
-	public function moveRight(string $pictureId, string $albumId): bool
-	{
-		return PictureEntity::moveRight($this->dbh, $pictureId, $albumId, $this->picturesTable);
-	}
-
-	/**
-	 * Removes the displayed image files
-	 *
-	 * @param $pictureId ID of the picture
-	 * @param $albumId ID of the album where the picture belongs to
-	 */
-	public function removePictureImage(string $pictureId, string $albumId): void
-	{
-		$this->fetchEntity($pictureId, $albumId); // Fetch picture entity object to determine the file type
-		PictureFileSet::deletePictures($this->albumDir, $this->entity["PICTURE_ID"], $this->entity["FileType"]);
-		PictureEntity::resetFileType($this->dbh, $this->entity["PICTURE_ID"], $this->entity["ALBUM_ID"], $this->picturesTable);
-	}
-
-	/**
-	 * Queries the picture that comes before the current picture in the album
-	 *
-	 * @return A PDO statement that can be used to retrieve the result
-	 */
-	public function queryPredecessor(): PDOStatement
-	{
-		return PictureEntity::queryPredecessor($this->dbh, $this->entity["ALBUM_ID"], $this->entity["Ordering"], $this->picturesTable);
-	}
-
-	/**
-	 * Queries the picture that comes after the current picture in the album
-	 *
-	 * @return A PDO statement that can be used to retrieve the result
-	 */
-	public function querySuccessor(): PDOStatement
-	{
-		return PictureEntity::querySuccessor($this->dbh, $this->entity["ALBUM_ID"], $this->entity["Ordering"], $this->picturesTable);
-	}
-
-	/**
-	 * Queries the album to which the current picture belongs.
-	 *
-	 * @return A PDO statement that can be used to retrieve the result
-	 */
-	public function queryAlbum(): PDOStatement
-	{
-		return AlbumEntity::queryOne($this->dbh, $this->entity["ALBUM_ID"], $this->albumsTable);
+			return $row["PICTURE_ID"];
 	}
 }
 ?>

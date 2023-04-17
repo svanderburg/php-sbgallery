@@ -5,227 +5,142 @@
  * @defgroup View-HTML-Album
  * @{
  */
-
 namespace SBGallery\View\HTML;
-use SBCrud\Model\RouteUtils;
 use SBGallery\Model\Album;
+use SBGallery\Model\PictureThumbnail;
+use SBGallery\Model\Settings\AlbumSettings;
 
-function album_displayConventionalAlbumLink(Album $album, string $albumURL): string
+function generatePictureThumbnailImageURL(PictureThumbnail $pictureThumbnail, AlbumSettings $settings): string
 {
-	return $albumURL."?".http_build_query(array(
-		"ALBUM_ID" => $album->entity["ALBUM_ID"]
-	), "", "&amp;", PHP_QUERY_RFC3986);
-}
-
-function album_displayLayoutAlbumLink(Album $album, string $albumURL): string
-{
-	return $albumURL;
-}
-
-function displayAlbumThumbnail(Album $album, array $picture, int $count, string $viewType): void
-{
-	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
-
-	if($picture["FileType"] === null)
-		$imageURL = $album->iconsPath."/thumbnail.png";
+	if($pictureThumbnail->fileType === null)
+		return $settings->iconsPath."/thumbnail.png";
 	else
-		$imageURL = $album->baseURL."/".rawurlencode($album->entity["ALBUM_ID"])."/thumbnails/".rawurlencode($picture["PICTURE_ID"]).".".$picture["FileType"];
+		return $settings->baseURL."/".rawurlencode($pictureThumbnail->albumId)."/thumbnails/".rawurlencode($pictureThumbnail->pictureId).".".$pictureThumbnail->fileType;
+}
+
+function displayPictureThumbnail(PictureThumbnail $pictureThumbnail, AlbumSettings $settings): void
+{
 	?>
-	<a href="<?= $displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $picture["PICTURE_ID"], $count) ?>"><img src="<?= $imageURL ?>" alt="<?= $picture["Title"] ?>"></a>
+	<div class="picturethumbnail">
+		<a href="<?= $settings->urlGenerator->generatePictureURL($pictureThumbnail->albumId, $pictureThumbnail->pictureId) ?>">
+			<img src="<?= generatePictureThumbnailImageURL($pictureThumbnail, $settings) ?>" alt="<?= $pictureThumbnail->title ?>">
+		</a>
+	</div>
 	<?php
 }
 
-function album_displayConventionalPictureLink(Album $album, string $albumId, string $pictureId, int $count, string $operation = null): string
+function displayPictureThumbnails(Album $album): void
 {
-	$params = array(
-		"ALBUM_ID" => $albumId,
-		"PICTURE_ID" => $pictureId
-	);
-
-	if($operation !== null)
+	if($album->albumId !== null)
 	{
-		$params["__operation"] = $operation;
-		if($album->displayAnchors)
-			$params["__id"] = $count;
+		?>
+		<div class="album">
+			<?php
+			foreach($album->pictureThumbnailIterator() as $pictureId => $pictureThumbnail)
+				displayPictureThumbnail($pictureThumbnail, $album->settings);
+			?>
+		</div>
+		<?php
 	}
-
-	return $album->pictureDisplayURL."?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
-}
-
-function album_displayLayoutPictureLink(Album $album, string $albumId, string $pictureId, int $count, string $operation = null): string
-{
-	$params = array();
-
-	if($operation !== null)
-	{
-		$params["__operation"] = $operation;
-		if($album->displayAnchors)
-			$params["__id"] = $count;
-	}
-
-	if(count($params) > 0)
-		$extraParams = "?".http_build_query($params, "", "&amp;", PHP_QUERY_RFC3986);
-	else
-		$extraParams = "";
-
-	return RouteUtils::composeSelfURL()."/".rawurlencode($pictureId).$extraParams;
-}
-
-function displayAlbumItem(Album $album, array $pictureObject, string $viewType): void
-{
-	?>
-	<div class="albumitem"><?php displayAlbumThumbnail($album, $pictureObject, 0, $viewType); ?></div>
-	<?php
 }
 
 /**
  * Displays a non-editable album.
  *
  * @param $album Album to display
- * @param $viewType Name of the class of functions that display the gallery
  */
-function displayAlbum(Album $album, string $viewType = "Conventional"): void
+function displayAlbum(Album $album): void
 {
-	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
-
-	if($album->entity === false)
-	{
-		?>
-		<p><strong>Cannot find the requested album!</strong></p>
-		<?php
-	}
-	else
-	{
-		?>
-		<p><?= $album->entity["Description"] ?></p>
-		<div class="album">
-			<?php
-			$stmt = $album->queryPictures();
-			while(($pictureObject = $stmt->fetch()) !== false)
-				displayAlbumItem($album, $pictureObject, $viewType);
-			?>
-		</div>
-		<?php
-	}
+	\SBData\View\HTML\displayField($album->form->fields["Description"]);
+	displayPictureThumbnails($album);
 }
 
-function album_displayConventionalAddPictureLink(Album $album): string
+function displayAddPictureItem(Album $album): void
 {
-	return $album->pictureDisplayURL."?".http_build_query(array(
-		"ALBUM_ID" => $album->entity["ALBUM_ID"]
-	), "", "&amp;", PHP_QUERY_RFC3986);
-}
-
-function album_displayLayoutAddPictureLink(Album $album): string
-{
-	return "?__operation=create_picture";
-}
-
-function album_displayConventionalAddMultiplePicturesLink(Album $album): string
-{
-	return $album->addMultiplePicturesURL."?".http_build_query(array(
-		"ALBUM_ID" => $album->entity["ALBUM_ID"]
-	), "", "&amp;", PHP_QUERY_RFC3986);
-}
-
-function album_displayLayoutAddMultiplePicturesLink(Album $album): string
-{
-	return "?__operation=add_multiple_pictures";
-}
-
-function displayAddPictureButton(Album $album, string $viewType): void
-{
-	$displayAddPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddPictureLink';
-
 	?>
-	<div class="albumitem">
-		<a href="<?= $displayAddPictureLinkFunction($album) ?>">
-			<img src="<?= $album->iconsPath ?>/add.png" alt="<?= $album->albumLabels["Add picture"] ?>"><br>
-			<?= $album->albumLabels["Add picture"] ?>
+	<div class="picturethumbnail">
+		<a href="<?= $album->settings->urlGenerator->generateAddPictureURL($album->albumId) ?>">
+			<img src="<?= $album->settings->iconsPath ?>/add.png" alt="<?= $album->settings->albumLabels->addPicture ?>"><br>
+			<?= $album->settings->albumLabels->addPicture ?>
 		</a>
 	</div>
 	<?php
 }
 
-function displayAddMultiplePicturesButton(Album $album, string $viewType): void
+function displayAddMultiplePicturesItem(Album $album): void
 {
-	$displayAddMultiplePicturesLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'AddMultiplePicturesLink';
-
 	?>
-	<div class="albumitem">
-		<a href="<?= $displayAddMultiplePicturesLinkFunction($album) ?>">
-			<img src="<?= $album->iconsPath ?>/add-multiple.png" alt="<?= $album->albumLabels["Add multiple pictures"] ?>"><br>
-			<?= $album->albumLabels["Add multiple pictures"] ?>
+	<div class="picturethumbnail">
+		<a href="<?= $album->settings->urlGenerator->generateAddMultiplePicturesURL($album->albumId) ?>">
+			<img src="<?= $album->settings->iconsPath ?>/add-multiple.png" alt="<?= $album->settings->albumLabels->addMultiplePictures ?>"><br>
+			<?= $album->settings->albumLabels->addMultiplePictures ?>
 		</a>
 	</div>
 	<?php
 }
 
-function displayEditableAlbumItem(Album $album, array $pictureObject, int $count, string $viewType, string $anchorPrefix): void
+function displayEditablePictureThumbnail(PictureThumbnail $pictureThumbnail, AlbumSettings $settings, int $count): void
 {
-	$displayPictureLinkFunction = '\SBGallery\View\HTML\album_display'.$viewType.'PictureLink';
-
 	?>
-	<div class="albumitem">
+	<div class="picturethumbnail">
 		<?php
-		if($album->displayAnchors)
+		if($settings->displayAnchors)
 		{
 			?>
-			<a name="<?= $anchorPrefix."-".$count ?>"></a>
+			<a name="<?= $settings->anchorPrefix."-".$count ?>"></a>
 			<?php
 		}
-
-		displayAlbumThumbnail($album, $pictureObject, $count, $viewType);
 		?>
+		<a href="<?= $settings->urlGenerator->generatePictureURL($pictureThumbnail->albumId, $pictureThumbnail->pictureId) ?>">
+			<img src="<?= generatePictureThumbnailImageURL($pictureThumbnail, $settings) ?>" alt="<?= $pictureThumbnail->title ?>">
+		</a>
 		<br>
-		<a href="<?= $displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "moveleft_picture") ?>"><img src="<?= $album->iconsPath ?>/moveleft.png" alt="<?= $album->albumLabels["Move left"] ?>"></a>
-		<a href="<?= $displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "moveright_picture") ?>"><img src="<?= $album->iconsPath ?>/moveright.png" alt="<?= $album->albumLabels["Move right"] ?>"></a>
+		<a href="<?= $settings->urlGenerator->generateMovePictureLeftURL($count, $pictureThumbnail->albumId, $pictureThumbnail->pictureId) ?>"><img src="<?= $settings->iconsPath ?>/moveleft.png" alt="<?= $settings->albumLabels->moveLeft ?>"></a>
+		<a href="<?= $settings->urlGenerator->generateMovePictureRightURL($count, $pictureThumbnail->albumId, $pictureThumbnail->pictureId) ?>"><img src="<?= $settings->iconsPath ?>/moveright.png" alt="<?= $settings->albumLabels->moveRight ?>"></a>
 		<?php
-		if($pictureObject["FileType"] !== null)
+		if($pictureThumbnail->fileType !== null)
 		{
 			?>
-			<a href="<?= $displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "setasthumbnail_picture") ?>"><img src="<?= $album->iconsPath ?>/setasthumbnail.png" alt="<?= $album->albumLabels["Set as album thumbnail"] ?>"></a>
+			<a href="<?= $settings->urlGenerator->generateSetAsThumbnailURL($count, $pictureThumbnail->albumId, $pictureThumbnail->pictureId) ?>"><img src="<?= $settings->iconsPath ?>/setasthumbnail.png" alt="<?= $settings->albumLabels->setAsThumbnail ?>"></a>
 			<?php
 		}
 		?>
-		<a href="<?= $displayPictureLinkFunction($album, $album->entity["ALBUM_ID"], $pictureObject["PICTURE_ID"], $count, "remove_picture") ?>"><img src="<?= $album->iconsPath ?>/delete.png" alt="<?= $album->albumLabels["Remove"] ?>"></a>
+		<a href="<?= $settings->urlGenerator->generateRemovePictureURL($count, $pictureThumbnail->albumId, $pictureThumbnail->pictureId) ?>"><img src="<?= $settings->iconsPath ?>/delete.png" alt="<?= $settings->albumLabels->remove ?>"></a>
 	</div>
 	<?php
 }
 
-/**
- * Displays an editable album.
- *
- * @param $album Album to display
- * @param $submitLabel Text to be displayed on the submit button
- * @param $generalErrorMessage Error message to be displayed if an album is incorrect
- * @param $fieldErrorMessage Error message to be display if a field is incorrect
- * @param $viewType Name of the class of functions that display the gallery
- * @param $anchorPrefix Prefix that the hidden anchors for searching should use
- */
-function displayEditableAlbum(Album $album, string $submitLabel, string $generalErrorMessage, string $fieldErrorMessage, string $viewType = "Conventional", string $anchorPrefix = "picture"): void
+function displayEditablePictureThumbnails(Album $album): void
 {
-	\SBData\View\HTML\displayEditableForm($album->form, $submitLabel, $generalErrorMessage, $fieldErrorMessage);
-
-	if($album->entity !== false)
+	if($album->albumId !== null)
 	{
+		$count = 0;
 		?>
 		<div class="album">
 			<?php
-			displayAddPictureButton($album, $viewType);
-			displayAddMultiplePicturesButton($album, $viewType);
+			displayAddPictureItem($album);
+			displayAddMultiplePicturesItem($album);
 
-			$count = 0;
-			$stmt = $album->queryPictures();
-			while(($pictureObject = $stmt->fetch()) !== false)
+			foreach($album->pictureThumbnailIterator() as $pictureId => $pictureThumbnail)
 			{
-				displayEditableAlbumItem($album, $pictureObject, $count, $viewType, $anchorPrefix);
+				displayEditablePictureThumbnail($pictureThumbnail, $album->settings, $count);
 				$count++;
 			}
 			?>
 		</div>
 		<?php
 	}
+}
+
+/**
+ * Displays an editable album.
+ *
+ * @param $album Album to display
+ */
+function displayEditableAlbum(Album $album): void
+{
+	\SBData\View\HTML\displayEditableForm($album->form);
+	displayEditablePictureThumbnails($album);
 }
 
 /**

@@ -1,13 +1,19 @@
 <?php
 namespace SBGallery\Model\Page;
-use Iterator;
 use SBGallery\Model\Page\Iterator\AlbumPageIterator;
 
-abstract class TraversableGalleryPage extends GalleryPage
+/**
+ * Extends the gallery page with a sub page iterator so that albums can be
+ * browsed from the menu sections.
+ */
+class TraversableGalleryPage extends GalleryPage
 {
-	public function subPageIterator(): Iterator
+	/**
+	 * @see Page#subPageIterator()
+	 */
+	public function subPageIterator(): AlbumPageIterator
 	{
-		return new AlbumPageIterator($this);
+		return new AlbumPageIterator($this->dbh, !$this->checker->checkWritePermissions(), $this);
 	}
 }
 ?>

@@ -15,3 +15,11 @@ img
 {
 	color: #ff0000;
 }
+
+#submenu
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 5px;
+}

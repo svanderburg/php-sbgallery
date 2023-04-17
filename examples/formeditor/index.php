@@ -12,7 +12,7 @@ $form = new Form(array(
 	"contents" => new HTMLEditorWithGalleryField("editor1", "Contents", "picturepicker.php", "iframepage.html", "image/editor", true)
 ));
 
-if(count($_REQUEST) > 0)
+if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	$form->importValues($_REQUEST);
 	$form->checkFields();
@@ -30,7 +30,7 @@ if(count($_REQUEST) > 0)
 
 	<body>
 		<?php
-		if(count($_REQUEST) > 0 && $valid)
+		if($_SERVER["REQUEST_METHOD"] == "POST" && $valid)
 		{
 			?>
 			<p>You have submitted:</p>
@@ -39,7 +39,7 @@ if(count($_REQUEST) > 0)
 			<?php
 		}
 
-		\SBData\View\HTML\displayEditableForm($form, "Submit", "One or more of the field values are incorrect!", "This field is incorrect!");
+		\SBData\View\HTML\displayEditableForm($form);
 		?>
 
 		<script type="text/javascript">

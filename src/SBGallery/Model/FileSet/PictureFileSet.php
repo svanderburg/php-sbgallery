@@ -2,6 +2,9 @@
 namespace SBGallery\Model\FileSet;
 use Exception;
 
+/**
+ * Contains methods that manage the file operations of a picture
+ */
 class PictureFileSet
 {
 	private static function scaleImageInBox(string $sourceFile, string $destinationFile, string $fileType, int $boxWidth, int $boxHeight, int $filePermissions): void

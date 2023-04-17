@@ -7,50 +7,57 @@ use SBData\Model\Value\AcceptableFileNameValue;
 use SBCrud\Model\Page\CRUDMasterPage;
 use SBCrud\Model\Page\OperationPage;
 use SBGallery\Model\Gallery;
-use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\Album;
+use SBGallery\Model\GalleryPermissionChecker;
+use SBGallery\Model\Exception\AlbumNotFoundException;
 use SBGallery\Model\Page\Content\AlbumContents;
-use SBGallery\Model\Page\Content\PictureContents;
+use SBGallery\Model\Page\Settings\AlbumPageSettings;
 
+/**
+ * A page that displays an album and redirects to sub pages that manage all album operations.
+ */
 class AlbumPage extends CRUDMasterPage
 {
-	public GalleryPage $galleryPage;
-
-	private PictureContents $pictureContents;
-
-	public string $albumId;
+	public Gallery $gallery;
 
 	public Album $album;
 
-	public function __construct(GalleryPage $galleryPage, string $albumId, string $title = "Album", AlbumContents $contents = null)
+	public AlbumPageSettings $settings;
+
+	public GalleryPermissionChecker $checker;
+
+	public function __construct(Gallery $gallery, string $albumId, AlbumPageSettings $settings, GalleryPermissionChecker $checker, AlbumContents $contents = null)
 	{
 		if($contents === null)
 			$contents = new AlbumContents();
 
-		$pictureContents = $contents->constructPictureContents();
+		$this->pictureContents = $contents->constructPictureContents();
 
-		$this->album = $galleryPage->gallery->constructAlbum();
+		try
+		{
+			$this->album = $gallery->queryAlbum($albumId);
+		}
+		catch(AlbumNotFoundException $ex)
+		{
+			throw new PageNotFoundException($ex->getMessage());
+		}
 
-		parent::__construct($title, "pictureId", $contents, array(
-			"create_picture" => new GalleryOperationPage($this, $this->album->albumLabels["Add picture"], $pictureContents),
-			"insert_picture" => new GalleryOperationPage($this, $this->album->albumLabels["Insert picture"], $pictureContents),
-			"update_album" => new GalleryOperationPage($this, $this->album->albumLabels["Update album"], $contents),
-			"remove_album" => new GalleryOperationPage($this, $this->album->albumLabels["Remove album"], $contents),
-			"moveleft_album" => new GalleryOperationPage($this, $this->album->albumLabels["Move left"], $contents),
-			"moveright_album" => new GalleryOperationPage($this, $this->album->albumLabels["Move right"], $contents),
-			"add_multiple_pictures" => new OperationPage($this->album->albumLabels["Add multiple pictures"], $contents->constructMultiplePictureContents()),
-			"insert_multiple_pictures" => new GalleryOperationPage($this, $this->album->albumLabels["Insert multiple pictures"], $contents)
-		), "Invalid query parameter:", "Invalid operation:", "__operation", dirname(__FILE__)."/../../View/HTML/menuitems/album.php");
+		parent::__construct($settings->albumPageLabels->title, "pictureId", $contents, array(
+			"create_picture" => new AlbumOperationPage($this->album, $settings->picturePageLabels->createPicture, $this->pictureContents, $checker, $gallery->settings->operationParam),
+			"insert_picture" => new AlbumOperationPage($this->album, $settings->picturePageLabels->insertPicture, $this->pictureContents, $checker, $gallery->settings->operationParam),
+			"update_album" => new GalleryOperationPage($gallery, $settings->albumPageLabels->updateAlbum, $contents, $checker, $gallery->settings->operationParam),
+			"remove_album" => new GalleryOperationPage($gallery, $settings->albumPageLabels->removeAlbum, $contents, $checker, $gallery->settings->operationParam),
+			"moveleft_album" => new GalleryOperationPage($gallery, $settings->albumPageLabels->moveLeft, $contents, $checker, $gallery->settings->operationParam),
+			"moveright_album" => new GalleryOperationPage($gallery, $settings->albumPageLabels->moveRight, $contents, $checker, $gallery->settings->operationParam),
+			"add_multiple_pictures" => new GalleryOperationPage($gallery, $settings->albumPageLabels->addMultiplePictures, $contents->constructMultiplePictureContents(), $checker, $gallery->settings->operationParam),
+			"insert_multiple_pictures" => new GalleryOperationPage($gallery, $settings->albumPageLabels->insertMultiplePictures, $contents, $checker, $gallery->settings->operationParam),
+		), $settings->albumPageLabels->invalidQueryParameterMessage, $settings->albumPageLabels->invalidOperationMessage, $gallery->settings->operationParam, $settings->albumMenuItem);
 
-		$this->galleryPage = $galleryPage;
-		$this->albumId = $albumId;
-		$this->pictureContents = $pictureContents;
+		$this->gallery = $gallery;
+		$this->settings = $settings;
+		$this->checker = $checker;
 
-		$this->album->fetchEntity($albumId);
-		if($this->album->entity === false)
-			throw new PageNotFoundException($this->album->albumLabels["Cannot find album:"]." ".$albumId);
-		else
-			$this->title = $this->album->entity["Title"];
+		$this->title = $this->album->form->fields["Title"]->exportValue();
 	}
 
 	public function createParamValue(): Value
@@ -60,12 +67,7 @@ class AlbumPage extends CRUDMasterPage
 
 	public function createDetailPage(array $query): ?ContentPage
 	{
-		return new PicturePage($this, $this->album, $query["pictureId"], $this->albumId, "Picture", $this->pictureContents);
-	}
-
-	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
-	{
-		return $this->galleryPage->constructGalleryPermissionChecker();
+		return new PicturePage($this->album, $query["pictureId"], $this->settings, $this->checker, $this->pictureContents);
 	}
 }
 ?>

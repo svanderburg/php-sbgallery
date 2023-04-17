@@ -2,6 +2,9 @@
 namespace SBGallery\Model\FileSet;
 use Exception;
 
+/**
+ * Contains methods that manage the file operations of an album
+ */
 class AlbumFileSet
 {
 	private static function createDirectoryWithPermissions(string $filePath, int $permissions): void

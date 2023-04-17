@@ -2,46 +2,50 @@
 namespace SBGallery\Model\Page;
 use SBLayout\Model\PageNotFoundException;
 use SBCrud\Model\Page\CRUDDetailPage;
-use SBCrud\Model\Page\OperationPage;
 use SBGallery\Model\Album;
 use SBGallery\Model\Picture;
 use SBGallery\Model\GalleryPermissionChecker;
+use SBGallery\Model\Exception\PictureNotFoundException;
 use SBGallery\Model\Page\Content\PictureContents;
+use SBGallery\Model\Page\Settings\PicturePageSettings;
 
+/**
+ * A page that displays a picture and redirects to sub pages that manage all page operations.
+ */
 class PicturePage extends CRUDDetailPage
 {
-	public AlbumPage $albumPage;
+	public Album $album;
 
 	public Picture $picture;
 
-	public function __construct(AlbumPage $albumPage, Album $album, string $pictureId, string $albumId, string $title = "Picture", PictureContents $contents = null)
+	public GalleryPermissionChecker $checker;
+
+	public function __construct(Album $album, string $pictureId, PicturePageSettings $settings, GalleryPermissionChecker $checker, PictureContents $contents = null)
 	{
 		if($contents === null)
 			$contents = new PictureContents();
 
-		$this->picture = $album->constructPicture($albumId);
-
-		parent::__construct($title, $contents, array(
-			"update_picture" => new GalleryOperationPage($this, $this->picture->labels["Update picture"], $contents),
-			"remove_picture" => new GalleryOperationPage($this, $this->picture->labels["Remove picture"], $contents),
-			"remove_picture_image" => new GalleryOperationPage($this, $this->picture->labels["Remove picture image"], $contents),
-			"moveleft_picture" => new GalleryOperationPage($this, $this->picture->labels["Move left"], $contents),
-			"moveright_picture" => new GalleryOperationPage($this, $this->picture->labels["Move right"], $contents),
-			"setasthumbnail_picture" => new GalleryOperationPage($this, $this->picture->labels["Set picture as thumbnail"], $contents)
+		parent::__construct($settings->picturePageLabels->title, $contents, array(
+			"update_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->updatePicture, $contents, $checker, $album->settings->operationParam),
+			"remove_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->removePicture, $contents, $checker, $album->settings->operationParam),
+			"clear_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->clearPicture, $contents, $checker, $album->settings->operationParam),
+			"moveleft_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->moveLeft, $contents, $checker, $album->settings->operationParam),
+			"moveright_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->moveRight, $contents, $checker, $album->settings->operationParam),
+			"moveright_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->moveRight, $contents, $checker, $album->settings->operationParam),
+			"setasthumbnail_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->setPictureAsThumbnail, $contents, $checker, $album->settings->operationParam)
 		));
+		$this->album = $album;
+		$this->checker = $checker;
 
-		$this->albumPage = $albumPage;
-
-		$this->picture->fetchEntity($pictureId, $albumId);
-		if($this->picture->entity === false)
-			throw new PageNotFoundException($this->picture->labels["Cannot find picture:"]." ".$pictureId);
-		else
-			$this->title = $this->picture->entity["Title"];
-	}
-
-	public function constructGalleryPermissionChecker(): GalleryPermissionChecker
-	{
-		return $this->albumPage->galleryPage->constructGalleryPermissionChecker();
+		try
+		{
+			$this->picture = $album->queryPicture($pictureId);
+			$this->title = $this->picture->form->fields["Title"]->exportValue();
+		}
+		catch(PictureNotFoundException $ex)
+		{
+			throw new PageNotFoundException($ex->getMessage());
+		}
 	}
 }
 ?>

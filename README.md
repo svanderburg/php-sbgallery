@@ -19,7 +19,7 @@ packages:
 
 * [php-sbdata](https://github.com/svanderburg/php-sbdata)
 * [php-sbeditor](https://github.com/svanderburg/php-sbeditor)
-* [php-sbcrud](https://github.com/svanderburg/php-sbcrud) (optional)
+* [php-sbcrud](https://github.com/svanderburg/php-sbcrud)
 
 Installation
 ============
@@ -82,50 +82,57 @@ The low-level API provides direct control over the gallery's state.
 
 Managing a gallery
 ------------------
-We can compose a gallery (an object displaying a set of albums and their
-thumbnails) as follows:
+We can create a gallery, that displays an overview of available albums with a
+thumbnail, as follows:
 
 ```php
 use SBGallery\Model\Gallery;
+use SBGallery\Model\Settings\GallerySettings;
+use SBGallery\Model\Settings\URLGenerator\SimpleGalleryURLGenerator;
 
 $dbh = new PDO("mysql:host=localhost;dbname=gallery", "user", "password", array(
     PDO::ATTR_PERSISTENT => true
 ));
 
-Gallery $gallery = new Gallery(
-    $dbh,
-    "/gallery", // Base URL where all the gallery's images reside
-    "/album.php", // URL that redirects to a page displaying an album
-    "/picture.php", // URL that redirects to a page displaying a picture
-    "/multiplepictures.php", // URL that redirects to a page providing an image uploader
-    "/icons", // Path where the gallery's icons reside
-    dirname($_SERVER["SCRIPT_NAME"])."/gallery", // Base path to all images in the gallery
-    160, 120, // Dimensions of the thumbnail image
-    1280, 960, // Dimension of the real picture
-    $galleryLabels = null, // Array that translates the gallery labels into another language (optional)
-    $albumLabels = null, // Array that translates the album labels into another language (optional)
-    $pictureLabels = null, // Array that translates the picture labels into another language (optional)
-    $editorSettings = null, // Array that modifies the properties of the embedded editor (optional)
-    $dirPermissions = 0777, // The filesystem permissions for the gallery directories (optional)
-    $filePermissions = 0666, // The filesystem permissions for the gallery's picture files (optional)
-    $albumsTable = "albums", // Name of the album table (optional)
-    $thumbnailsTable = "thumbnails", // Name of thumbnails table (optional)
-    $picturesTable = "pictures" // Name of the pictures table (optional)
+GallerySettings $settings = new GallerySettings(new SimpleGalleryURLGenerator(), // An object that defines how URLs to the sub pages should be generated
+    "gallery", // The directory in which the gallery's images reside
+    160, 160, // The maximum dimensions of a thumbnail
+    1280, 1280, // The maximum dimensions of a picture
+    0666 // The permissions of picture files in the gallery directory
+    0777 // The permissions of directories in the gallery directory
 );
+
+Gallery $gallery = new Gallery($dbh, $settings);
 ```
 
-A gallery requires various configuration properties, such a database connection,
-the location where the gallery's artifacts are stored, the locations of the
-display pages and the dimensions of the images.
+The above code snippet sets up a database connection and configures a gallery
+with the following settings:
 
-A gallery can be displayed in read-only mode as follows:
+* It uses a `URLGenerator` object to generate URLs that link to albums, pictures
+  and their corresponding operation pages. The `SimpleGalleryURLGenerator`
+  implements a URL convention in which the gallery is managed by the
+  `gallery.php` page, albums with the `album.php` page and pictures by the
+  `picture.php` page. The pages use GET parameters to determine which album and
+  picture have been requested.
+* It uses the `gallery/` folder as the base directory of all images
+* The maximum dimensions of a thumbnail are 160x160 pixels
+* The maximum dimensions of a picture are 1280x1280 pixels
+* The file permissions of the picture files are read, write support for the
+  owner, group and others
+* The directory permissions of a picture directory are read, write, execute
+  support for the owner, group and others
+
+There are more configuration properties supported beyond the ones shown in the
+example. Consult the API documentation for more information.
+
+We can render the gallery in read mode with the following function call:
 
 ```php
 \SBGallery\View\HTML\displayGallery($gallery);
 ```
 
-To make the gallery writable so that the user can modify its contents, we can
-use:
+Rendering the gallery in write mode, in which the user can modify its contents,
+can be done with the following funcion call:
 
 ```php
 \SBGallery\View\HTML\displayEditableGallery($gallery);
@@ -133,120 +140,249 @@ use:
 
 Managing albums
 ---------------
-An album (that displays a set of pictures and their thumbnails) can be managed
-by composing an album object that takes similar parameters as the gallery
-constructor.
+The low level API implements a variety of album operations.
 
-Alternatively, it is possible to automatically construct an album with identical
-settings to a gallery instance:
+### Querying an album
 
-```php
-use SBGallery\Model\Album;
-
-$album = $gallery->constructAlbum();
-```
-
-We can execute CRUD operations on an album instance, by invoking the following
-functions:
+We can query an album from the gallery as follows:
 
 ```php
-$album->create();
-$album->insert($_REQUEST);
-$album->update($_REQUEST);
-$album->remove($albumId);
-$album->moveLeft($albumId);
-$album->moveRight($albumId);
-$album->view($albumId);
+$album = $gallery->queryAlbum("myalbum");
 ```
 
-Typically, you want to execute these functions before any HTML output is
-rendered.
+The above method invocation queries the album with the identifier: `myalbum`.
+If the album does not exists, the method returns an `AlbumNotFoundException`.
 
-To determine which kind of CRUD operation you need to execute, every UI element
-of the album (such as hyperlinks and forms) send an `__operation` request
-parameter along with it (e.g. `$_REQUEST["create_album"]`) that can be used to
-determine what CRUD operation to execute. For example, `create_album`
-corresponds to creating an album.
+### Creating a new album
 
-We can display an album in read-only mode as follows:
+We can create a new album as follows:
+
+```php
+$album = $gallery->newAlbum();
+```
+
+The above method call creates a new album that inherits the configuration
+settings from the gallery.
+
+### Checking an album for validity
+
+We can import album settings from the request variables and check its validity
+as follows:
+
+```php
+$album->importValues($_REQUEST);
+$album->checkFields();
+$valid = $album->checkValid(); // Returns true if the album properties are valid, otherwise false
+```
+
+### Inserting an album
+
+We can insert an album into the database with the following method call:
+
+```php
+$gallery->insertAlbum($album);
+```
+
+### Updating an album
+
+An existing album can be updated with the following method call:
+
+```php
+$gallery->updateAlbum("myalbum", $updatedAlbum);
+```
+
+The above method call updates the album with identifier: `myalbum` with the
+properties of the `$updatedAlbum`.
+
+### Removing an album
+
+An album can be removed with the following method call:
+
+```php
+$myGallery->removeAlbum("myalbum");
+```
+
+### Uploading multiple pictures into an album
+
+We can also upload multiple images into an album (albums will automatically adopt
+the image filename as a title and identifier) and scale it down according to the
+gallery's specifications with the following method invocaion:
+
+```php
+$album->insertMultiplePictures("Image");
+```
+
+The parameter specifies the name of the form field that facilitates the multiple
+file upload.
+
+### Moving an album left or right in the gallery
+
+The following methods can be used to move an album left or right in the gallery:
+
+```php
+$result = $myGallery->moveLeftAlbum("myalbum");
+$result = $myGallery->moveRightAlbum("myalbum");
+```
+
+The method call returns `true` if the album was moved, and `false` if it did
+not. When an album has reached the beginning or end in the gallery these methods
+return `false`.
+
+### Displaying an album in read mode
+
+An album can be rendered in read mode with the following function call:
 
 ```php
 \SBGallery\View\HTML\displayAlbum($album);
 ```
 
-Or in write mode by:
+### Displaying an album in write mode
+
+We can also render an album in write mode, in which the user can change the
+properties of the album, and adjust the pictures inside it:
 
 ```php
-\SBGallery\View\HTML\displayEditableAlbum($album,
-    "Submit",
-    "One or more fields are incorrectly specified and marked with a red color!",
-    "This field is incorrectly specified!");
+\SBGallery\View\HTML\displayEditableAlbum($album);
 ```
 
-The page displaying the above functions should typically correspond to the album
-display URL shown in the gallery construction example shown in the previous
-section.
+### Displaying a pictures uploader
 
-We can also display an uploader that can be used to bulk insert a collection of
-images:
+As shown earlier, the album editor can also upload multiple pictures at the same
+time. To render the form that provides the input fields, we can do the following
+function call:
 
 ```php
-\SBGallery\View\HTML\displayPicturesUploader($albumId);
+$picturesUploader = $album->constructPicturesUploader();
+\SBGallery\View\HTML\displayPicturesUploader($picturesUploader);
 ```
-
-The page that displays the uploader should correspond to the multiple images
-upload URL shown in the previous section.
 
 Managing pictures
 -----------------
-An individual picture can be managed by composing a picture object that takes
-similar parameters as the gallery and album constructors.
+The low-level API makes it also possible to directly manage pictures.
 
-Alternatively, it is possible to automatically construct a picture with identical
-settings to an album instance:
+### Querying a picture
 
-```php
-use SBGallery\Model\Picture;
-
-$picture = $album->constructPicture($albumId);
-```
-
-We can execute CRUD operations on a picture instance, by invoking the following
-functions:
+We can query a picture from an album as follows:
 
 ```php
-$picture->create($albumId);
-$picture->insert($_REQUEST);
-$picture->update($_REQUEST)
-$picture->remove($pictureId, $albumId);
-$picture->removePictureImage($pictureId, $albumId);
-$picture->setAsThumbnail($pictureId, $albumId);
-$picture->moveLeft($pictureId, $albumId);
-$picture->moveRight($pictureId, $albumId);
+$picture = $album->queryPicture("mypicture");
 ```
 
-Similarly to albums, any picture UI element sends a `$_REQUEST["__operation"]`
-parameter that can be used to determine what CRUD operation to execute.
+The above method invocation queries the album with the identifier: `mypicture`.
+If the album does not exists, the method returns an `PictureNotFoundException`.
 
-We can display a picture in read-only mode as follows:
+### Creating a new picture
+
+We can create a new picture as follows:
+
+```php
+$picture = $album->newPicture();
+```
+
+The above method call creates a new picture that inherits the configuration
+settings from the album.
+
+### Checking a picture for validity
+
+We can import picture settings from the request variables and check its validity
+as follows:
+
+```php
+$picture->importValues($_REQUEST);
+$picture->checkFields();
+$valid = $picture->checkValid(); // Returns true if the picture is valid, otherwise false
+```
+
+### Inserting a picture
+
+We can insert a picture into the database with the following function call:
+
+```php
+$album->insertPicture($picture);
+```
+
+In addition to inserting the picture into the database, it will also
+automatically upload a user provided image and scales it according to the
+gallery's specifications.
+
+### Updating a picture
+
+An existing picture can be updated with the following method call:
+
+```php
+$album->updatePicture("mypicture", $updatedPicture);
+```
+
+The above method call updates the picture with identifier: `mypicture` with the
+properties of the `$updatedPicture`.
+
+In addition, it will also automatically upload a user provided image and scales
+it according to the gallery's specifications.
+
+### Removing a picture
+
+A picture can be removed with the following method call:
+
+```php
+$album->removePicture("mypicture");
+```
+
+### Moving a picture left or right in an album
+
+The following methods can be used to move a picture left or right in the abum:
+
+```php
+$album->moveLeftPicture("mypicture");
+$album->moveRightPicture("mypicture")
+```
+
+The method call returns `true` if the picture was moved, and `false` if it did
+not. When a picture has reached the beginning or end in the albums these methods
+return `false`.
+
+### Setting a picture as thumbnail for an album
+
+To set a picture as a thumbnail for an album, we can use the following method
+call:
+
+```php
+$album->setAsThumbnail("mypicture");
+```
+
+### Clearing an image in a picture
+
+It is possible to add a picture to an album without an image. To clear an
+existing image in a picture we can use the following method call:
+
+```php
+$album->clearPicture($_REQUEST["PICTURE_ID"]);
+```
+
+### Displaying a picture in read mode
+
+A picture, including navigation controls, can be rendered in read mode with the
+following function call:
 
 ```php
 \SBGallery\View\HTML\displayPicture($picture);
 ```
 
-And in write mode, by:
+### Displaying a picture in write mode
+
+We can also render a picture in write mode, in which the user can change the
+properties of the picture:
 
 ```php
-\SBGallery\View\HTML\displayEditablePicture($picture,
-    "Submit",
-    "One or more fields are incorrectly specified and marked with a red color!",
-    "This field is incorrectly specified!");
+\SBGallery\View\HTML\displayEditablePicture($picture);
 ```
 
 High-level API usage
 ====================
-The high-level API can be used to automatically add the entire page structure to
-an application layout including authentication checks.
+The high-level API is an API that is built on top of the `php-sblayout` and
+`php-sbcrud` frameworks. The idea is that you can easily embed a fully
+functional gallery into an existing application (including authentication
+checks) by composing `GalleryPage` object and adding it to the `Application`'s
+page structure.
 
 First, we must construct our own permission checker that determines whether a
 user has write permissions:
@@ -266,8 +402,12 @@ class MyGalleryPermissionChecker implements GalleryPermissionChecker
 In the above checker, you must implement your own password policy, such as
 integrating with a database or external authentication system.
 
-Then we must construct our sub class from `GalleryPage` that provides a Gallery
-object and permission checker:
+Then we must construct a `GalleryPage` instance that we can add to an
+application's page structure. A `GalleryPage` accepts many kinds of
+configuration parameters including a permission checker.
+
+A convenient way to compose an instance and keep the code clean, is to create a
+sub class from `GalleryPage`:
 
 ```php
 use PDO;
@@ -279,20 +419,22 @@ class MyGalleryPage extends GalleryPage
 {
     public function __construct(PDO $dbh)
     {
-        parent::__construct($dbh, "Gallery");
-    }
-
-    public function constructGallery(PDO $dbh): Gallery
-    {
-        return new Gallery($dbh, array(...));
-    }
-
-    public function constructGalleryPermissionChecker(): GalleryPermissionChecker
-    {
-        return new MyGalleryPermissionChecker();
+        parent::__construct($dbh, new GalleryPageSettings("gallery"), new MyGalleryPermissionChecker());
     }
 }
 ```
+
+The above sub class: `MyGalleryPage` defines a new constructor that composes a
+`GalleryPage` with desired configuration settings, such as:
+
+* The database connection handler: `$dbh`
+* Various gallery page settings. The base directory of the gallery images is:
+  `gallery/`
+* The gallery permission checker that we have defined earlier.
+
+There are many kinds of gallery settings that can be configured, such as the
+icons and labels. Consult the API documentation for the `GalleryPage` and
+`GalleryPageSettings` classes for more information.
 
 We can add a page instance of our sub class to the application layout as
 follows:
@@ -337,8 +479,9 @@ Adding the page object to the application layout allows us to:
 * Access each album through: `http://localhost/gallery/<albumId>`
 * Access each picture through: `http://localhost/gallery/<albumId>/<pictureId>`
 
-And we can access CRUD operations (other than reading) by appending a
-`__operation` request paramer, such as:
+Because the high-level API is also using the `php-sbcrud` framework, we can
+access CRUD operations (other than reading) by appending a `__operation` request
+paramer, such as:
 
 ```
 http://localhost/gallery/myalbum/mypicture?__operation=moveleft_picture
@@ -347,17 +490,21 @@ http://localhost/gallery/myalbum/mypicture?__operation=moveleft_picture
 By invoking the above URL (and having met the appropriate authentication
 criteria) the picture will be moved left in the album.
 
-Exposing a gallery as a set of sub pages
-========================================
+Exposing a gallery as a set of sub pages in an application layout
+=================================================================
 In addition to using the high level API to embed the gallery as a sub
-application into an application layout, we can also expose albums as sub pages.
+application into an application layout, we can also expose albums as browable
+sub pages from a menu.
 
 By using albums as pages, we can use the gallery as a simple content manager
 allowing a user to dynamic construct sub pages of a web applications including
 the contents of the pages.
 
-When defining the gallery page, we must configure it to inherit from the
-`TraversableGalleryPage` class:
+Instead of creating an instance of the `GalleryPage` class, we must instantiate
+the `TraversableGalleryPage` class.
+
+As with the previous example, for convenience, we can construct such a page with
+its configuration settings by creating a sub class:
 
 ```php
 use PDO;
@@ -369,17 +516,7 @@ class MyGalleryPage extends TraversableGalleryPage
 {
     public function __construct(PDO $dbh)
     {
-        parent::__construct($dbh, "Gallery");
-    }
-
-    public function constructGallery(PDO $dbh): Gallery
-    {
-        return new Gallery($dbh, array(...));
-    }
-
-    public function constructGalleryPermissionChecker(): GalleryPermissionChecker
-    {
-        return new MyGalleryPermissionChecker();
+        parent::__construct($dbh, new GalleryPageSettings("gallery"), new MyGalleryPermissionChecker());
     }
 }
 ```
@@ -443,10 +580,7 @@ $form = new Form(array(
 When displaying the above form as an editable form:
 
 ```php
-\SBData\View\HTML\displayEditableForm($form,
-    "Submit",
-    "One or more of the field values are incorrect!",
-    "This field is incorrect!");
+\SBData\View\HTML\displayEditableForm($form);
 ```
 
 Then the corresponding field will be displayed as an HTML editor with embedded

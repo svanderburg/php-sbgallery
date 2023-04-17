@@ -1,17 +1,11 @@
 <?php
-global $route, $crudInterface, $checker;
-
-$picture = $crudInterface->picture;
+global $route, $currentPage, $crudInterface;
 
 \SBLayout\View\HTML\displayBreadcrumbs($route, 0);
 
-if($checker->checkWritePermissions())
+if($currentPage->checker->checkWritePermissions())
 {
-	\SBGallery\View\HTML\displayEditablePicture($picture,
-		$picture->labels["Submit"],
-		$picture->labels["Form invalid"],
-		$picture->labels["Field invalid"],
-		"Layout");
+	\SBGallery\View\HTML\displayEditablePicture($crudInterface->picture);
 	?>
 	<script type="text/javascript">
 	sbeditor.initEditors();
@@ -19,5 +13,5 @@ if($checker->checkWritePermissions())
 	<?php
 }
 else
-	\SBGallery\View\HTML\displayPicture($picture, "Layout");
+	\SBGallery\View\HTML\displayPicture($crudInterface->picture);
 ?>

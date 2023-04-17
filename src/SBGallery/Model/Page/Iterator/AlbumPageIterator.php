@@ -1,30 +1,39 @@
 <?php
 namespace SBGallery\Model\Page\Iterator;
+use PDO;
 use PDOStatement;
 use Iterator;
+use SBGallery\Model\Gallery;
+use SBGallery\Model\GalleryPermissionChecker;
+use SBGallery\Model\Entity\AlbumEntity;
 use SBGallery\Model\Page\GalleryPage;
+use SBGallery\Model\Page\AlbumPage;
 
+/**
+ * Iterator that steps over each album page that a gallery page contains
+ */
 class AlbumPageIterator implements Iterator
 {
-	public GalleryPage $galleryPage;
+	private PDO $dbh;
 
-	public PDOStatement $stmt;
+	private bool $displayOnlyVisible;
 
-	public $row;
+	private GalleryPage $galleryPage;
 
-	public bool $reachedEnd;
+	private PDOStatement $stmt;
 
-	public bool $authenticated;
+	private $row;
 
-	public function __construct(GalleryPage $galleryPage)
+	private bool $reachedEnd;
+
+	private bool $authenticated;
+
+	public function __construct(PDO $dbh, bool $displayOnlyVisible, GalleryPage $galleryPage)
 	{
+		$this->dbh = $dbh;
+		$this->displayOnlyVisible = $displayOnlyVisible;
 		$this->galleryPage = $galleryPage;
-		$this->stmt = $this->galleryPage->gallery->queryAlbums(false);
-		$this->row = $this->stmt->fetch();
-		$this->reachedEnd = false;
-
-		$checker = $galleryPage->constructGalleryPermissionChecker();
-		$this->authenticated = $checker->checkWritePermissions();
+		$this->authenticated = $galleryPage->checker->checkWritePermissions();
 	}
 
 	public function current(): mixed
@@ -32,7 +41,7 @@ class AlbumPageIterator implements Iterator
 		if($this->row === false)
 			return $this->galleryPage->crudPageManager->operationPages["create_album"];
 		else
-			return $this->galleryPage->createDetailPage(array("albumId" => $this->row["ALBUM_ID"]));
+			return new AlbumPage($this->galleryPage->gallery, $this->row["ALBUM_ID"], $this->galleryPage->settings, $this->galleryPage->checker, $this->galleryPage->albumContents);
 	}
 
 	public function key(): mixed
@@ -51,9 +60,11 @@ class AlbumPageIterator implements Iterator
 			$this->row = $this->stmt->fetch();
 	}
 
-	public function rewind(): void
+	public function rewind()
 	{
-		// Do nothing
+		$this->stmt = AlbumEntity::queryThumbnails($this->dbh, $this->displayOnlyVisible, $this->galleryPage->gallery->settings->albumsTable, $this->galleryPage->gallery->settings->thumbnailsTable, $this->galleryPage->gallery->settings->picturesTable);
+		$this->row = $this->stmt->fetch();
+		$this->reachedEnd = false;
 	}
 
 	public function valid(): bool

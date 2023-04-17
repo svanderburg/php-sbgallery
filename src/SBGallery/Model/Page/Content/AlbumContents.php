@@ -19,7 +19,7 @@ class AlbumContents extends OverridedContents
 
 	public function constructMultiplePictureContents(): OverridedContents
 	{
-		return new OverridedContents("gallery/addmultiplepictures.php", true, null, $this->sections, $this->gallerySection, $this->view, $this->styles, $this->scripts);
+		return new OverridedContents("gallery/picturesuploader.php", true, null, $this->sections, $this->gallerySection, $this->view, $this->styles, $this->scripts);
 	}
 }
 ?>

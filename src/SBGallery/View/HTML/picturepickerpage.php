@@ -8,29 +8,25 @@
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Gallery;
 
-function displayAlbumsForPicturePickerPage(Gallery $gallery, string $galleryLabel): void
+function displayPicturesForPicturePickerPage(Gallery $gallery, string $galleryLabel): void
 {
 	?>
 	<p><a href="?">&laquo; <?= $galleryLabel ?></a></p>
 	<div class="album">
 		<?php
-		$album = $gallery->constructAlbum();
-		$album->entity = array();
-		$album->entity["ALBUM_ID"] = $_REQUEST["ALBUM_ID"];
+		$album = $gallery->queryAlbum($_REQUEST["ALBUM_ID"]);
 
-		$stmt = $album->queryPictures();
-
-		while(($row = $stmt->fetch()) !== false)
+		foreach($album->pictureThumbnailIterator() as $pictureId => $pictureThumbnail)
 		{
 			?>
-			<div class="albumitem">
+			<div class="picturethumbnail">
 				<?php
-				if($row["FileType"] !== null)
+				if($pictureThumbnail->fileType !== null)
 				{
-					$thumbnailURL = $album->baseURL."/".rawurlencode($album->entity["ALBUM_ID"])."/thumbnails/".rawurlencode($row["PICTURE_ID"]).".".$row["FileType"];
-					$pictureURL = $album->baseURL."/".rawurlencode($album->entity["ALBUM_ID"])."/pictures/".rawurlencode($row["PICTURE_ID"]).".".$row["FileType"];
+					$thumbnailURL = $album->settings->baseURL."/".rawurlencode($_REQUEST["ALBUM_ID"])."/thumbnails/".rawurlencode($pictureId).".".$pictureThumbnail->fileType;
+					$pictureURL = $album->settings->baseURL."/".rawurlencode($_REQUEST["ALBUM_ID"])."/pictures/".rawurlencode($pictureId).".".$pictureThumbnail->fileType;
 					?>
-					<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?= $pictureURL ?>', '<?= $row["Title"] ?>'); return false;"><img src="<?= $thumbnailURL ?>" alt="<?= $row["Title"] ?>"></a>
+					<a href="#" onclick="sbgallery.addImageFromGallery('editor1', '<?= $pictureURL ?>', '<?= $pictureThumbnail->title ?>'); return false;"><img src="<?= $thumbnailURL ?>" alt="<?= $pictureThumbnail->title ?>"></a>
 					<?php
 				}
 				?>
@@ -42,26 +38,24 @@ function displayAlbumsForPicturePickerPage(Gallery $gallery, string $galleryLabe
 	<?php
 }
 
-function displayPicturesForPicturePickerPage(Gallery $gallery): void
+function displayAlbumsForPicturePickerPage(Gallery $gallery): void
 {
 	?>
 	<div class="gallery">
 		<?php
-		$stmt = $gallery->queryAlbums(false);
-
-		while(($row = $stmt->fetch()) !== false)
+		foreach($gallery->albumThumbnailIterator(false) as $albumId => $albumThumbnail)
 		{
 			?>
 			<div class="galleryitem">
-				<a href="?ALBUM_ID=<?= $row["ALBUM_ID"] ?>">
+				<a href="?ALBUM_ID=<?= rawurlencode($albumId) ?>">
 					<?php
-					if($row["FileType"] === null)
-						$imageURL = $gallery->iconsPath."/thumbnail.png";
+					if($albumThumbnail->fileType === null)
+						$imageURL = $gallery->settings->iconsPath."/thumbnail.png";
 					else
-						$imageURL = $gallery->baseURL."/".rawurlencode($row["ALBUM_ID"])."/thumbnails/".rawurlencode($row["PICTURE_ID"]).".".$row["FileType"];
+						$imageURL = $gallery->settings->baseURL."/".rawurlencode($albumId)."/thumbnails/".rawurlencode($albumThumbnail->pictureId).".".$albumThumbnail->fileType;
 					?>
-					<img src="<?= $imageURL ?>" alt="<?= $row["Title"] ?>"><br>
-					<?= $row["Title"] ?>
+					<img src="<?= $imageURL ?>" alt="<?= $albumThumbnail->title ?>"><br>
+					<?= $albumThumbnail->title ?>
 				</a>
 			</div>
 			<?php
@@ -107,9 +101,9 @@ function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gall
 		<body>
 			<?php
 			if(array_key_exists("ALBUM_ID", $_REQUEST))
-				displayAlbumsForPicturePickerPage($gallery, $galleryLabel);
+				displayPicturesForPicturePickerPage($gallery, $galleryLabel);
 			else
-				displayPicturesForPicturePickerPage($gallery);
+				displayAlbumsForPicturePickerPage($gallery);
 			?>
 		</body>
 	</html>

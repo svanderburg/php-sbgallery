@@ -2,98 +2,141 @@
 error_reporting(E_STRICT | E_ALL);
 
 require_once(dirname(__FILE__)."/../../vendor/autoload.php");
+require_once("includes/config.php");
 
 use SBData\Model\Table\Anchor\AnchorRow;
+use SBGallery\Model\Picture;
+use SBGallery\Model\Exception\AlbumNotFoundException;
+use SBGallery\Model\Exception\PictureNotFoundException;
 use Examples\LowLevel\Model\MyGallery;
 
-/* Construct picture model from the gallery model */
-$myGallery = new MyGallery();
-$album = $myGallery->constructAlbum();
-$picture = $album->constructPicture($_REQUEST["ALBUM_ID"]);
+$myGallery = new MyGallery($dbh);
 
-/* Display picture controller */
+$error = null;
+
 try
 {
 	if(!array_key_exists("ALBUM_ID", $_REQUEST))
-		throw new Exception("No album id provided!");
-	else if(!array_key_exists("PICTURE_ID", $_REQUEST))
-		$picture->create($_REQUEST["ALBUM_ID"]);
-	else if(array_key_exists("__operation", $_REQUEST))
+		throw new Exception("No ALBUM_ID specified!");
+
+	$album = $myGallery->queryAlbum($_REQUEST["ALBUM_ID"]);
+
+	if(array_key_exists($myGallery->settings->operationParam, $_REQUEST))
 	{
-		if($_REQUEST["__operation"] == "insert_picture")
+		$operationParam = $_REQUEST[$myGallery->settings->operationParam];
+
+		if($operationParam == "insert_picture")
 		{
-			if($picture->insert($_REQUEST))
+			$picture = $album->newPicture();
+			$picture->importValues($_REQUEST);
+			$picture->checkFields();
+
+			if($picture->checkValid())
 			{
-				header("Location: ?".http_build_query(array(
-					"ALBUM_ID" => $picture->entity["ALBUM_ID"],
-					"PICTURE_ID" => $picture->entity["PICTURE_ID"]
+				$album->insertPicture($picture);
+
+				header("Location: picture.php?".http_build_query(array(
+					"ALBUM_ID" => $picture->form->fields["ALBUM_ID"]->exportValue(),
+					"PICTURE_ID" => $picture->form->fields["PICTURE_ID"]->exportValue()
 				), "", null, PHP_QUERY_RFC3986));
-				exit;
+				exit();
 			}
 		}
-		else if($_REQUEST["__operation"] == "update_picture")
+		else if($operationParam == "update_picture")
 		{
-			if($picture->update($_REQUEST))
+			$picture = $album->queryPicture($_GET["PICTURE_ID"]);
+			$picture->importValues($_POST);
+			$picture->checkFields();
+
+			if($picture->checkValid())
 			{
-				header("Location: ?".http_build_query(array(
-					"ALBUM_ID" => $picture->entity["ALBUM_ID"],
-					"PICTURE_ID" => $picture->entity["PICTURE_ID"]
+				$album->updatePicture($_GET["PICTURE_ID"], $picture);
+
+				header("Location: picture.php?".http_build_query(array(
+					"ALBUM_ID" => $picture->form->fields["ALBUM_ID"]->exportValue(),
+					"PICTURE_ID" => $picture->form->fields["PICTURE_ID"]->exportValue()
 				), "", null, PHP_QUERY_RFC3986));
-				exit;
+				exit();
 			}
 		}
-		else if($_REQUEST["__operation"] == "remove_picture")
+		else if($operationParam == "remove_picture")
 		{
-			$picture->remove($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
+			$album->removePicture($_REQUEST["PICTURE_ID"]);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composePreviousRowFragment("picture"));
-			exit;
+			header("Location: album.php?".http_build_query(array(
+				"ALBUM_ID" => $_REQUEST["ALBUM_ID"]
+			), "", null, PHP_QUERY_RFC3986).AnchorRow::composeRowFragment($album->settings->anchorPrefix));
+			exit();
 		}
-		else if($_REQUEST["__operation"] == "remove_picture_image")
+		else if($operationParam == "moveleft_picture")
 		{
-			$picture->removePictureImage($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
-
-			header("Location: ".$_SERVER["HTTP_REFERER"]);
-			exit;
-		}
-		else if($_REQUEST["__operation"] == "setasthumbnail_picture")
-		{
-			$picture->setAsThumbnail($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
-
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composeRowFragment("picture"));
-			exit;
-		}
-		else if($_REQUEST["__operation"] == "moveleft_picture")
-		{
-			if($picture->moveLeft($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]))
-				$rowFragment = AnchorRow::composePreviousRowFragment("picture");
+			if($album->moveLeftPicture($_REQUEST["PICTURE_ID"]))
+				$rowFragment = AnchorRow::composePreviousRowFragment($album->settings->anchorPrefix);
 			else
-				$rowFragment = AnchorRow::composeRowFragment("picture");
+				$rowFragment = AnchorRow::composeRowFragment($album->settings->anchorPrefix);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
-			exit;
+			header("Location: album.php?".http_build_query(array(
+				"ALBUM_ID" => $_REQUEST["ALBUM_ID"]
+			), "", null, PHP_QUERY_RFC3986).$rowFragment);
+			exit();
 		}
-		else if($_REQUEST["__operation"] == "moveright_picture")
+		else if($operationParam == "moveright_picture")
 		{
-			if($picture->moveRight($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]))
-				$rowFragment = AnchorRow::composeNextRowFragment("picture");
+			if($album->moveRightPicture($_REQUEST["PICTURE_ID"]))
+				$rowFragment = AnchorRow::composeNextRowFragment($album->settings->anchorPrefix);
 			else
-				$rowFragment = AnchorRow::composeRowFragment("picture");
+				$rowFragment = AnchorRow::composeRowFragment($album->settings->anchorPrefix);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
-			exit;
+			header("Location: album.php?".http_build_query(array(
+				"ALBUM_ID" => $_REQUEST["ALBUM_ID"]
+			), "", null, PHP_QUERY_RFC3986).$rowFragment);
+			exit();
+		}
+		else if($operationParam == "setasthumbnail_picture")
+		{
+			$album->setAsThumbnail($_REQUEST["PICTURE_ID"]);
+
+			header("Location: album.php?".http_build_query(array(
+				"ALBUM_ID" => $_REQUEST["ALBUM_ID"]
+			), "", null, PHP_QUERY_RFC3986).AnchorRow::composeRowFragment($album->settings->anchorPrefix));
+			exit();
+		}
+		else if($operationParam == "clear_picture")
+		{
+			$album->clearPicture($_REQUEST["PICTURE_ID"]);
+
+			header("Location: picture.php?".http_build_query(array(
+				"ALBUM_ID" => $_REQUEST["ALBUM_ID"],
+				"PICTURE_ID" => $_REQUEST["PICTURE_ID"]
+			), "", null, PHP_QUERY_RFC3986));
+			exit();
 		}
 		else
-			throw new Exception("Unknown operation: ".$_REQUEST["__operation"]);
+		{
+			header("HTTP/1.1 400 Bad Request");
+			$error = "Unknown operation: ".$operationParam;
+		}
 	}
 	else
-		$picture->view($_REQUEST["PICTURE_ID"], $_REQUEST["ALBUM_ID"]);
-	
-	$error = null;
+	{
+		if(array_key_exists("PICTURE_ID", $_REQUEST))
+			$picture = $album->queryPicture($_REQUEST["PICTURE_ID"]);
+		else
+			$picture = $album->newPicture();
+	}
+}
+catch(AlbumNotFoundException $ex)
+{
+	header("HTTP/1.1 404 Not Found");
+	$error = $ex->getMessage();
+}
+catch(PictureNotFoundException $ex)
+{
+	header("HTTP/1.1 404 Not Found");
+	$error = $ex->getMessage();
 }
 catch(Exception $ex)
 {
-	header("HTTP/1.1 404 Not Found");
 	$error = $ex->getMessage();
 }
 ?>
@@ -110,16 +153,10 @@ catch(Exception $ex)
 		<?php
 		if($error === null)
 		{
-			/* View the picture */
 			if(array_key_exists("view", $_GET) && $_GET["view"] == "1")
 				\SBGallery\View\HTML\displayPicture($picture);
 			else
-			{
-				\SBGallery\View\HTML\displayEditablePicture($picture,
-					"Submit",
-					"One or more fields are incorrectly specified and marked with a red color!",
-					"This field is incorrectly specified!");
-			}
+				\SBGallery\View\HTML\displayEditablePicture($picture);
 		}
 		else
 		{

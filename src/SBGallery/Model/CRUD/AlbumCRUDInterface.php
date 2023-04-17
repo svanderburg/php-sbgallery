@@ -8,7 +8,6 @@ use SBCrud\Model\RouteUtils;
 use SBCrud\Model\Page\CRUDPage;
 use SBCrud\Model\CRUD\CRUDInterface;
 use SBGallery\Model\Album;
-use SBGallery\Model\GalleryPermissionChecker;
 
 class AlbumCRUDInterface extends CRUDInterface
 {
@@ -16,69 +15,66 @@ class AlbumCRUDInterface extends CRUDInterface
 
 	public CRUDPage $crudPage;
 
-	public GalleryPermissionChecker $checker;
-
 	public Album $album;
 
-	public function __construct(Route $route, CRUDPage $crudPage, GalleryPermissionChecker $checker)
+	public function __construct(Route $route, CRUDPage $crudPage)
 	{
 		parent::__construct($crudPage);
 		$this->route = $route;
 		$this->crudPage = $crudPage;
-		$this->checker = $checker;
-	}
-
-	private function createAlbum(): void
-	{
-		$this->album = $this->crudPage->parentPage->gallery->constructAlbum();
-		$this->album->create();
-	}
-
-	private function insertAlbum(): void
-	{
-		$this->album = $this->crudPage->parentPage->gallery->constructAlbum();
-
-		if($this->album->insert($_REQUEST))
-		{
-			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->album->entity["ALBUM_ID"]));
-			exit;
-		}
 	}
 
 	private function viewAlbum(): void
 	{
 		$this->album = $this->crudPage->album;
-		$this->album->view($GLOBALS["query"]["albumId"]);
+	}
+
+	private function createAlbum(): void
+	{
+		$this->album = $this->crudPage->gallery->newAlbum();
+	}
+
+	private function insertAlbum(): void
+	{
+		$this->album = $this->crudPage->gallery->newAlbum();
+		$this->album->importValues($_REQUEST);
+		$this->album->checkFields();
+
+		if($this->album->checkValid())
+		{
+			$this->crudPage->gallery->insertAlbum($this->album);
+			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->album->form->fields["ALBUM_ID"]->exportValue()));
+			exit();
+		}
 	}
 
 	private function updateAlbum(): void
 	{
-		$this->album = $this->crudPage->parentPage->album;
+		$this->album = $this->crudPage->gallery->newAlbum($GLOBALS["query"]["albumId"]);
+		$this->album->importValues($_REQUEST);
+		$this->album->checkFields();
 
-		if($this->album->update($_REQUEST))
+		if($this->album->checkValid())
 		{
-			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->album->entity["ALBUM_ID"]));
-			exit;
+			$this->crudPage->gallery->updateAlbum($GLOBALS["query"]["albumId"], $this->album);
+			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->album->form->fields["ALBUM_ID"]->exportValue()));
+			exit();
 		}
 	}
 
 	private function removeAlbum(): void
 	{
-		$this->album = $this->crudPage->parentPage->album;
-
-		$this->album->remove($GLOBALS["query"]["albumId"]);
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composePreviousRowFragment("album"));
+		$this->crudPage->gallery->removeAlbum($GLOBALS["query"]["albumId"]);
+		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composePreviousRowFragment($this->crudPage->gallery->settings->albumAnchorPrefix));
 		exit();
 	}
 
 	private function moveLeftAlbum(): void
 	{
-		$this->album = $this->crudPage->parentPage->album;
-
-		if($this->album->moveLeft($GLOBALS["query"]["albumId"]))
-			$rowFragment = AnchorRow::composePreviousRowFragment("album");
+		if($this->crudPage->gallery->moveLeftAlbum($GLOBALS["query"]["albumId"]))
+			$rowFragment = AnchorRow::composePreviousRowFragment($this->crudPage->gallery->settings->albumAnchorPrefix);
 		else
-			$rowFragment = AnchorRow::composeRowFragment("album");
+			$rowFragment = AnchorRow::composeRowFragment($this->crudPage->gallery->settings->albumAnchorPrefix);
 
 		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
 		exit();
@@ -86,12 +82,10 @@ class AlbumCRUDInterface extends CRUDInterface
 
 	private function moveRightAlbum(): void
 	{
-		$this->album = $this->crudPage->parentPage->album;
-
-		if($this->album->moveRight($GLOBALS["query"]["albumId"]))
-			$rowFragment = AnchorRow::composeNextRowFragment("album");
+		if($this->crudPage->gallery->moveRightAlbum($GLOBALS["query"]["albumId"]))
+			$rowFragment = AnchorRow::composeNextRowFragment($this->crudPage->gallery->settings->albumAnchorPrefix);
 		else
-			$rowFragment = AnchorRow::composeRowFragment("album");
+			$rowFragment = AnchorRow::composeRowFragment($this->crudPage->gallery->settings->albumAnchorPrefix);
 
 		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
 		exit();
@@ -99,9 +93,9 @@ class AlbumCRUDInterface extends CRUDInterface
 
 	private function insertMultiplePictures(): void
 	{
-		$this->album = $this->crudPage->parentPage->album;
+		$this->album = $this->crudPage->gallery->queryAlbum($GLOBALS["query"]["albumId"]);
+		$this->album->insertMultiplePictures("Image");
 
-		$this->album->insertMultiplePictures($GLOBALS["query"]["albumId"], "Image");
 		header("Location: ".RouteUtils::composeSelfURL());
 		exit();
 	}
@@ -112,7 +106,7 @@ class AlbumCRUDInterface extends CRUDInterface
 			$this->viewAlbum();
 		else
 		{
-			if($this->checker->checkWritePermissions())
+			if($this->crudPage->checker->checkWritePermissions())
 			{
 				switch($operation)
 				{

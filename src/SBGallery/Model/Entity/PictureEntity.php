@@ -4,9 +4,12 @@ use Exception;
 use PDO;
 use PDOStatement;
 
+/**
+ * Contains methods that are related to the pictures table
+ */
 class PictureEntity
 {
-	public static function queryAll(PDO $dbh, string $albumId, $picturesTable = "pictures"): PDOStatement
+	public static function queryAll(PDO $dbh, string $albumId, string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select * from ".$picturesTable." where ALBUM_ID = ? order by Ordering");
 		if(!$stmt->execute(array($albumId)))

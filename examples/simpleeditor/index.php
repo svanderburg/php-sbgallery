@@ -22,7 +22,7 @@ require_once("../../vendor/autoload.php");
 				$contents = $_REQUEST["contents"];
 				?>
 				<p>You have submitted:</p>
-				<div><?= $_REQUEST["contents"] ?></div>
+				<div><?= $contents ?></div>
 				<?php
 			}
 			else
@@ -31,7 +31,7 @@ require_once("../../vendor/autoload.php");
 		else
 			$contents = NULL;
 		?>
-		<form action="" method="post">
+		<form action="<?= $_SERVER["PHP_SELF"] ?>" method="post">
 			<?php
 			\SBGallery\View\HTML\displayHTMLEditorWithGallery("editor1", "contents", "picturepicker.php", "iframepage.html", "image/editor", $contents);
 			?>

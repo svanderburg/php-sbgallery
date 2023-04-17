@@ -2,82 +2,96 @@
 error_reporting(E_STRICT | E_ALL);
 
 require_once(dirname(__FILE__)."/../../vendor/autoload.php");
+require_once("includes/config.php");
 
 use SBData\Model\Table\Anchor\AnchorRow;
+use SBGallery\Model\Album;
+use SBGallery\Model\Exception\AlbumNotFoundException;
 use Examples\LowLevel\Model\MyGallery;
 
-/* Construct album model from the gallery model */
-$myGallery = new MyGallery();
-$album = $myGallery->constructAlbum();
+$myGallery = new MyGallery($dbh);
 
-/* Album controller */
+$error = null;
+
 try
 {
-	if(!array_key_exists("ALBUM_ID", $_REQUEST))
-		$album->create();
-	else if(array_key_exists("__operation", $_REQUEST))
+	if(array_key_exists($myGallery->settings->operationParam, $_REQUEST))
 	{
-		if($_REQUEST["__operation"] == "insert_album")
+		$operationParam = $_REQUEST[$myGallery->settings->operationParam];
+
+		if($operationParam == "insert_album")
 		{
-			if($album->insert($_REQUEST))
+			$album = $myGallery->newAlbum();
+			$album->importValues($_REQUEST);
+			$album->checkFields();
+
+			if($album->checkValid())
 			{
-				header("Location: ?".http_build_query(array(
-					"ALBUM_ID" => $album->entity["ALBUM_ID"]
-				), "", null, PHP_QUERY_RFC3986));
-				exit;
+				$myGallery->insertAlbum($album);
+				header("Location: album.php?ALBUM_ID=".rawurlencode($_REQUEST["ALBUM_ID"]));
+				exit();
 			}
 		}
-		else if($_REQUEST["__operation"] == "update_album")
+		else if($operationParam == "update_album")
 		{
-			if($album->update($_REQUEST))
+			$album = $myGallery->newAlbum($_GET["ALBUM_ID"]);
+			$album->importValues($_POST);
+			$album->checkFields();
+
+			if($album->checkValid())
 			{
-				header("Location: ?".http_build_query(array(
-					"ALBUM_ID" => $album->entity["ALBUM_ID"]
-				), "", null, PHP_QUERY_RFC3986));
-				exit;
+				$myGallery->updateAlbum($_GET["ALBUM_ID"], $album);
+				header("Location: album.php?ALBUM_ID=".rawurlencode($_REQUEST["ALBUM_ID"]));
+				exit();
 			}
 		}
-		else if($_REQUEST["__operation"] == "remove_album")
+		else if($operationParam == "remove_album")
 		{
-			$album->remove($_REQUEST["ALBUM_ID"]);
-
-			header("Location: ".$_SERVER["HTTP_REFERER"].AnchorRow::composePreviousRowFragment("album"));
-			exit;
+			$myGallery->removeAlbum($_REQUEST["ALBUM_ID"]);
+			header("Location: gallery.php".AnchorRow::composePreviousRowFragment($myGallery->settings->albumAnchorPrefix));
+			exit();
 		}
-		else if($_REQUEST["__operation"] == "moveleft_album")
+		else if($operationParam == "moveleft_album")
 		{
-			if($album->moveLeft($_REQUEST["ALBUM_ID"]))
-				$rowFragment = AnchorRow::composePreviousRowFragment("album");
+			if($myGallery->moveLeftAlbum($_REQUEST["ALBUM_ID"]))
+				$rowFragment = AnchorRow::composePreviousRowFragment($myGallery->settings->albumAnchorPrefix);
 			else
-				$rowFragment = AnchorRow::composeRowFragment("album");
+				$rowFragment = AnchorRow::composeRowFragment($myGallery->settings->albumAnchorPrefix);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
-			exit;
+			header("Location: gallery.php".$rowFragment);
+			exit();
 		}
-		else if($_REQUEST["__operation"] == "moveright_album")
+		else if($operationParam == "moveright_album")
 		{
-			if($album->moveRight($_REQUEST["ALBUM_ID"]))
-				$rowFragment = AnchorRow::composeNextRowFragment("album");
+			if($myGallery->moveRightAlbum($_REQUEST["ALBUM_ID"]))
+				$rowFragment = AnchorRow::composeNextRowFragment($myGallery->settings->albumAnchorPrefix);
 			else
-				$rowFragment = AnchorRow::composeRowFragment("album");
+				$rowFragment = AnchorRow::composeRowFragment($myGallery->settings->albumAnchorPrefix);
 
-			header("Location: ".$_SERVER["HTTP_REFERER"].$rowFragment);
-			exit;
+			header("Location: gallery.php".$rowFragment);
+			exit();
 		}
 		else
-			throw new Exception("Unknown operation: ".$_REQUEST["__operation"]);
+		{
+			header("HTTP/1.1 400 Bad Request");
+			$error = "Unknown operation: ".$operationParam;
+		}
 	}
 	else
 	{
-		$album->fetchEntity($_REQUEST["ALBUM_ID"]);
-		$album->view($_REQUEST["ALBUM_ID"]);
+		if(array_key_exists("ALBUM_ID", $_REQUEST))
+			$album = $myGallery->queryAlbum($_REQUEST["ALBUM_ID"]);
+		else
+			$album = $myGallery->newAlbum();
 	}
-
-	$error = null;
+}
+catch(AlbumNotFoundException $ex)
+{
+	header("HTTP/1.1 404 Not Found");
+	$error = $ex->getMessage();
 }
 catch(Exception $ex)
 {
-	header("HTTP/1.1 404 Not Found");
 	$error = $ex->getMessage();
 }
 ?>
@@ -92,19 +106,12 @@ catch(Exception $ex)
 	<body>
 		<h1>Album</h1>
 		<?php
-		/* View the album */
-
 		if($error === null)
 		{
 			if(array_key_exists("view", $_GET) && $_GET["view"] == "1")
 				\SBGallery\View\HTML\displayAlbum($album);
 			else
-			{
-				\SBGallery\View\HTML\displayEditableAlbum($album,
-					"Submit",
-					"One or more fields are incorrectly specified and marked with a red color!",
-					"This field is incorrectly specified!");
-			}
+				\SBGallery\View\HTML\displayEditableAlbum($album);
 		}
 		else
 		{
