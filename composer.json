@@ -13,12 +13,12 @@
   "autoload": {
       "psr-4": { "SBGallery\\": "src/SBGallery" },
       "files": [
-          "src/SBGallery/View/HTML/multiplepictures.php",
           "src/SBGallery/View/HTML/gallery.php",
           "src/SBGallery/View/HTML/album.php",
-          "src/SBGallery/View/HTML/htmleditorwithgallery.php",
-          "src/SBGallery/View/HTML/picturepickerpage.php",
           "src/SBGallery/View/HTML/picture.php",
+          "src/SBGallery/View/HTML/picturesuploader.php",
+          "src/SBGallery/View/HTML/picturepickerpage.php",
+          "src/SBGallery/View/HTML/htmleditorwithgallery.php",
           "src/SBGallery/View/HTML/Field/htmleditorwithgalleryfield.php"
       ]
   },

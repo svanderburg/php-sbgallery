@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "25a22f640f11276b758efc5609027545576b659c"
+                "reference": "8f4c6cdc7d7db0490ada3ba13dcf4f21f8f2ccb3"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -23,7 +23,11 @@
             "autoload": {
                 "psr-4": {
                     "SBCrud\\": "src/SBCrud"
-                }
+                },
+                "files": [
+                    "src/SBCrud/View/HTML/pager.php",
+                    "src/SBCrud/View/HTML/operationtoolbar.php"
+                ]
             },
             "autoload-dev": {
                 "psr-4": {
@@ -44,7 +48,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2022-12-19T17:50:33+00:00"
+            "time": "2023-05-30T23:16:27+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -52,7 +56,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbdata.git",
-                "reference": "0a9c962dcb92dfade5015c43637b8ab8800f52c3"
+                "reference": "f61559eaca14e0795960e3c5cb42a2fec1c5efdd"
             },
             "require-dev": {
                 "abeautifulsite/simple-php-captcha": "1.0.x",
@@ -66,11 +70,11 @@
                 },
                 "files": [
                     "src/SBData/View/HTML/table.php",
-                    "src/SBData/View/HTML/pager.php",
-                    "src/SBData/View/HTML/pageddbtable.php",
+                    "src/SBData/View/HTML/editabletable.php",
                     "src/SBData/View/HTML/form.php",
                     "src/SBData/View/HTML/util.php",
                     "src/SBData/View/HTML/field.php",
+                    "src/SBData/View/HTML/label.php",
                     "src/SBData/View/HTML/Field/acceptablefilenamefield.php",
                     "src/SBData/View/HTML/Field/arraycomboboxfield.php",
                     "src/SBData/View/HTML/Field/textareafield.php",
@@ -107,8 +111,7 @@
             "autoload-dev": {
                 "psr-4": {
                     "Examples\\Books\\": "examples/books/includes",
-                    "Examples\\CAPTCHA\\": "examples/captcha/includes",
-                    "Examples\\TodoList\\": "examples/todolist/includes"
+                    "Examples\\CAPTCHA\\": "examples/captcha/includes"
                 },
                 "files": [
                     "examples/captcha/includes/View/HTML/Field/captchafield.php"
@@ -125,7 +128,7 @@
                 }
             ],
             "description": "Abstractions to deal with checking and displaying fields, forms and tables in web applications",
-            "time": "2022-12-18T15:36:04+00:00"
+            "time": "2023-05-16T23:05:46+00:00"
         },
         {
             "name": "svanderburg/php-sbeditor",
@@ -133,7 +136,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "07e246b65c7b2ea37ad3b8a7d1355974733c1102"
+                "reference": "56747f6ac3aa4244ffb21f8ca9c2011990a3482c"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
@@ -160,7 +163,7 @@
                 }
             ],
             "description": "Simple embeddable HTML editor",
-            "time": "2022-12-20T20:43:43+00:00"
+            "time": "2023-03-18T15:58:28+00:00"
         },
         {
             "name": "svanderburg/php-sblayout",
@@ -168,7 +171,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sblayout.git",
-                "reference": "97546d499170396598338a62bc2043fb84ef24c1"
+                "reference": "56b8668eae093d47c9ab8f6fab0522524cb0a89e"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.x"
@@ -182,6 +185,7 @@
                 "files": [
                     "src/SBLayout/View/HTML/errorpage.php",
                     "src/SBLayout/View/HTML/menuitem.php",
+                    "src/SBLayout/View/HTML/custommenuitem.php",
                     "src/SBLayout/View/HTML/inlinemenusection.php",
                     "src/SBLayout/View/HTML/menusection.php",
                     "src/SBLayout/View/HTML/embeddedmenusection.php",
@@ -215,7 +219,7 @@
                 }
             ],
             "description": "My custom website layout organiser framework for PHP",
-            "time": "2022-12-10T13:48:12+00:00"
+            "time": "2023-05-30T13:28:59+00:00"
         }
     ],
     "packages-dev": [],
