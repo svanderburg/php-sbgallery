@@ -6,43 +6,43 @@ use SBLayout\Model\PageForbiddenException;
 use SBData\Model\Table\Anchor\AnchorRow;
 use SBCrud\Model\RouteUtils;
 use SBCrud\Model\CRUD\CRUDInterface;
-use SBCrud\Model\Page\CRUDPage;
+use SBCrud\Model\Page\OperationParamPage;
 use SBGallery\Model\Picture;
 
 class PictureCRUDInterface extends CRUDInterface
 {
 	public Route $route;
 
-	public CRUDPage $crudPage;
+	public OperationParamPage $operationParamPage;
 
 	public Picture $picture;
 
-	public function __construct(Route $route, CRUDPage $crudPage)
+	public function __construct(Route $route, OperationParamPage $operationParamPage)
 	{
-		parent::__construct($crudPage);
+		parent::__construct($operationParamPage);
 		$this->route = $route;
-		$this->crudPage = $crudPage;
+		$this->operationParamPage = $operationParamPage;
 	}
 
 	private function viewPicture(): void
 	{
-		$this->picture = $this->crudPage->picture;
+		$this->picture = $this->operationParamPage->picture;
 	}
 
 	private function createPicture(): void
 	{
-		$this->picture = $this->crudPage->album->newPicture();
+		$this->picture = $this->operationParamPage->album->newPicture();
 	}
 
 	private function insertPicture(): void
 	{
-		$this->picture = $this->crudPage->album->newPicture();
+		$this->picture = $this->operationParamPage->album->newPicture();
 		$this->picture->importValues($_REQUEST);
 		$this->picture->checkFields();
 
 		if($this->picture->checkValid())
 		{
-			$this->crudPage->album->insertPicture($this->picture);
+			$this->operationParamPage->album->insertPicture($this->picture);
 
 			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->picture->form->fields["PICTURE_ID"]->exportValue()));
 			exit();
@@ -51,13 +51,13 @@ class PictureCRUDInterface extends CRUDInterface
 
 	private function updatePicture(): void
 	{
-		$this->picture = $this->crudPage->album->queryPicture($GLOBALS["query"]["pictureId"]);
+		$this->picture = $this->operationParamPage->album->queryPicture($GLOBALS["query"]["pictureId"]);
 		$this->picture->importValues($_REQUEST);
 		$this->picture->checkFields();
 
 		if($this->picture->checkValid())
 		{
-			$this->crudPage->album->updatePicture($GLOBALS["query"]["pictureId"], $this->picture);
+			$this->operationParamPage->album->updatePicture($GLOBALS["query"]["pictureId"], $this->picture);
 			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->picture->form->fields["PICTURE_ID"]->exportValue()));
 			exit();
 		}
@@ -65,24 +65,24 @@ class PictureCRUDInterface extends CRUDInterface
 
 	private function removePicture(): void
 	{
-		$this->crudPage->album->removePicture($GLOBALS["query"]["pictureId"]);
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composePreviousRowFragment($this->crudPage->album->settings->anchorPrefix));
+		$this->operationParamPage->album->removePicture($GLOBALS["query"]["pictureId"]);
+		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composePreviousRowFragment($this->operationParamPage->album->settings->anchorPrefix));
 		exit();
 	}
 
 	private function clearPicture(): void
 	{
-		$this->crudPage->album->clearPicture($GLOBALS["query"]["pictureId"]);
+		$this->operationParamPage->album->clearPicture($GLOBALS["query"]["pictureId"]);
 		header("Location: ".RouteUtils::composeSelfURL());
 		exit();
 	}
 
 	private function moveLeftPicture(): void
 	{
-		if($this->crudPage->album->moveLeftPicture($GLOBALS["query"]["pictureId"]))
-			$rowFragment = AnchorRow::composePreviousRowFragment($this->crudPage->album->settings->anchorPrefix);
+		if($this->operationParamPage->album->moveLeftPicture($GLOBALS["query"]["pictureId"]))
+			$rowFragment = AnchorRow::composePreviousRowFragment($this->operationParamPage->album->settings->anchorPrefix);
 		else
-			$rowFragment = AnchorRow::composeRowFragment($this->crudPage->album->settings->anchorPrefix);
+			$rowFragment = AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix);
 
 		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
 		exit();
@@ -90,10 +90,10 @@ class PictureCRUDInterface extends CRUDInterface
 
 	private function moveRightPicture(): void
 	{
-		if($this->crudPage->album->moveRightPicture($GLOBALS["query"]["pictureId"]))
-			$rowFragment = AnchorRow::composeNextRowFragment($this->crudPage->album->settings->anchorPrefix);
+		if($this->operationParamPage->album->moveRightPicture($GLOBALS["query"]["pictureId"]))
+			$rowFragment = AnchorRow::composeNextRowFragment($this->operationParamPage->album->settings->anchorPrefix);
 		else
-			$rowFragment = AnchorRow::composeRowFragment($this->crudPage->album->settings->anchorPrefix);
+			$rowFragment = AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix);
 
 		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
 		exit();
@@ -101,8 +101,8 @@ class PictureCRUDInterface extends CRUDInterface
 
 	private function setAsPictureAsThumbnail(): void
 	{
-		$this->crudPage->album->setAsThumbnail($GLOBALS["query"]["pictureId"]);
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composeRowFragment($this->crudPage->album->settings->anchorPrefix));
+		$this->operationParamPage->album->setAsThumbnail($GLOBALS["query"]["pictureId"]);
+		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix));
 		exit();
 	}
 
@@ -112,7 +112,7 @@ class PictureCRUDInterface extends CRUDInterface
 			$this->viewPicture();
 		else
 		{
-			if($this->crudPage->checker->checkWritePermissions())
+			if($this->operationParamPage->checker->checkWritePermissions())
 			{
 				switch($operation)
 				{

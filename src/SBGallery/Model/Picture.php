@@ -1,6 +1,7 @@
 <?php
 namespace SBGallery\Model;
 use PDO;
+use SBData\Model\Label\TextLabel;
 use SBData\Model\Field\AcceptableFileNameField;
 use SBData\Model\Field\FileField;
 use SBData\Model\Field\HiddenField;
@@ -57,7 +58,7 @@ class Picture
 			"Title" => new TextField($settings->labels->title, true, 20, 255),
 			"Description" => new HTMLEditorField($settings->editorSettings->id, $settings->labels->description, $settings->editorSettings->iframePage, $settings->editorSettings->iconsPath, false, $settings->editorSettings->width, $settings->editorSettings->height),
 			"Image" => new FileField($settings->labels->image, array("image/gif", "image/jpeg", "image/png"), false)
-		), $settings->operationParam, $settings->urlGenerator->generatePictureFormURL($albumId, $pictureId), $settings->labels->submit, $settings->labels->validationErrorMessage, $settings->labels->fieldErrorMessage);
+		), $settings->operationParam, $settings->urlGenerator->generatePictureFormURL($albumId, $pictureId), new TextLabel($settings->labels->submit), $settings->labels->validationErrorMessage, $settings->labels->fieldErrorMessage);
 
 		$this->fileType = null;
 

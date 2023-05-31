@@ -5,6 +5,7 @@ use PDO;
 use SBData\Model\Field\CheckBoxField;
 use SBData\Model\Field\AcceptableFileNameField;
 use SBData\Model\Field\TextField;
+use SBData\Model\Label\TextLabel;
 use SBCrud\Model\CRUDForm;
 use SBEditor\Model\Field\HTMLEditorField;
 use SBGallery\Model\Entity\AlbumEntity;
@@ -48,7 +49,7 @@ class Album
 			"Title" => new TextField($settings->albumLabels->title, true, 20, 255),
 			"Visible" => new CheckBoxField($settings->albumLabels->visible),
 			"Description" => new HTMLEditorField($settings->albumEditorSettings->id, $settings->albumLabels->description, $settings->albumEditorSettings->iframePage, $settings->albumEditorSettings->iconsPath, false, $settings->albumEditorSettings->width, $settings->albumEditorSettings->height)
-		), $settings->operationParam, $settings->urlGenerator->generateAlbumFormURL($albumId), $settings->albumLabels->submit, $settings->albumLabels->validationErrorMessage, $settings->albumLabels->fieldErrorMessage);
+		), $settings->operationParam, $settings->urlGenerator->generateAlbumFormURL($albumId), new TextLabel($settings->albumLabels->submit), $settings->albumLabels->validationErrorMessage, $settings->albumLabels->fieldErrorMessage);
 
 		if($albumId === null)
 			$this->form->setOperation("insert_album");
