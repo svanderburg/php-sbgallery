@@ -5,10 +5,10 @@ let
     "svanderburg/php-sbcrud" = {
       targetDir = "";
       src = fetchgit {
-        name = "svanderburg-php-sbcrud-8f4c6cdc7d7db0490ada3ba13dcf4f21f8f2ccb3";
+        name = "svanderburg-php-sbcrud-7a5162f12847dd5b1e96703668543d2b7f1b5024";
         url = "https://github.com/svanderburg/php-sbcrud.git";
-        rev = "8f4c6cdc7d7db0490ada3ba13dcf4f21f8f2ccb3";
-        sha256 = "1qcp90wxkla8n68ip7lx7hh3nibyp9wqcxrnxycrlc5pckzqk77s";
+        rev = "7a5162f12847dd5b1e96703668543d2b7f1b5024";
+        sha256 = "0562r9zy3lxm99b1dw2npski6j4b3992g5ziqm4vacxx45vgdqc7";
       };
     };
     "svanderburg/php-sbdata" = {
