@@ -17,12 +17,17 @@ class EditorSettings
 
 	public int $height;
 
-	public function __construct(string $id = "editor1", string $iframePage = "iframepage.html", string $iconsPath = "image/editor", int $width = 60, int $height = 20)
+	public function __construct(string $id = "editor1", string $iframePage = null, string $iconsPath = "image/editor", int $width = 60, int $height = 20)
 	{
 		$pageBaseURL = Page::computeBaseURL();
 
 		$this->id = $id;
-		$this->iframePage = $iframePage;
+
+		if($iframePage === null)
+			$this->iframePage = $pageBaseURL."/iframepage.html";
+		else
+			$this->iframePage = $pageBaseURL;
+
 		$this->iconsPath = $pageBaseURL."/".$iconsPath;
 		$this->width = $width;
 		$this->height = $height;
