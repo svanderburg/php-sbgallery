@@ -46,7 +46,7 @@ function displayAlbumsForPicturePickerPage(Gallery $gallery): void
 		foreach($gallery->albumThumbnailIterator(false) as $albumId => $albumThumbnail)
 		{
 			?>
-			<div class="galleryitem">
+			<div class="albumthumbnail">
 				<a href="?ALBUM_ID=<?= rawurlencode($albumId) ?>">
 					<?php
 					if($albumThumbnail->fileType === null)
