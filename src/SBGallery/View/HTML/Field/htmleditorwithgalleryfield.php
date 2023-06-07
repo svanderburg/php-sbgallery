@@ -15,7 +15,7 @@ function displayHTMLEditorWithGalleryField(HTMLEditorWithGalleryField $field)
 
 function displayEditableHTMLEditorWithGalleryField(string $name, HTMLEditorWithGalleryField $field)
 {
-	\SBGallery\View\HTML\displayHTMLEditorWithGallery($field->id, $name, $field->galleryIframePage, $field->editorIframePage, $field->iconsPath, $field->exportValue(), $field->width, $field->galleryHeight, $field->editorHeight);
+	\SBGallery\View\HTML\displayHTMLEditorWithGallery($field->id, $name, $field->galleryIframePage, $field->editorIframePage, $field->iconsPath, $field->exportValue(), $field->width, $field->galleryHeight, $field->editorHeight, $field->editorLabelsParameter);
 }
 
 /**

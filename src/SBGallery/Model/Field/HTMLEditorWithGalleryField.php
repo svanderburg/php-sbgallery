@@ -28,6 +28,9 @@ class HTMLEditorWithGalleryField extends TextField
 	/** Height of the editor in em */
 	public int $editorHeight;
 
+	/** Expression referring to the labels parameter that can be used to provide a JavaScript object that defines the labels (null omits the parameter so that the default labels are used) */
+	public ?string $editorLabelsParameter;
+
 	/** Package name */
 	public string $package;
 
@@ -43,8 +46,9 @@ class HTMLEditorWithGalleryField extends TextField
 	 * @param $width Width of the field in em
 	 * @param $galleryHeight Height of the gallery in em
 	 * @param $editorHeight Height of the editor in em
+	 * @param $editorLabelsParameter Expression referring to the labels parameter that can be used to provide a JavaScript object that defines the labels (null omits the parameter so that the default labels are used)
 	 */
-	public function __construct(string $id, string $title, string $galleryIframePage, string $editorIframePage, string $iconsPath, bool $mandatory = false, int $width = 60, int $galleryHeight = 10, int $editorHeight = 20)
+	public function __construct(string $id, string $title, string $galleryIframePage, string $editorIframePage, string $iconsPath, bool $mandatory = false, int $width = 60, int $galleryHeight = 10, int $editorHeight = 20, string $editorLabelsParameter = null)
 	{
 		parent::__construct($title, $mandatory);
 		$this->id = $id;
@@ -54,6 +58,7 @@ class HTMLEditorWithGalleryField extends TextField
 		$this->width = $width;
 		$this->galleryHeight = $galleryHeight;
 		$this->editorHeight = $editorHeight;
+		$this->editorLabelsParameter = $editorLabelsParameter;
 		$this->package = "SBGallery";
 	}
 }

@@ -17,7 +17,9 @@ class EditorSettings
 
 	public int $height;
 
-	public function __construct(string $id = "editor1", string $iframePage = null, string $iconsPath = "image/editor", int $width = 60, int $height = 20)
+	public ?string $labelsParameter;
+
+	public function __construct(string $id = "editor1", string $iframePage = null, string $iconsPath = "image/editor", int $width = 60, int $height = 20, string $labelsParameter = null)
 	{
 		$pageBaseURL = Page::computeBaseURL();
 
@@ -31,6 +33,7 @@ class EditorSettings
 		$this->iconsPath = $pageBaseURL."/".$iconsPath;
 		$this->width = $width;
 		$this->height = $height;
+		$this->labelsParameter = $labelsParameter;
 	}
 }
 ?>

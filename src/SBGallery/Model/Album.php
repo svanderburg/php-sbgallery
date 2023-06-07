@@ -48,7 +48,7 @@ class Album
 			"ALBUM_ID" => new AcceptableFileNameField($settings->albumLabels->albumId, true, 20, 255),
 			"Title" => new TextField($settings->albumLabels->title, true, 20, 255),
 			"Visible" => new CheckBoxField($settings->albumLabels->visible),
-			"Description" => new HTMLEditorField($settings->albumEditorSettings->id, $settings->albumLabels->description, $settings->albumEditorSettings->iframePage, $settings->albumEditorSettings->iconsPath, false, $settings->albumEditorSettings->width, $settings->albumEditorSettings->height)
+			"Description" => new HTMLEditorField($settings->albumEditorSettings->id, $settings->albumLabels->description, $settings->albumEditorSettings->iframePage, $settings->albumEditorSettings->iconsPath, false, $settings->albumEditorSettings->width, $settings->albumEditorSettings->height, $settings->albumEditorSettings->labelsParameter)
 		), $settings->operationParam, $settings->urlGenerator->generateAlbumFormURL($albumId), new TextLabel($settings->albumLabels->submit), $settings->albumLabels->validationErrorMessage, $settings->albumLabels->fieldErrorMessage);
 
 		if($albumId === null)
