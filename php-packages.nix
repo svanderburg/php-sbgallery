@@ -23,10 +23,10 @@ let
     "svanderburg/php-sbeditor" = {
       targetDir = "";
       src = fetchgit {
-        name = "svanderburg-php-sbeditor-56747f6ac3aa4244ffb21f8ca9c2011990a3482c";
+        name = "svanderburg-php-sbeditor-70b2f7acdd97b3eae9b59dba482e70d4103b8838";
         url = "https://github.com/svanderburg/php-sbeditor.git";
-        rev = "56747f6ac3aa4244ffb21f8ca9c2011990a3482c";
-        sha256 = "19hxbvlwnly3xqy5w7zps73dsjjfxg006lsv94ax45fss5ax1ykm";
+        rev = "70b2f7acdd97b3eae9b59dba482e70d4103b8838";
+        sha256 = "0jhzcy7gs7g1nbgbic72rcyyhc347aiwadchxyl4swv5lr1pfhbj";
       };
     };
     "svanderburg/php-sblayout" = {

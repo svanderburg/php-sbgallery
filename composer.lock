@@ -136,7 +136,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbeditor.git",
-                "reference": "56747f6ac3aa4244ffb21f8ca9c2011990a3482c"
+                "reference": "70b2f7acdd97b3eae9b59dba482e70d4103b8838"
             },
             "require-dev": {
                 "svanderburg/php-sbdata": "dev-master"
@@ -163,7 +163,7 @@
                 }
             ],
             "description": "Simple embeddable HTML editor",
-            "time": "2023-03-18T15:58:28+00:00"
+            "time": "2023-06-07T20:54:31+00:00"
         },
         {
             "name": "svanderburg/php-sblayout",
