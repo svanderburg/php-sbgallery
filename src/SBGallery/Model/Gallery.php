@@ -86,7 +86,7 @@ class Gallery
 	{
 		$row = $album->exportValues();
 		AlbumEntity::insert($this->dbh, $row, $this->settings->albumsTable, $this->settings->thumbnailsTable);
-		AlbumFileSet::createAlbumDirectories($this->settings->baseDir, $album->form->fields["ALBUM_ID"]->exportValue(), $this->settings->dirPermissions);
+		AlbumFileSet::createAlbumDirectories($this->settings->baseDir, $album->fields["ALBUM_ID"]->exportValue(), $this->settings->dirPermissions);
 	}
 
 	/**
@@ -99,7 +99,7 @@ class Gallery
 	{
 		$row = $album->exportValues();
 		AlbumEntity::update($this->dbh, $row, $albumId, $this->settings->albumsTable);
-		AlbumFileSet::renameAlbumDirectory($this->settings->baseDir, $albumId, $album->form->fields["ALBUM_ID"]->exportValue());
+		AlbumFileSet::renameAlbumDirectory($this->settings->baseDir, $albumId, $album->fields["ALBUM_ID"]->exportValue());
 	}
 
 	/**

@@ -59,7 +59,7 @@ function displayPictureOnly(Picture $picture): void
 		{
 			?>
 			<p>
-				<img src="<?= $picture->settings->baseURL."/pictures/".rawurlencode($picture->pictureId).".".$picture->fileType ?>" alt="<?= $picture->form->fields["Title"]->exportValue() ?>">
+				<img src="<?= $picture->settings->baseURL."/pictures/".rawurlencode($picture->pictureId).".".$picture->fileType ?>" alt="<?= $picture->fields["Title"]->exportValue() ?>">
 			</p>
 			<?php
 		}
@@ -78,7 +78,7 @@ function displayPicture(Picture $picture): void
 	if($picture->pictureId !== null)
 		displayPictureNavigation($picture);
 	displayPictureOnly($picture);
-	\SBData\View\HTML\displayField($picture->form->fields["Description"]);
+	\SBData\View\HTML\displayField($picture->fields["Description"]);
 }
 
 function displayEditablePictureNavigation(Picture $picture): void
@@ -108,7 +108,7 @@ function displayEditablePicture(Picture $picture): void
 	if($picture->pictureId !== null)
 		displayEditablePictureNavigation($picture);
 	displayPictureOnly($picture);
-	\SBData\View\HTML\displayEditableForm($picture->form);
+	\SBData\View\HTML\displayEditableForm($picture);
 }
 
 /**

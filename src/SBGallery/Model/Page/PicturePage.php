@@ -40,7 +40,7 @@ class PicturePage extends CRUDDetailPage
 		try
 		{
 			$this->picture = $album->queryPicture($pictureId);
-			$this->title = $this->picture->form->fields["Title"]->exportValue();
+			$this->title = $this->picture->fields["Title"]->exportValue();
 		}
 		catch(PictureNotFoundException $ex)
 		{

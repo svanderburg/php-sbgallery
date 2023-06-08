@@ -44,7 +44,7 @@ class PictureCRUDInterface extends CRUDInterface
 		{
 			$this->operationParamPage->album->insertPicture($this->picture);
 
-			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->picture->form->fields["PICTURE_ID"]->exportValue()));
+			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->picture->fields["PICTURE_ID"]->exportValue()));
 			exit();
 		}
 	}
@@ -58,7 +58,7 @@ class PictureCRUDInterface extends CRUDInterface
 		if($this->picture->checkValid())
 		{
 			$this->operationParamPage->album->updatePicture($GLOBALS["query"]["pictureId"], $this->picture);
-			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->picture->form->fields["PICTURE_ID"]->exportValue()));
+			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->picture->fields["PICTURE_ID"]->exportValue()));
 			exit();
 		}
 	}

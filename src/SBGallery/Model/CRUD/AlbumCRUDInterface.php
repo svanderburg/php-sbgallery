@@ -43,7 +43,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		if($this->album->checkValid())
 		{
 			$this->operationParamPage->gallery->insertAlbum($this->album);
-			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->album->form->fields["ALBUM_ID"]->exportValue()));
+			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->album->fields["ALBUM_ID"]->exportValue()));
 			exit();
 		}
 	}
@@ -57,7 +57,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		if($this->album->checkValid())
 		{
 			$this->operationParamPage->gallery->updateAlbum($GLOBALS["query"]["albumId"], $this->album);
-			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->album->form->fields["ALBUM_ID"]->exportValue()));
+			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->album->fields["ALBUM_ID"]->exportValue()));
 			exit();
 		}
 	}

@@ -57,7 +57,7 @@ class AlbumPage extends CRUDMasterPage
 		$this->settings = $settings;
 		$this->checker = $checker;
 
-		$this->title = $this->album->form->fields["Title"]->exportValue();
+		$this->title = $this->album->fields["Title"]->exportValue();
 	}
 
 	public function createParamValue(): Value

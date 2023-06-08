@@ -18,7 +18,7 @@ use SBGallery\Model\Settings\AlbumSettings;
 /**
  * Representation of a configurable album whose state can be modified.
  */
-class Album
+class Album extends CRUDForm
 {
 	/** Database connection to the gallery database */
 	public PDO $dbh;
@@ -29,8 +29,6 @@ class Album
 	/** The ID of the album or null if it was not yet inserted into the database */
 	public ?string $albumId;
 
-	public CRUDForm $form;
-
 	/**
 	 * Constructs a new album instance.
 	 *
@@ -40,11 +38,7 @@ class Album
 	 */
 	public function __construct(PDO $dbh, AlbumSettings $settings, string $albumId = null)
 	{
-		$this->dbh = $dbh;
-		$this->settings = $settings;
-		$this->albumId = $albumId;
-
-		$this->form = new CRUDForm(array(
+		parent::__construct(array(
 			"ALBUM_ID" => new AcceptableFileNameField($settings->albumLabels->albumId, true, 20, 255),
 			"Title" => new TextField($settings->albumLabels->title, true, 20, 255),
 			"Visible" => new CheckBoxField($settings->albumLabels->visible),
@@ -52,34 +46,18 @@ class Album
 		), $settings->operationParam, $settings->urlGenerator->generateAlbumFormURL($albumId), new TextLabel($settings->albumLabels->submit), $settings->albumLabels->validationErrorMessage, $settings->albumLabels->fieldErrorMessage);
 
 		if($albumId === null)
-			$this->form->setOperation("insert_album");
+			$this->setOperation("insert_album");
 		else
-			$this->form->setOperation("update_album");
-	}
+			$this->setOperation("update_album");
 
-	public function importValues(array $values): void
-	{
-		$this->form->importValues($values);
-	}
-
-	public function exportValues(): array
-	{
-		return $this->form->exportValues();
-	}
-
-	public function checkFields(): void
-	{
-		$this->form->checkFields();
-	}
-
-	public function checkValid(): bool
-	{
-		return $this->form->checkValid();
+		$this->dbh = $dbh;
+		$this->settings = $settings;
+		$this->albumId = $albumId;
 	}
 
 	public function deriveAlbumDir(): string
 	{
-		return $this->settings->baseDir."/".$this->form->fields["ALBUM_ID"]->exportValue();
+		return $this->settings->baseDir."/".$this->fields["ALBUM_ID"]->exportValue();
 	}
 
 	/**
@@ -131,7 +109,7 @@ class Album
 		/* Move or replace the image file if one has been provided */
 		PictureFileSet::generatePictures($_FILES["Image"]["tmp_name"],
 			$this->deriveAlbumDir(),
-			$picture->form->fields["PICTURE_ID"]->exportValue(),
+			$picture->fields["PICTURE_ID"]->exportValue(),
 			$picture->fileType,
 			$this->settings->thumbnailWidth,
 			$this->settings->thumbnailHeight,
@@ -160,13 +138,13 @@ class Album
 
 		if($picture->fileType !== null && $oldPicture->fileType !== null && $oldPicture->fileType !== $picture->fileType) // If the filetype has changed, then delete the old pictures
 			PictureFileSet::deletePictures($this->deriveAlbumDir(), $pictureId, $oldPicture->fileType);
-		else if($pictureId !== $picture->form->fields["PICTURE_ID"]->exportValue()) // If the id has changed, we should change the filenames of the pictures as well
-			PictureFileSet::renamePictures($this->deriveAlbumDir(), $pictureId, $picture->form->fields["PICTURE_ID"]->exportValue(), $oldPicture->fileType, $picture->fileType);
+		else if($pictureId !== $picture->fields["PICTURE_ID"]->exportValue()) // If the id has changed, we should change the filenames of the pictures as well
+			PictureFileSet::renamePictures($this->deriveAlbumDir(), $pictureId, $picture->fields["PICTURE_ID"]->exportValue(), $oldPicture->fileType, $picture->fileType);
 
 		/* Move or replace the image file if one has been provided */
 		PictureFileSet::generatePictures($_FILES["Image"]["tmp_name"],
 			$this->deriveAlbumDir(),
-			$picture->form->fields["PICTURE_ID"]->exportValue(),
+			$picture->fields["PICTURE_ID"]->exportValue(),
 			$picture->fileType,
 			$this->settings->thumbnailWidth,
 			$this->settings->thumbnailHeight,

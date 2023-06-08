@@ -51,7 +51,7 @@ function displayPictureThumbnails(Album $album): void
  */
 function displayAlbum(Album $album): void
 {
-	\SBData\View\HTML\displayField($album->form->fields["Description"]);
+	\SBData\View\HTML\displayField($album->fields["Description"]);
 	displayPictureThumbnails($album);
 }
 
@@ -139,7 +139,7 @@ function displayEditablePictureThumbnails(Album $album): void
  */
 function displayEditableAlbum(Album $album): void
 {
-	\SBData\View\HTML\displayEditableForm($album->form);
+	\SBData\View\HTML\displayEditableForm($album);
 	displayEditablePictureThumbnails($album);
 }
 
