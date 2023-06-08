@@ -23,7 +23,7 @@ class PicturePage extends CRUDDetailPage
 	public function __construct(Album $album, string $pictureId, PicturePageSettings $settings, GalleryPermissionChecker $checker, PictureContents $contents = null)
 	{
 		if($contents === null)
-			$contents = new PictureContents();
+			$contents = new PictureContents($settings->pictureEditorLabelsFile);
 
 		parent::__construct($settings->picturePageLabels->title, $contents, array(
 			"update_picture" => new AlbumOperationPage($album, $settings->picturePageLabels->updatePicture, $contents, $checker, $album->settings->operationParam),

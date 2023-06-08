@@ -26,6 +26,7 @@
       "psr-4": {
           "Examples\\LowLevel\\": "examples/lowlevel/includes",
           "Examples\\CRUD\\": "examples/crud/includes",
+          "Examples\\CRUDTranslated\\": "examples/crud-translated/includes",
           "Examples\\Pages\\": "examples/pages/includes"
       }
   },

@@ -9,12 +9,16 @@ class PicturePageSettings
 {
 	public PicturePageLabels $picturePageLabels;
 
-	public function __construct(PicturePageLabels $picturePageLabels = null)
+	public ?string $pictureEditorLabelsFile;
+
+	public function __construct(PicturePageLabels $picturePageLabels = null, string $pictureEditorLabelsFile = null)
 	{
 		if($picturePageLabels === null)
 			$this->picturePageLabels = new PicturePageLabels();
 		else
 			$this->picturePageLabels = $picturePageLabels;
+
+		$this->pictureEditorLabelsFile = $pictureEditorLabelsFile;
 	}
 }
 ?>

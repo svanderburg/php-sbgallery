@@ -42,6 +42,8 @@ class GalleryPageSettings extends AlbumPageSettings
 		PictureLabels $pictureLabels = null,
 		EditorSettings $albumEditorSettings = null,
 		EditorSettings $pictureEditorSettings = null,
+		string $albumEditorLabelsFile = null,
+		string $pictureEditorLabelsFile = null,
 		string $albumsTable = "albums",
 		string $thumbnailsTable = "thumbnails",
 		string $picturesTable = "pictures",
@@ -49,9 +51,16 @@ class GalleryPageSettings extends AlbumPageSettings
 		string $galleryPageMenuItem = null,
 		string $albumPageMenuItem = null)
 	{
-		parent::__construct($albumPageLabels, $picturePageLabels, $albumPageMenuItem);
+		parent::__construct($albumPageLabels, $picturePageLabels, $albumEditorLabelsFile, $pictureEditorLabelsFile, $albumPageMenuItem);
 
 		$pageBaseURL = Page::computeBaseURL();
+
+		// If editor label files were provided, then also auto assign a label parameter
+		if($albumEditorLabelsFile !== null)
+			$albumEditorSettings->labelsParameter = "albumEditorLabels";
+
+		if($pictureEditorLabelsFile !== null)
+			$pictureEditorSettings->labelsParameter = "pictureEditorLabels";
 
 		$this->gallerySettings = new GallerySettings(new LayoutGalleryURLGenerator(),
 			$pageBaseURL."/".$baseURL,

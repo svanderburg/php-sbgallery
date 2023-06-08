@@ -1,0 +1,25 @@
+body
+{
+	font-family: arial, lucida, helvetica, sans-serif;
+}
+
+img
+{
+	border-style: none;
+	max-width: 100%;
+	width: auto;
+	height: auto;
+}
+
+.mandatory
+{
+	color: #ff0000;
+}
+
+#submenu
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 5px;
+}

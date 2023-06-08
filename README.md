@@ -596,6 +596,8 @@ This package contains two examples in the `example/` sub folder:
   a gallery, album, picture and multiple pictures upload page.
 * The `crud` folder contains an example using the high-level API. It provides
   a gallery with a useless authentication check (the `view=1` GET parameter).
+  The `crud-translated` folder extends the previous example with a translated
+  version the gallery to Dutch.
 * The `pages` folder contains an example of exposing albums as sub pages in the
   application layout so that parts of the web application content can be
   managed by end-users.
@@ -604,6 +606,8 @@ This package contains two examples in the `example/` sub folder:
 * The `formeditor` folder contains an example of an editor with gallery
   integrated into the `php-sbdata` framework, so that input can be automatically
   validated and presented.
+* The `formeditor-translated` folder extends the previous example with a
+  translation to Dutch
 
 API documentation
 =================

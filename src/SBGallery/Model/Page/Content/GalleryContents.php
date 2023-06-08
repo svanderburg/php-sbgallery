@@ -16,9 +16,9 @@ class GalleryContents extends OverridedContents
 		parent::__construct($sectionFile, $relativeSectionFile, null, $sections, $gallerySection, $view, $styles, $scripts);
 	}
 
-	public function constructAlbumContents(): AlbumContents
+	public function constructAlbumContents(string $albumEditorLabelsFile = null): AlbumContents
 	{
-		return new AlbumContents($this->sections, $this->gallerySection, $this->view, $this->styles, $this->scripts);
+		return new AlbumContents($albumEditorLabelsFile, $this->sections, $this->gallerySection, $this->view, $this->styles, $this->scripts);
 	}
 }
 ?>

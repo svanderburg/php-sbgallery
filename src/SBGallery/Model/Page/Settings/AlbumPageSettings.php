@@ -10,16 +10,24 @@ class AlbumPageSettings extends PicturePageSettings
 {
 	public AlbumPageLabels $albumPageLabels;
 
+	public ?string $albumEditorLabelsFile;
+
 	public ?string $albumMenuItem;
 
-	public function __construct(AlbumPageLabels $albumPageLabels = null, PicturePageLabels $picturePageLabels = null, string $albumMenuItem = null)
+	public function __construct(AlbumPageLabels $albumPageLabels = null,
+		PicturePageLabels $picturePageLabels = null,
+		string $albumEditorLabelsFile = null,
+		string $pictureEditorLabelsFile = null,
+		string $albumMenuItem = null)
 	{
-		parent::__construct($picturePageLabels);
+		parent::__construct($picturePageLabels, $pictureEditorLabelsFile);
 
 		if($albumPageLabels === null)
 			$this->albumPageLabels = new AlbumPageLabels();
 		else
 			$this->albumPageLabels = $albumPageLabels;
+
+		$this->albumEditorLabelsFile = $albumEditorLabelsFile;
 
 		if($albumMenuItem === null)
 			$this->albumMenuItem = dirname(__FILE__)."/../../../View/HTML/menuitems/album.php";

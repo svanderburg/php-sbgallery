@@ -44,7 +44,7 @@ class GalleryPage extends CRUDMasterPage
 		if($contents === null)
 			$contents = new GalleryContents();
 
-		$this->albumContents = $contents->constructAlbumContents();
+		$this->albumContents = $contents->constructAlbumContents($settings->albumEditorLabelsFile);
 
 		$this->gallery = new Gallery($dbh, $settings->gallerySettings);
 
