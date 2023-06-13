@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sbcrud.git",
-                "reference": "7a5162f12847dd5b1e96703668543d2b7f1b5024"
+                "reference": "2a03d319e074854fed4030b98672d35e746770d3"
             },
             "require": {
                 "svanderburg/php-sbdata": "dev-master",
@@ -48,7 +48,7 @@
                 }
             ],
             "description": "Abstractions to construct web-based information systems",
-            "time": "2023-06-02T16:04:02+00:00"
+            "time": "2023-06-13T20:21:46+00:00"
         },
         {
             "name": "svanderburg/php-sbdata",
@@ -171,7 +171,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/svanderburg/php-sblayout.git",
-                "reference": "56b8668eae093d47c9ab8f6fab0522524cb0a89e"
+                "reference": "c7b6f86ab9e95a9508833581f0e0e5dd107ae931"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.x"
@@ -219,7 +219,7 @@
                 }
             ],
             "description": "My custom website layout organiser framework for PHP",
-            "time": "2023-05-30T13:28:59+00:00"
+            "time": "2023-06-13T19:31:02+00:00"
         }
     ],
     "packages-dev": [],
