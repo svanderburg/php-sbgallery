@@ -7,16 +7,66 @@
  */
 namespace SBGallery\View\HTML;
 use SBGallery\Model\Gallery;
+use SBGallery\Model\Album;
+
+function determinePage(string $key): int
+{
+	if(array_key_exists($key, $_REQUEST))
+		return (int)($_REQUEST[$key]);
+	else
+		return 0;
+}
+
+function displayPicturePagesNavigationForPicturePickerPage(Album $album, int $page): void
+{
+	if($album->settings->pageSize !== null)
+	{
+		$numOfPages = ceil($album->queryNumOfPicturesInAlbum() / $album->settings->pageSize);
+
+		if($numOfPages > 1)
+		{
+			?>
+			<div class="albumnavigation">
+				<?php
+				if($page > 0)
+				{
+					?>
+					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumPage=<?= $page - 1 ?>"><?= $album->settings->albumLabels->previous ?></a>
+					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumPage=0">0</a>
+					<?php
+				}
+				?>
+				<a class="active_page" href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumPage=<?= $page ?>"><strong><?= $page ?></strong></a>
+				<?php
+				$lastPage = $numOfPages - 1;
+
+				if($page < $lastPage)
+				{
+					?>
+					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumId=<?= $lastPage ?>"><?= $lastPage ?></a>
+					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumId=<?= $page + 1 ?>"><?= $album->settings->albumLabels->next ?></a>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+		}
+	}
+}
 
 function displayPicturesForPicturePickerPage(Gallery $gallery, string $galleryLabel): void
 {
 	?>
 	<p><a href="?">&laquo; <?= $galleryLabel ?></a></p>
+	<?php
+	$album = $gallery->queryAlbum($_REQUEST["ALBUM_ID"]);
+
+	$page = determinePage("albumPage");
+	displayPicturePagesNavigationForPicturePickerPage($album, $page);
+	?>
 	<div class="album">
 		<?php
-		$album = $gallery->queryAlbum($_REQUEST["ALBUM_ID"]);
-
-		foreach($album->pictureThumbnailIterator() as $pictureId => $pictureThumbnail)
+		foreach($album->pictureThumbnailIterator($page) as $pictureId => $pictureThumbnail)
 		{
 			?>
 			<div class="picturethumbnail">
@@ -38,12 +88,51 @@ function displayPicturesForPicturePickerPage(Gallery $gallery, string $galleryLa
 	<?php
 }
 
+function displayAlbumPagesNavigationForPicturePickerPage(Gallery $gallery, int $page): void
+{
+	if($gallery->settings->galleryPageSize !== null)
+	{
+		$numOfPages = ceil($gallery->queryNumOfAlbums() / $gallery->settings->galleryPageSize);
+
+		if($numOfPages > 1)
+		{
+			?>
+			<div class="gallerynavigation">
+				<?php
+				if($page > 0)
+				{
+					?>
+					<a href="?galleryPage=<?= $page - 1 ?>"><?= $gallery->settings->galleryLabels->previous ?></a>
+					<a href="?galleryPage=0">0</a>
+					<?php
+				}
+				?>
+				<a class="active_page" href="?page=<?= $page ?>"><strong><?= $page ?></strong></a>
+				<?php
+				$lastPage = $numOfPages - 1;
+
+				if($page < $lastPage)
+				{
+					?>
+					<a href="?galleryPage=<?= $lastPage ?>"><?= $lastPage ?></a>
+					<a href="?galleryPage=<?= $page + 1 ?>"><?= $gallery->settings->galleryLabels->next ?></a>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+		}
+	}
+}
+
 function displayAlbumsForPicturePickerPage(Gallery $gallery): void
 {
+	$page = determinePage("galleryPage");
+	displayAlbumPagesNavigationForPicturePickerPage($gallery, $page);
 	?>
 	<div class="gallery">
 		<?php
-		foreach($gallery->albumThumbnailIterator(false) as $albumId => $albumThumbnail)
+		foreach($gallery->albumThumbnailIterator(false, $page) as $albumId => $albumThumbnail)
 		{
 			?>
 			<div class="albumthumbnail">

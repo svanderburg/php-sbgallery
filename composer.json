@@ -28,7 +28,8 @@
           "Examples\\CRUD\\": "examples/crud/includes",
           "Examples\\CRUDPaged\\": "examples/crud-paged/includes",
           "Examples\\CRUDTranslated\\": "examples/crud-translated/includes",
-          "Examples\\Pages\\": "examples/pages/includes"
+          "Examples\\Pages\\": "examples/pages/includes",
+          "Examples\\FormEditorPaged\\": "examples/formeditor-paged/includes"
       }
   },
   "repositories": [

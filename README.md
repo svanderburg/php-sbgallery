@@ -610,6 +610,8 @@ This package contains two examples in the `example/` sub folder:
   validated and presented.
 * The `formeditor-translated` folder extends the previous example with a
   translation to Dutch
+* The `formeditor-paged` example extends the `formeditor` example with
+  pagination support
 
 API documentation
 =================
