@@ -18,15 +18,18 @@ class PictureThumbnailIterator implements Iterator
 
 	private AlbumSettings $settings;
 
+	private int $page;
+
 	private PDOStatement $stmt;
 
 	private $row;
 
-	public function __construct(PDO $dbh, string $albumId, AlbumSettings $settings)
+	public function __construct(PDO $dbh, string $albumId, AlbumSettings $settings, int $page)
 	{
 		$this->dbh = $dbh;
 		$this->albumId = $albumId;
 		$this->settings = $settings;
+		$this->page = $page;
 	}
 
 	public function current(): mixed
@@ -46,7 +49,11 @@ class PictureThumbnailIterator implements Iterator
 
 	public function rewind()
 	{
-		$this->stmt = PictureEntity::queryAll($this->dbh, $this->albumId, $this->settings->picturesTable);
+		if($this->settings->pageSize === null)
+			$this->stmt = PictureEntity::queryAll($this->dbh, $this->albumId, $this->settings->picturesTable);
+		else
+			$this->stmt = PictureEntity::queryPage($this->dbh, $this->albumId, $this->page, $this->settings->pageSize, $this->settings->picturesTable);
+
 		$this->row = $this->stmt->fetch();
 	}
 

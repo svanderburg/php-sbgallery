@@ -17,7 +17,7 @@ use SBGallery\Model\PicturesUploader;
 function displayPicturesUploader(PicturesUploader $uploader): void
 {
 	?>
-	<form action="<?= $uploader->settings->urlGenerator->generatePicturesUploaderFormURL($uploader->albumId) ?>" method="post" enctype="multipart/form-data">
+	<form action="<?= $uploader->settings->urlGenerator->generatePicturesUploaderFormURL($uploader->albumId, "&amp;") ?>" method="post" enctype="multipart/form-data">
 		<input name="<?= $uploader->settings->operationParam ?>" type="hidden" value="insert_multiple_pictures">
 		<input name="ALBUM_ID" type="hidden" value="<?= $uploader->albumId ?>">
 		<input name="Image[]" type="file" multiple><br>

@@ -9,29 +9,43 @@ class LayoutGalleryURLGenerator extends LayoutAlbumURLGenerator implements Galle
 		parent::__construct($operationParam);
 	}
 
-	public function generateAlbumURL(string $albumId): string
+	public function generateGalleryPageURL(int $page, string $argSeparator): string
 	{
-		return RouteUtils::composeSelfURL()."/".rawurlencode($albumId);
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "", array("galleryPage" => $page));
 	}
 
-	public function generateAddAlbumURL(): string
+	public function generateAlbumURL(string $albumId, string $argSeparator, array $extraGetParameters = array()): string
 	{
-		return "?".$this->operationParam."=create_album";
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "/".rawurlencode($albumId), $extraGetParameters);
 	}
 
-	public function generateRemoveAlbumURL(int $id, string $albumId): string
+	public function generateAddAlbumURL(string $argSeparator): string
 	{
-		return $this->generateAlbumURL($albumId)."?".$this->operationParam."=remove_album&amp;__id=".$id;
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "", array($this->operationParam => "create_album"));
 	}
 
-	public function generateMoveAlbumLeftURL(int $id, string $albumId): string
+	public function generateRemoveAlbumURL(int $id, string $albumId, string $argSeparator): string
 	{
-		return $this->generateAlbumURL($albumId)."?".$this->operationParam."=moveleft_album&amp;__id=".$id;
+		return $this->generateAlbumURL($albumId, $argSeparator, array(
+			$this->operationParam => "remove_album",
+			"__id" => $id
+		));
 	}
 
-	public function generateMoveAlbumRightURL(int $id, string $albumId): string
+	public function generateMoveAlbumLeftURL(int $id, string $albumId, string $argSeparator): string
 	{
-		return $this->generateAlbumURL($albumId)."?".$this->operationParam."=moveright_album&amp;__id=".$id;
+		return $this->generateAlbumURL($albumId, $argSeparator, array(
+			$this->operationParam => "moveleft_album",
+			"__id" => $id
+		));
+	}
+
+	public function generateMoveAlbumRightURL(int $id, string $albumId, string $argSeparator): string
+	{
+		return $this->generateAlbumURL($albumId, $argSeparator, array(
+			$this->operationParam => "moveright_album",
+			"__id" => $id
+		));
 	}
 }
 ?>

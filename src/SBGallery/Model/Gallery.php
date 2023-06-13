@@ -78,6 +78,26 @@ class Gallery
 	}
 
 	/**
+	 * Queries the amount of albums in the gallery
+	 *
+	 * @return The amount of albums
+	 */
+	public function queryNumOfAlbums(): int
+	{
+		return AlbumEntity::queryNumOfAlbums($this->dbh, $this->settings->albumsTable);
+	}
+
+	/**
+	 * Queries the amount of visible albums in the gallery
+	 *
+	 * @return The amount of visible albums
+	 */
+	public function queryNumOfVisibleAlbums(): int
+	{
+		return AlbumEntity::queryNumOfVisibleAlbums($this->dbh, $this->settings->albumsTable);
+	}
+
+	/**
 	 * Inserts an album into the database.
 	 *
 	 * @param $album Album to insert
@@ -139,11 +159,12 @@ class Gallery
 	 * Provides an iterator that steps over the thumbnails of each album.
 	 *
 	 * @param $displayOnlyVisible Specifies whether to include only visible albums
+	 * @param $page Page to fetch thumbnails from (defaults to 0)
 	 * @return Gallery item iterator that iterates over all available gallery items
 	 */
-	public function albumThumbnailIterator(bool $displayOnlyVisible): AlbumThumbnailIterator
+	public function albumThumbnailIterator(bool $displayOnlyVisible, int $page = 0): AlbumThumbnailIterator
 	{
-		return new AlbumThumbnailIterator($this->dbh, $displayOnlyVisible, $this->settings);
+		return new AlbumThumbnailIterator($this->dbh, $displayOnlyVisible, $this->settings, $page);
 	}
 }
 ?>

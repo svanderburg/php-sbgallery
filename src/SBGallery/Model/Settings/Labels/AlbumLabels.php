@@ -30,6 +30,10 @@ class AlbumLabels
 
 	public string $sendFiles;
 
+	public string $previous;
+
+	public string $next;
+
 	public string $invalidFile;
 
 	public string $validationErrorMessage;
@@ -50,6 +54,8 @@ class AlbumLabels
 		string $remove = "Remove",
 		string $submit = "Submit",
 		string $sendFiles = "Send files",
+		string $previous = "&laquo; Previous",
+		string $next = "Next &raquo;",
 		string $invalidFile = "Invalid file: ",
 		string $validationErrorMessage = "One or more fields are invalid and marked with a red color",
 		string $fieldErrorMessage = "This value is incorrect!",
@@ -66,6 +72,8 @@ class AlbumLabels
 		$this->setAsThumbnail = $setAsThumbnail;
 		$this->remove = $remove;
 		$this->submit = $submit;
+		$this->previous = $previous;
+		$this->next = $next;
 		$this->sendFiles = $sendFiles;
 		$this->invalidFile =  $invalidFile;
 		$this->validationErrorMessage = $validationErrorMessage;

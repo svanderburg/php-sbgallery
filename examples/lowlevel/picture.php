@@ -36,8 +36,8 @@ try
 				$album->insertPicture($picture);
 
 				header("Location: picture.php?".http_build_query(array(
-					"ALBUM_ID" => $picture->form->fields["ALBUM_ID"]->exportValue(),
-					"PICTURE_ID" => $picture->form->fields["PICTURE_ID"]->exportValue()
+					"ALBUM_ID" => $picture->fields["ALBUM_ID"]->exportValue(),
+					"PICTURE_ID" => $picture->fields["PICTURE_ID"]->exportValue()
 				), "", null, PHP_QUERY_RFC3986));
 				exit();
 			}
@@ -53,8 +53,8 @@ try
 				$album->updatePicture($_GET["PICTURE_ID"], $picture);
 
 				header("Location: picture.php?".http_build_query(array(
-					"ALBUM_ID" => $picture->form->fields["ALBUM_ID"]->exportValue(),
-					"PICTURE_ID" => $picture->form->fields["PICTURE_ID"]->exportValue()
+					"ALBUM_ID" => $picture->fields["ALBUM_ID"]->exportValue(),
+					"PICTURE_ID" => $picture->fields["PICTURE_ID"]->exportValue()
 				), "", null, PHP_QUERY_RFC3986));
 				exit();
 			}

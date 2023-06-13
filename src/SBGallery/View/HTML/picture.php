@@ -21,7 +21,7 @@ function displayNavigationButtons(Picture $picture): void
 	else
 	{
 		?>
-		<a href="<?= $picture->settings->urlGenerator->generatePreviousPictureURL($picture->albumId, $predecessorId) ?>"><img src="<?= $picture->settings->iconsPath ?>/previous.png" alt="<?= $picture->settings->labels->previous ?>"></a>
+		<a href="<?= $picture->settings->urlGenerator->generatePreviousPictureURL($picture->albumId, $predecessorId, "&amp;") ?>"><img src="<?= $picture->settings->iconsPath ?>/previous.png" alt="<?= $picture->settings->labels->previous ?>"></a>
 		<?php
 	}
 
@@ -36,7 +36,7 @@ function displayNavigationButtons(Picture $picture): void
 	else
 	{
 		?>
-		<a href="<?= $picture->settings->urlGenerator->generateNextPictureURL($picture->albumId, $successorId) ?>"><img src="<?= $picture->settings->iconsPath ?>/next.png" alt="<?= $picture->settings->labels->next ?>"></a>
+		<a href="<?= $picture->settings->urlGenerator->generateNextPictureURL($picture->albumId, $successorId, "&amp;") ?>"><img src="<?= $picture->settings->iconsPath ?>/next.png" alt="<?= $picture->settings->labels->next ?>"></a>
 		<?php
 	}
 }
@@ -90,7 +90,7 @@ function displayEditablePictureNavigation(Picture $picture): void
 		if($picture->fileType !== null)
 		{
 			?>
-			<a href="<?= $picture->settings->urlGenerator->generateClearPictureURL($picture->albumId, $picture->pictureId) ?>"><img src="<?= $picture->settings->iconsPath ?>/clear.png" alt="<?= $picture->settings->labels->clearPicture ?>"></a>
+			<a href="<?= $picture->settings->urlGenerator->generateClearPictureURL($picture->albumId, $picture->pictureId, "&amp;") ?>"><img src="<?= $picture->settings->iconsPath ?>/clear.png" alt="<?= $picture->settings->labels->clearPicture ?>"></a>
 			<?php
 		}
 		?>

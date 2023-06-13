@@ -19,15 +19,18 @@ class AlbumThumbnailIterator implements Iterator
 
 	private GallerySettings $settings;
 
+	private int $page;
+
 	private PDOStatement $stmt;
 
 	private $row;
 
-	public function __construct(PDO $dbh, bool $displayOnlyVisible, GallerySettings $settings)
+	public function __construct(PDO $dbh, bool $displayOnlyVisible, GallerySettings $settings, int $page)
 	{
 		$this->dbh = $dbh;
 		$this->displayOnlyVisible = $displayOnlyVisible;
 		$this->settings = $settings;
+		$this->page = $page;
 	}
 
 	public function current(): mixed
@@ -47,7 +50,11 @@ class AlbumThumbnailIterator implements Iterator
 
 	public function rewind()
 	{
-		$this->stmt = AlbumEntity::queryThumbnails($this->dbh, $this->displayOnlyVisible, $this->settings->albumsTable, $this->settings->thumbnailsTable, $this->settings->picturesTable);
+		if($this->settings->galleryPageSize === null)
+			$this->stmt = AlbumEntity::queryThumbnails($this->dbh, $this->displayOnlyVisible, $this->settings->albumsTable, $this->settings->thumbnailsTable, $this->settings->picturesTable);
+		else
+			$this->stmt = AlbumEntity::queryThumbnailPage($this->dbh, $this->displayOnlyVisible, $this->page, $this->settings->galleryPageSize, $this->settings->albumsTable, $this->settings->thumbnailsTable, $this->settings->picturesTable);
+
 		$this->row = $this->stmt->fetch();
 	}
 

@@ -8,29 +8,34 @@ class SimpleGalleryURLGenerator extends SimpleAlbumURLGenerator implements Galle
 		parent::__construct($operationParam);
 	}
 
-	public function generateAlbumURL(string $albumId): string
+	public function generateGalleryPageURL(int $page, string $argSeparator): string
 	{
-		return $this->generateAddAlbumURL()."?ALBUM_ID=".rawurlencode($albumId);
+		return "gallery.php?PAGE_ID=".$page;
 	}
 
-	public function generateAddAlbumURL(): string
+	public function generateAlbumURL(string $albumId, string $argSeparator): string
+	{
+		return $this->generateAddAlbumURL($argSeparator)."?ALBUM_ID=".rawurlencode($albumId);
+	}
+
+	public function generateAddAlbumURL(string $argSeparator): string
 	{
 		return "album.php";
 	}
 
-	public function generateRemoveAlbumURL(int $id, string $albumId): string
+	public function generateRemoveAlbumURL(int $id, string $albumId, string $argSeparator): string
 	{
-		return $this->generateAlbumURL($albumId)."&amp;".$this->operationParam."=remove_album&amp;__id=".$id;
+		return $this->generateAlbumURL($albumId, $argSeparator).$argSeparator.$this->operationParam."=remove_album".$argSeparator."__id=".$id;
 	}
 
-	public function generateMoveAlbumLeftURL(int $id, string $albumId): string
+	public function generateMoveAlbumLeftURL(int $id, string $albumId, string $argSeparator): string
 	{
-		return $this->generateAlbumURL($albumId)."&amp;".$this->operationParam."=moveleft_album&amp;__id=".$id;
+		return $this->generateAlbumURL($albumId, $argSeparator).$argSeparator.$this->operationParam."=moveleft_album".$argSeparator."__id=".$id;
 	}
 
-	public function generateMoveAlbumRightURL(int $id, string $albumId): string
+	public function generateMoveAlbumRightURL(int $id, string $albumId, string $argSeparator): string
 	{
-		return $this->generateAlbumURL($albumId)."&amp;".$this->operationParam."=moveright_album&amp;__id=".$id;
+		return $this->generateAlbumURL($albumId, $argSeparator).$argSeparator.$this->operationParam."=moveright_album".$argSeparator."__id=".$id;
 	}
 }
 ?>

@@ -44,7 +44,7 @@ class PictureCRUDInterface extends CRUDInterface
 		{
 			$this->operationParamPage->album->insertPicture($this->picture);
 
-			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->picture->fields["PICTURE_ID"]->exportValue()));
+			header("Location: ".RouteUtils::composeSelfURLWithParameters(null, "/".rawurlencode($this->picture->fields["PICTURE_ID"]->exportValue())));
 			exit();
 		}
 	}
@@ -58,7 +58,7 @@ class PictureCRUDInterface extends CRUDInterface
 		if($this->picture->checkValid())
 		{
 			$this->operationParamPage->album->updatePicture($GLOBALS["query"]["pictureId"], $this->picture);
-			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->picture->fields["PICTURE_ID"]->exportValue()));
+			header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route, "/".rawurlencode($this->picture->fields["PICTURE_ID"]->exportValue())));
 			exit();
 		}
 	}
@@ -66,14 +66,14 @@ class PictureCRUDInterface extends CRUDInterface
 	private function removePicture(): void
 	{
 		$this->operationParamPage->album->removePicture($GLOBALS["query"]["pictureId"]);
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composePreviousRowFragment($this->operationParamPage->album->settings->anchorPrefix));
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route, AnchorRow::composePreviousRowFragment($this->operationParamPage->album->settings->anchorPrefix)));
 		exit();
 	}
 
 	private function clearPicture(): void
 	{
 		$this->operationParamPage->album->clearPicture($GLOBALS["query"]["pictureId"]);
-		header("Location: ".RouteUtils::composeSelfURL());
+		header("Location: ".RouteUtils::composeSelfURLWithParameters());
 		exit();
 	}
 
@@ -84,7 +84,7 @@ class PictureCRUDInterface extends CRUDInterface
 		else
 			$rowFragment = AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix);
 
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route).$rowFragment);
 		exit();
 	}
 
@@ -95,14 +95,14 @@ class PictureCRUDInterface extends CRUDInterface
 		else
 			$rowFragment = AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix);
 
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route).$rowFragment);
 		exit();
 	}
 
 	private function setAsPictureAsThumbnail(): void
 	{
 		$this->operationParamPage->album->setAsThumbnail($GLOBALS["query"]["pictureId"]);
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix));
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route).AnchorRow::composeRowFragment($this->operationParamPage->album->settings->anchorPrefix));
 		exit();
 	}
 

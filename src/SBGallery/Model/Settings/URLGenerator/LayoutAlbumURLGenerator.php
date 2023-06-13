@@ -9,49 +9,66 @@ class LayoutAlbumURLGenerator extends LayoutPictureURLGenerator implements Album
 		parent::__construct($operationParam);
 	}
 
-	public function generatePictureURL(string $albumId, string $pictureId): string
+	public function generateAlbumPageURL(string $albumId, int $page, string $argSeparator): string
 	{
-		return RouteUtils::composeSelfURL()."/".rawurlencode($pictureId);
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "", array("albumPage" => $page));
 	}
 
-	public function generateAddPictureURL(string $albumId): string
+	public function generatePictureURL(string $albumId, string $pictureId, string $argSeparator, array $extraGetParameters = array()): string
 	{
-		return "?".$this->operationParam."=create_picture";
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "/".rawurlencode($pictureId), $extraGetParameters);
 	}
 
-	public function generateAddMultiplePicturesURL(string $albumId): string
+	public function generateAddPictureURL(string $albumId, string $argSeparator): string
 	{
-		return "?".$this->operationParam."=add_multiple_pictures";
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "", array($this->operationParam => "create_picture"));
 	}
 
-	public function generateMovePictureLeftURL(int $id, string $albumId, string $pictureId): string
+	public function generateAddMultiplePicturesURL(string $albumId, string $argSeparator): string
 	{
-		return $this->generatePictureURL($albumId, $pictureId)."?".$this->operationParam."=moveleft_picture&amp;__id=".$id;
+		return RouteUtils::composeSelfURLWithParameters($argSeparator, "", array($this->operationParam => "add_multiple_pictures"));
 	}
 
-	public function generateMovePictureRightURL(int $id, string $albumId, string $pictureId): string
+	public function generateMovePictureLeftURL(int $id, string $albumId, string $pictureId, string $argSeparator): string
 	{
-		return $this->generatePictureURL($albumId, $pictureId)."?".$this->operationParam."=moveright_picture&amp;__id=".$id;
+		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
+			$this->operationParam => "moveleft_picture",
+			"__id=" => $id
+		));
 	}
 
-	public function generateSetAsThumbnailURL(int $id, string $albumId, string $pictureId): string
+	public function generateMovePictureRightURL(int $id, string $albumId, string $pictureId, string $argSeparator): string
 	{
-		return $this->generatePictureURL($albumId, $pictureId)."?".$this->operationParam."=setasthumbnail_picture&amp;__id=".$id;
+		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
+			$this->operationParam => "moveright_picture",
+			"__id=" => $id
+		));
 	}
 
-	public function generateRemovePictureURL(int $id, string $albumId, string $pictureId): string
+	public function generateSetAsThumbnailURL(int $id, string $albumId, string $pictureId, string $argSeparator): string
 	{
-		return $this->generatePictureURL($albumId, $pictureId)."?".$this->operationParam."=remove_picture&amp;__id=".$id;
+		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
+			$this->operationParam => "setasthumbnail_picture",
+			"__id=" => $id
+		));
 	}
 
-	public function generateAlbumFormURL(?string $albumId): ?string
+	public function generateRemovePictureURL(int $id, string $albumId, string $pictureId, string $argSeparator): string
 	{
-		return RouteUtils::composeSelfURL();
+		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
+			$this->operationParam => "remove_picture",
+			"__id=" => $id
+		));
 	}
 
-	public function generatePicturesUploaderFormURL(string $albumId): string
+	public function generateAlbumFormURL(?string $albumId, string $argSeparator): ?string
 	{
-		return RouteUtils::composeSelfURL();
+		return RouteUtils::composeSelfURLWithParameters($argSeparator);
+	}
+
+	public function generatePicturesUploaderFormURL(string $albumId, string $argSeparator): string
+	{
+		return RouteUtils::composeSelfURLWithParameters($argSeparator);
 	}
 }
 ?>

@@ -43,7 +43,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		if($this->album->checkValid())
 		{
 			$this->operationParamPage->gallery->insertAlbum($this->album);
-			header("Location: ".RouteUtils::composeSelfURL()."/".rawurlencode($this->album->fields["ALBUM_ID"]->exportValue()));
+			header("Location: ".RouteUtils::composeSelfURLWithParameters(null, "/".rawurlencode($this->album->fields["ALBUM_ID"]->exportValue())));
 			exit();
 		}
 	}
@@ -57,7 +57,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		if($this->album->checkValid())
 		{
 			$this->operationParamPage->gallery->updateAlbum($GLOBALS["query"]["albumId"], $this->album);
-			header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"])."/".rawurlencode($this->album->fields["ALBUM_ID"]->exportValue()));
+			header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route, "/".rawurlencode($this->album->fields["ALBUM_ID"]->exportValue())));
 			exit();
 		}
 	}
@@ -65,7 +65,7 @@ class AlbumCRUDInterface extends CRUDInterface
 	private function removeAlbum(): void
 	{
 		$this->operationParamPage->gallery->removeAlbum($GLOBALS["query"]["albumId"]);
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).AnchorRow::composePreviousRowFragment($this->operationParamPage->gallery->settings->albumAnchorPrefix));
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route).AnchorRow::composePreviousRowFragment($this->operationParamPage->gallery->settings->albumAnchorPrefix));
 		exit();
 	}
 
@@ -76,7 +76,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		else
 			$rowFragment = AnchorRow::composeRowFragment($this->operationParamPage->gallery->settings->albumAnchorPrefix);
 
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route).$rowFragment);
 		exit();
 	}
 
@@ -87,7 +87,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		else
 			$rowFragment = AnchorRow::composeRowFragment($this->operationParamPage->gallery->settings->albumAnchorPrefix);
 
-		header("Location: ".$this->route->composeParentPageURL($_SERVER["SCRIPT_NAME"]).$rowFragment);
+		header("Location: ".RouteUtils::composePreviousURLWithParameters($this->route).$rowFragment);
 		exit();
 	}
 
@@ -96,7 +96,7 @@ class AlbumCRUDInterface extends CRUDInterface
 		$this->album = $this->operationParamPage->gallery->queryAlbum($GLOBALS["query"]["albumId"]);
 		$this->album->insertMultiplePictures("Image");
 
-		header("Location: ".RouteUtils::composeSelfURL());
+		header("Location: ".RouteUtils::composeSelfURLWithParameters());
 		exit();
 	}
 

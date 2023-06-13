@@ -2,7 +2,9 @@
 namespace SBGallery\Model\Page;
 use SBLayout\Model\PageNotFoundException;
 use SBLayout\Model\Page\ContentPage;
+use SBData\Model\ParameterMap;
 use SBData\Model\Value\Value;
+use SBData\Model\Value\PageValue;
 use SBData\Model\Value\AcceptableFileNameValue;
 use SBCrud\Model\Page\CRUDMasterPage;
 use SBCrud\Model\Page\OperationPage;
@@ -63,6 +65,18 @@ class AlbumPage extends CRUDMasterPage
 	public function createParamValue(): Value
 	{
 		return new AcceptableFileNameValue(true, 255);
+	}
+
+	public function createRequestParameterMap(): ParameterMap
+	{
+		if($this->gallery->settings->albumPageSize === null)
+			return new ParameterMap();
+		else
+		{
+			return new ParameterMap(array(
+				"albumPage" => new PageValue()
+			));
+		}
 	}
 
 	public function createDetailPage(array $query): ?ContentPage

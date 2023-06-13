@@ -598,6 +598,8 @@ This package contains two examples in the `example/` sub folder:
   a gallery with a useless authentication check (the `view=1` GET parameter).
   The `crud-translated` folder extends the previous example with a translated
   version the gallery to Dutch.
+* The `crud-paged` folder extends the `crud/` example with pagination support
+  in which a fixed number of album and picture thumbnails are displayed per page
 * The `pages` folder contains an example of exposing albums as sub pages in the
   application layout so that parts of the web application content can be
   managed by end-users.

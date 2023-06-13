@@ -42,8 +42,15 @@ class Album extends CRUDForm
 			"ALBUM_ID" => new AcceptableFileNameField($settings->albumLabels->albumId, true, 20, 255),
 			"Title" => new TextField($settings->albumLabels->title, true, 20, 255),
 			"Visible" => new CheckBoxField($settings->albumLabels->visible),
-			"Description" => new HTMLEditorField($settings->albumEditorSettings->id, $settings->albumLabels->description, $settings->albumEditorSettings->iframePage, $settings->albumEditorSettings->iconsPath, false, $settings->albumEditorSettings->width, $settings->albumEditorSettings->height, $settings->albumEditorSettings->labelsParameter)
-		), $settings->operationParam, $settings->urlGenerator->generateAlbumFormURL($albumId), new TextLabel($settings->albumLabels->submit), $settings->albumLabels->validationErrorMessage, $settings->albumLabels->fieldErrorMessage);
+			"Description" => new HTMLEditorField($settings->albumEditorSettings->id,
+				$settings->albumLabels->description,
+				$settings->albumEditorSettings->iframePage,
+				$settings->albumEditorSettings->iconsPath,
+				false,
+				$settings->albumEditorSettings->width,
+				$settings->albumEditorSettings->height,
+				$settings->albumEditorSettings->labelsParameter)
+		), $settings->operationParam, $settings->urlGenerator->generateAlbumFormURL($albumId, "&amp;"), new TextLabel($settings->albumLabels->submit), $settings->albumLabels->validationErrorMessage, $settings->albumLabels->fieldErrorMessage);
 
 		if($albumId === null)
 			$this->setOperation("insert_album");
@@ -89,6 +96,26 @@ class Album extends CRUDForm
 			$picture->importValues($row);
 			return $picture;
 		}
+	}
+
+	/**
+	 * Queries the amount of pictures in the album
+	 *
+	 * @return The amount of pictures
+	 */
+	public function queryNumOfPicturesInAlbum(): int
+	{
+		return PictureEntity::queryNumOfPicturesInAlbum($this->dbh, $this->albumId, $this->settings->picturesTable);
+	}
+
+	/**
+	 * Queries the amount of visible pictures in the album
+	 *
+	 * @return The amount of visible pictures
+	 */
+	public function queryNumOfVisiblePicturesInAlbum(): int
+	{
+		return PictureEntity::queryNumOfVisiblePicturesInAlbum($this->dbh, $this->albumId, $this->settings->picturesTable);
 	}
 
 	/**
@@ -252,11 +279,12 @@ class Album extends CRUDForm
 	 * Provides an iterator that steps over each thumbnail of a picture in
 	 * the album.
 	 *
+	 * @param $page Page to fetch thumbnails from (defaults to 0)
 	 * @return Album item iterator that iterates over all available album items
 	 */
-	public function pictureThumbnailIterator(): PictureThumbnailIterator
+	public function pictureThumbnailIterator(int $page = 0): PictureThumbnailIterator
 	{
-		return new PictureThumbnailIterator($this->dbh, $this->albumId, $this->settings);
+		return new PictureThumbnailIterator($this->dbh, $this->albumId, $this->settings, $page);
 	}
 
 	/**

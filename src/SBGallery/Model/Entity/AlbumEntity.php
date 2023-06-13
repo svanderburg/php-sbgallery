@@ -25,6 +25,23 @@ class AlbumEntity
 		return $stmt;
 	}
 
+	public static function queryNumOfAlbums(PDO $dbh, string $albumsTable = "albums", string $suffix = ""): int
+	{
+		$stmt = $dbh->prepare("select count(*) from ".$albumsTable.$suffix);
+		if(!$stmt->execute())
+			throw new Exception($stmt->errorInfo()[2]);
+
+		if(($row = $stmt->fetch()) !== false)
+			return $row[0];
+		else
+			return 0;
+	}
+
+	public static function queryNumOfVisibleAlbums(PDO $dbh, string $albumsTable = "albums"): int
+	{
+		return AlbumEntity::queryNumOfAlbums($dbh, $albumsTable, " where Visible = 1");
+	}
+
 	public static function insert(PDO $dbh, array $album, string $albumsTable = "albums", string $thumbnailsTable = "thumbnails"): void
 	{
 		$dbh->beginTransaction();
@@ -86,6 +103,26 @@ class AlbumEntity
 			"left outer join ".$picturesTable." on ".$thumbnailsTable.".PICTURE_ID = ".$picturesTable.".PICTURE_ID ".
 			($displayOnlyVisible ? "where ".$albumsTable.".Visible = 1 " : "").
 			"order by ".$albumsTable.".Ordering desc");
+		if(!$stmt->execute())
+			throw new Exception($stmt->errorInfo()[2]);
+		return $stmt;
+	}
+
+	public static function queryThumbnailPage(PDO $dbh, bool $displayOnlyVisible, int $page, int $pageSize, string $albumsTable = "albums", string $thumbnailsTable = "thumbnails", string $picturesTable = "pictures"): PDOStatement
+	{
+		$offset = (int)($page * $pageSize);
+
+		$stmt = $dbh->prepare("select distinct ".$thumbnailsTable.".ALBUM_ID, ".$thumbnailsTable.".PICTURE_ID, ".$albumsTable.".Title, ".$picturesTable.".FileType ".
+			"from ".$thumbnailsTable." ".
+			"inner join ".$albumsTable." on ".$thumbnailsTable.".ALBUM_ID = ".$albumsTable.".ALBUM_ID ".
+			"left outer join ".$picturesTable." on ".$thumbnailsTable.".PICTURE_ID = ".$picturesTable.".PICTURE_ID ".
+			($displayOnlyVisible ? "where ".$albumsTable.".Visible = 1 " : "").
+			"order by ".$albumsTable.".Ordering desc ".
+			"limit ?, ?");
+
+		$stmt->bindParam(1, $offset, PDO::PARAM_INT);
+		$stmt->bindParam(2, $pageSize, PDO::PARAM_INT);
+
 		if(!$stmt->execute())
 			throw new Exception($stmt->errorInfo()[2]);
 		return $stmt;

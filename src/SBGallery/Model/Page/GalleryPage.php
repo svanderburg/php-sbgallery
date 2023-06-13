@@ -2,7 +2,9 @@
 namespace SBGallery\Model\Page;
 use PDO;
 use SBLayout\Model\Page\ContentPage;
+use SBData\Model\ParameterMap;
 use SBData\Model\Value\Value;
+use SBData\Model\Value\PageValue;
 use SBData\Model\Value\AcceptableFileNameValue;
 use SBCrud\Model\Page\CRUDMasterPage;
 use SBGallery\Model\Gallery;
@@ -64,6 +66,21 @@ class GalleryPage extends CRUDMasterPage
 	public function createParamValue(): Value
 	{
 		return new AcceptableFileNameValue(true, 255);
+	}
+
+	/**
+	 * @see MasterPage::createRequestParameterMap()
+	 */
+	public function createRequestParameterMap(): ParameterMap
+	{
+		if($this->gallery->settings->galleryPageSize === null)
+			return new ParameterMap();
+		else
+		{
+			return new ParameterMap(array(
+				"galleryPage" => new PageValue()
+			));
+		}
 	}
 
 	/**

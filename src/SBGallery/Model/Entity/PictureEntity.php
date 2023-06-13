@@ -17,6 +17,20 @@ class PictureEntity
 		return $stmt;
 	}
 
+	public static function queryPage(PDO $dbh, string $albumId, int $page, int $pageSize, string $picturesTable = "pictures"): PDOStatement
+	{
+		$offset = (int)($page * $pageSize);
+
+		$stmt = $dbh->prepare("select * from ".$picturesTable." where ALBUM_ID = ? order by Ordering limit ?, ?");
+		$stmt->bindParam(1, $albumId, PDO::PARAM_STR);
+		$stmt->bindParam(2, $offset, PDO::PARAM_INT);
+		$stmt->bindParam(3, $pageSize, PDO::PARAM_INT);
+
+		if(!$stmt->execute())
+			throw new Exception($stmt->errorInfo()[2]);
+		return $stmt;
+	}
+
 	public static function queryOne(PDO $dbh, string $pictureId, string $albumId, string $picturesTable = "pictures"): PDOStatement
 	{
 		$stmt = $dbh->prepare("select * from ".$picturesTable." where PICTURE_ID = ? and ALBUM_ID = ?");
@@ -25,9 +39,9 @@ class PictureEntity
 		return $stmt;
 	}
 
-	public static function queryNumOfPicturesInAlbum(PDO $dbh, string $albumId, string $picturesTable = "pictures"): int
+	public static function queryNumOfPicturesInAlbum(PDO $dbh, string $albumId, string $picturesTable = "pictures", string $suffix = ""): int
 	{
-		$stmt = $dbh->prepare("select count(*) from ".$picturesTable." where ALBUM_ID = ?");
+		$stmt = $dbh->prepare("select count(*) from ".$picturesTable." where ALBUM_ID = ?".$suffix);
 
 		if($stmt->execute(array($albumId)))
 		{
@@ -38,6 +52,11 @@ class PictureEntity
 		}
 		else
 			throw new Exception($stmt->errorInfo()[2]);
+	}
+
+	public static function queryNumOfVisiblePicturesInAlbum(PDO $dbh, string $albumId, string $picturesTable = "pictures"): int
+	{
+		return PictureEntity::queryNumOfPicturesInAlbum($dbh, $albumId, $picturesTable, " and Visible = 1");
 	}
 
 	public static function queryPredecessor(PDO $dbh, string $albumId, int $ordering, string $picturesTable = "pictures"): PDOStatement

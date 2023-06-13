@@ -64,6 +64,12 @@ class GallerySettings
 	/** An object containing the editor settings for the picture pages */
 	public EditorSettings $pictureEditorSettings;
 
+	/** The amount of album thumbnails displayed per gallery page. null means there is no limit */
+	public ?int $galleryPageSize;
+
+	/** The amount of picture thumbnails displayed per album page. null means there is no limit */
+	public ?int $albumPageSize;
+
 	/** Name of the albums table */
 	public string $albumsTable;
 
@@ -97,6 +103,8 @@ class GallerySettings
 	 * @param $pictureLabels Object containing all the labels of the picture pages
 	 * @param $albumEditorSettings An object containing the editor settings for the album pages
 	 * @param $pictureEditorSettings An object containing the editor settings for the picture pages
+	 * @param $galleryPageSize The amount of album thumbnails displayed per gallery page
+	 * @param $picturePageSize The amount of picture thumbnails displayed per album page
 	 * @param $albumsTable Name of the albums table
 	 * @param $thumbnailsTable Name of the thumbnails table
 	 * @param $picturesTable Name of the pictures table
@@ -120,6 +128,8 @@ class GallerySettings
 		PictureLabels $pictureLabels = null,
 		EditorSettings $albumEditorSettings = null,
 		EditorSettings $pictureEditorSettings = null,
+		int $galleryPageSize = null,
+		int $albumPageSize = null,
 		string $albumsTable = "albums",
 		string $thumbnailsTable = "thumbnails",
 		string $picturesTable = "pictures",
@@ -164,6 +174,8 @@ class GallerySettings
 		else
 			$this->pictureEditorSettings = $pictureEditorSettings;
 
+		$this->galleryPageSize = $galleryPageSize;
+		$this->albumPageSize = $albumPageSize;
 		$this->albumsTable = $albumsTable;
 		$this->thumbnailsTable = $thumbnailsTable;
 		$this->picturesTable = $picturesTable;
@@ -193,6 +205,7 @@ class GallerySettings
 			$this->pictureLabels,
 			$this->albumEditorSettings,
 			$this->pictureEditorSettings,
+			$this->albumPageSize,
 			$this->thumbnailsTable,
 			$this->picturesTable,
 			$this->operationParam);

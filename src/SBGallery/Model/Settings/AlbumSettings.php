@@ -57,6 +57,9 @@ class AlbumSettings
 	/** An object containing the editor settings for the picture pages */
 	public EditorSettings $pictureEditorSettings;
 
+	/** The amount of picture thumbnails displayed per album page. null means there is no limit */
+	public ?int $pageSize;
+
 	/** Name of the thumbnails table */
 	public string $thumbnailsTable;
 
@@ -105,6 +108,7 @@ class AlbumSettings
 		PictureLabels $pictureLabels = null,
 		EditorSettings $albumEditorSettings = null,
 		EditorSettings $pictureEditorSettings = null,
+		int $pageSize = null,
 		string $thumbnailsTable = "thumbnails",
 		string $picturesTable = "pictures",
 		string $operationParam = "__operation")
@@ -142,6 +146,7 @@ class AlbumSettings
 		else
 			$this->pictureEditorSettings = $pictureEditorSettings;
 
+		$this->pageSize = $pageSize;
 		$this->thumbnailsTable = $thumbnailsTable;
 		$this->picturesTable = $picturesTable;
 		$this->operationParam = $operationParam;

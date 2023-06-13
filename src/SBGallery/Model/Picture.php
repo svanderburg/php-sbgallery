@@ -51,7 +51,7 @@ class Picture extends CRUDForm
 			"Title" => new TextField($settings->labels->title, true, 20, 255),
 			"Description" => new HTMLEditorField($settings->editorSettings->id, $settings->labels->description, $settings->editorSettings->iframePage, $settings->editorSettings->iconsPath, false, $settings->editorSettings->width, $settings->editorSettings->height, $settings->editorSettings->labelsParameter),
 			"Image" => new FileField($settings->labels->image, array("image/gif", "image/jpeg", "image/png"), false)
-		), $settings->operationParam, $settings->urlGenerator->generatePictureFormURL($albumId, $pictureId), new TextLabel($settings->labels->submit), $settings->labels->validationErrorMessage, $settings->labels->fieldErrorMessage);
+		), $settings->operationParam, $settings->urlGenerator->generatePictureFormURL($albumId, $pictureId, "&amp;"), new TextLabel($settings->labels->submit), $settings->labels->validationErrorMessage, $settings->labels->fieldErrorMessage);
 
 		$this->fields["ALBUM_ID"]->importValue($albumId);
 
