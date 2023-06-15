@@ -28,7 +28,7 @@ function displayHTMLEditorWithGallery(string $id, string $name, string $galleryI
 	\SBEditor\View\HTML\displayEditorTextAreaDiv($id, $name, $contents, $width, $editorHeight);
 	?>
 	<script type="text/javascript">
-	var editorWithGallery_<?= $id ?> = new sbeditorWithGallery.SBEditorWithGallery('<?= $iconsPath ?>', '<?= $galleryIframePage ?>', '<?= $editorIframePage ?>', '<?= $width ?>', '<?= $galleryHeight ?>', '<?= $editorHeight ?>'<?= $editorLabelsParameter === null ? "" : (", ".$editorLabelsParameter) ?>);
+	var editorWithGallery_<?= $id ?> = new sbeditorWithGallery.SBEditorWithGallery('<?= $iconsPath ?>', '<?= $galleryIframePage ?>', '<?= $editorIframePage ?>', <?= $width ?>, <?= $galleryHeight ?>, <?= $editorHeight ?><?= $editorLabelsParameter === null ? "" : (", ".$editorLabelsParameter) ?>);
 	editorWithGallery_<?= $id ?>.addEditorWithGalleryCapabilities('<?= $id ?>');
 	</script>
 	<?php
