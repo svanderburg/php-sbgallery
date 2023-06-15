@@ -43,8 +43,8 @@ function displayPicturePagesNavigationForPicturePickerPage(Album $album, int $pa
 				if($page < $lastPage)
 				{
 					?>
-					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumId=<?= $lastPage ?>"><?= $lastPage ?></a>
-					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumId=<?= $page + 1 ?>"><?= $album->settings->albumLabels->next ?></a>
+					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumPage=<?= $lastPage ?>"><?= $lastPage ?></a>
+					<a href="?ALBUM_ID=<?= $album->albumId ?>&amp;albumPage=<?= $page + 1 ?>"><?= $album->settings->albumLabels->next ?></a>
 					<?php
 				}
 				?>

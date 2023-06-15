@@ -90,6 +90,7 @@ function displayGallery(Gallery $gallery, int $page = 0): void
 		?>
 	</div>
 	<?php
+	displayVisibleGalleryPagesNavigation($gallery, $page);
 }
 
 function displayAddAlbumItem(GallerySettings $settings): void
@@ -169,6 +170,7 @@ function displayEditableGallery(Gallery $gallery, int $page = 0): void
 		?>
 	</div>
 	<?php
+	displayGalleryPagesNavigation($gallery, $page);
 }
 
 /**

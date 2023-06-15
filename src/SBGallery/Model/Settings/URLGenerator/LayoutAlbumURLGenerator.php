@@ -33,7 +33,7 @@ class LayoutAlbumURLGenerator extends LayoutPictureURLGenerator implements Album
 	{
 		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
 			$this->operationParam => "moveleft_picture",
-			"__id=" => $id
+			"__id" => $id
 		));
 	}
 
@@ -41,7 +41,7 @@ class LayoutAlbumURLGenerator extends LayoutPictureURLGenerator implements Album
 	{
 		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
 			$this->operationParam => "moveright_picture",
-			"__id=" => $id
+			"__id" => $id
 		));
 	}
 
@@ -49,7 +49,7 @@ class LayoutAlbumURLGenerator extends LayoutPictureURLGenerator implements Album
 	{
 		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
 			$this->operationParam => "setasthumbnail_picture",
-			"__id=" => $id
+			"__id" => $id
 		));
 	}
 
@@ -57,7 +57,7 @@ class LayoutAlbumURLGenerator extends LayoutPictureURLGenerator implements Album
 	{
 		return $this->generatePictureURL($albumId, $pictureId, $argSeparator, array(
 			$this->operationParam => "remove_picture",
-			"__id=" => $id
+			"__id" => $id
 		));
 	}
 

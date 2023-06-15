@@ -85,6 +85,7 @@ function displayPictureThumbnails(Album $album, int $page): void
 			?>
 		</div>
 		<?php
+		displayVisibleAlbumPagesNavigation($album, $page);
 	}
 }
 
@@ -185,6 +186,7 @@ function displayEditablePictureThumbnails(Album $album, int $page): void
 			?>
 		</div>
 		<?php
+		displayAlbumPagesNavigation($album, $page);
 	}
 }
 
