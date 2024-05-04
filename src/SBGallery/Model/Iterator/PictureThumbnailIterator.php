@@ -47,7 +47,7 @@ class PictureThumbnailIterator implements Iterator
 		$this->row = $this->stmt->fetch();
 	}
 
-	public function rewind()
+	public function rewind(): void
 	{
 		if($this->settings->pageSize === null)
 			$this->stmt = PictureEntity::queryAll($this->dbh, $this->albumId, $this->settings->picturesTable);

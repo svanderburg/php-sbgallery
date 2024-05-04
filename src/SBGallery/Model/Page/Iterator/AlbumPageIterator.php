@@ -60,7 +60,7 @@ class AlbumPageIterator implements Iterator
 			$this->row = $this->stmt->fetch();
 	}
 
-	public function rewind()
+	public function rewind(): void
 	{
 		$this->stmt = AlbumEntity::queryThumbnails($this->dbh, $this->displayOnlyVisible, $this->galleryPage->gallery->settings->albumsTable, $this->galleryPage->gallery->settings->thumbnailsTable, $this->galleryPage->gallery->settings->picturesTable);
 		$this->row = $this->stmt->fetch();

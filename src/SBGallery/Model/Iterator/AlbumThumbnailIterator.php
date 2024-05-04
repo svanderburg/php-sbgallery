@@ -48,7 +48,7 @@ class AlbumThumbnailIterator implements Iterator
 		$this->row = $this->stmt->fetch();
 	}
 
-	public function rewind()
+	public function rewind(): void
 	{
 		if($this->settings->galleryPageSize === null)
 			$this->stmt = AlbumEntity::queryThumbnails($this->dbh, $this->displayOnlyVisible, $this->settings->albumsTable, $this->settings->thumbnailsTable, $this->settings->picturesTable);
