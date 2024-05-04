@@ -22,7 +22,7 @@ class AlbumSettings
 	public int $thumbnailWidth;
 
 	/** Maximum height of a thumbnail */
-	public int $thumnailHeight;
+	public int $thumbnailHeight;
 
 	/** Maximum width of a picture */
 	public int $pictureWidth;

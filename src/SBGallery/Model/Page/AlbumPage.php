@@ -13,6 +13,7 @@ use SBGallery\Model\Album;
 use SBGallery\Model\GalleryPermissionChecker;
 use SBGallery\Model\Exception\AlbumNotFoundException;
 use SBGallery\Model\Page\Content\AlbumContents;
+use SBGallery\Model\Page\Content\PictureContents;
 use SBGallery\Model\Page\Settings\AlbumPageSettings;
 
 /**
@@ -27,6 +28,8 @@ class AlbumPage extends CRUDMasterPage
 	public AlbumPageSettings $settings;
 
 	public GalleryPermissionChecker $checker;
+
+	public PictureContents $pictureContents;
 
 	public function __construct(Gallery $gallery, string $albumId, AlbumPageSettings $settings, GalleryPermissionChecker $checker, AlbumContents $contents = null)
 	{

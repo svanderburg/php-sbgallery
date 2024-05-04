@@ -1,5 +1,5 @@
 <?php
-\SBLayout\View\HTML\displayMenuItem($active, $url, $subPage);
+\SBLayout\View\HTML\displayStandardMenuItem($active, $url, $subPage);
 
 if($subPage->checker->checkWritePermissions())
 {
