@@ -493,7 +493,7 @@ criteria) the picture will be moved left in the album.
 Exposing a gallery as a set of sub pages in an application layout
 =================================================================
 In addition to using the high level API to embed the gallery as a sub
-application into an application layout, we can also expose albums as browable
+application into an application layout, we can also expose albums as browseable
 sub pages from a menu.
 
 By using albums as pages, we can use the gallery as a simple content manager
