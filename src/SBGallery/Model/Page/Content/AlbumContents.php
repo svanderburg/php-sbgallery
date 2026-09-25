@@ -4,7 +4,7 @@ use SBLayout\Model\Page\Page;
 
 class AlbumContents extends OverridedContents
 {
-	public function __construct(string $albumEditorLabelsFile = null, array $sections = null, string $gallerySection = "contents", string $view = "HTML", ?array $styles = array(), ?array $scripts = array())
+	public function __construct(?string $albumEditorLabelsFile = null, ?array $sections = null, string $gallerySection = "contents", string $view = "HTML", ?array $styles = array(), ?array $scripts = array())
 	{
 		$htmlEditorJsPath = Page::computeBaseURL()."/scripts/htmleditor.js";
 		array_push($scripts, $htmlEditorJsPath);
@@ -15,7 +15,7 @@ class AlbumContents extends OverridedContents
 		parent::__construct("gallery/album.php", true, "gallery/album.php", $sections, $gallerySection, $view, $styles, $scripts);
 	}
 
-	public function constructPictureContents(string $pictureEditorLabelsFile = null): PictureContents
+	public function constructPictureContents(?string $pictureEditorLabelsFile = null): PictureContents
 	{
 		return new PictureContents($pictureEditorLabelsFile, $this->sections, $this->gallerySection, $this->view, $this->styles, $this->scripts);
 	}

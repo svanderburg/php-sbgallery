@@ -36,7 +36,7 @@ class Album extends CRUDForm
 	 * @param $settings Object that contains album settings
 	 * @param $albumId The ID of the album
 	 */
-	public function __construct(PDO $dbh, AlbumSettings $settings, string $albumId = null)
+	public function __construct(PDO $dbh, AlbumSettings $settings, ?string $albumId = null)
 	{
 		parent::__construct(array(
 			"ALBUM_ID" => new AcceptableFileNameField($settings->albumLabels->albumId, true, 20, 255),
@@ -72,7 +72,7 @@ class Album extends CRUDForm
 	 *
 	 * @param $pictureId ID of the picture
 	 */
-	public function newPicture(string $pictureId = null): Picture
+	public function newPicture(?string $pictureId = null): Picture
 	{
 		return new Picture($this->dbh, $this->settings->constructPictureSettings($this->albumId), $this->albumId, $pictureId);
 	}

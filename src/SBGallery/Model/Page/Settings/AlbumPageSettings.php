@@ -14,11 +14,11 @@ class AlbumPageSettings extends PicturePageSettings
 
 	public ?string $albumMenuItem;
 
-	public function __construct(AlbumPageLabels $albumPageLabels = null,
-		PicturePageLabels $picturePageLabels = null,
-		string $albumEditorLabelsFile = null,
-		string $pictureEditorLabelsFile = null,
-		string $albumMenuItem = null)
+	public function __construct(?AlbumPageLabels $albumPageLabels = null,
+		?PicturePageLabels $picturePageLabels = null,
+		?string $albumEditorLabelsFile = null,
+		?string $pictureEditorLabelsFile = null,
+		?string $albumMenuItem = null)
 	{
 		parent::__construct($picturePageLabels, $pictureEditorLabelsFile);
 

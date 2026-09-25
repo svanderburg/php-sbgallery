@@ -163,7 +163,7 @@ function displayAlbumsForPicturePickerPage(Gallery $gallery): void
  * @param $htmlEditorJs JavaScript include that provides HTML editor functionality
  * @param $galleryJs JavaScript include that provides gallery functionality
  */
-function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gallery", array $styles = null, string $htmlEditorJs = "scripts/htmleditor.js", string $galleryJs = "scripts/gallery.js"): void
+function displayPicturePickerPage(Gallery $gallery, string $galleryLabel = "Gallery", ?array $styles = null, string $htmlEditorJs = "scripts/htmleditor.js", string $galleryJs = "scripts/gallery.js"): void
 {
 	?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

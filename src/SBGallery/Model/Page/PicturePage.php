@@ -20,7 +20,7 @@ class PicturePage extends CRUDDetailPage
 
 	public GalleryPermissionChecker $checker;
 
-	public function __construct(Album $album, string $pictureId, PicturePageSettings $settings, GalleryPermissionChecker $checker, PictureContents $contents = null)
+	public function __construct(Album $album, string $pictureId, PicturePageSettings $settings, GalleryPermissionChecker $checker, ?PictureContents $contents = null)
 	{
 		if($contents === null)
 			$contents = new PictureContents($settings->pictureEditorLabelsFile);

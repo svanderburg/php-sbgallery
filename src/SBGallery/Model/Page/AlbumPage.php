@@ -31,7 +31,7 @@ class AlbumPage extends CRUDMasterPage
 
 	public PictureContents $pictureContents;
 
-	public function __construct(Gallery $gallery, string $albumId, AlbumPageSettings $settings, GalleryPermissionChecker $checker, AlbumContents $contents = null)
+	public function __construct(Gallery $gallery, string $albumId, AlbumPageSettings $settings, GalleryPermissionChecker $checker, ?AlbumContents $contents = null)
 	{
 		if($contents === null)
 			$contents = new AlbumContents($settings->albumEditorLabelsFile);

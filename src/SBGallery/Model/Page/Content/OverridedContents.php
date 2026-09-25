@@ -8,7 +8,7 @@ class OverridedContents extends Contents
 
 	public string $view;
 
-	public function __construct(string $sectionFile, bool $relativeSectionFile = true, string $controller = null, array $sections = null, string $gallerySection = "contents", string $view = "HTML", ?array $styles = array(), ?array $scripts = array())
+	public function __construct(string $sectionFile, bool $relativeSectionFile = true, ?string $controller = null, ?array $sections = null, string $gallerySection = "contents", string $view = "HTML", ?array $styles = array(), ?array $scripts = array())
 	{
 		if($sections === null)
 			$sections = array();

@@ -41,7 +41,7 @@ class GalleryPage extends CRUDMasterPage
 	 * @param $checker An object that checks whether the user has write permissions to the gallery
 	 * @param $contents Specifies the content to be displayed in every content section. null constructs a default object updating the 'content' section
 	 */
-	public function __construct(PDO $dbh, GalleryPageSettings $settings, GalleryPermissionChecker $checker, GalleryContents $contents = null)
+	public function __construct(PDO $dbh, GalleryPageSettings $settings, GalleryPermissionChecker $checker, ?GalleryContents $contents = null)
 	{
 		if($contents === null)
 			$contents = new GalleryContents();

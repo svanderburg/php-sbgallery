@@ -43,8 +43,8 @@ class PictureSettings
 	public function __construct(PictureURLGenerator $urlGenerator,
 		string $baseURL,
 		string $iconsPath = "image/gallery",
-		PictureLabels $labels = null,
-		EditorSettings $editorSettings = null,
+		?PictureLabels $labels = null,
+		?EditorSettings $editorSettings = null,
 		string $picturesTable = "pictures",
 		string $operationParam = "__operation")
 	{

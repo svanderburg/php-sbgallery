@@ -48,7 +48,7 @@ class HTMLEditorWithGalleryField extends TextField
 	 * @param $editorHeight Height of the editor in em
 	 * @param $editorLabelsParameter Expression referring to the labels parameter that can be used to provide a JavaScript object that defines the labels (null omits the parameter so that the default labels are used)
 	 */
-	public function __construct(string $id, string $title, string $galleryIframePage, string $editorIframePage, string $iconsPath, bool $mandatory = false, int $width = 60, int $galleryHeight = 10, int $editorHeight = 20, string $editorLabelsParameter = null)
+	public function __construct(string $id, string $title, string $galleryIframePage, string $editorIframePage, string $iconsPath, bool $mandatory = false, int $width = 60, int $galleryHeight = 10, int $editorHeight = 20, ?string $editorLabelsParameter = null)
 	{
 		parent::__construct($title, $mandatory);
 		$this->id = $id;

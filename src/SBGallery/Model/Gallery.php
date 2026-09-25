@@ -51,7 +51,7 @@ class Gallery
 	 * @param $albumId ID of the album
 	 * @return A new empty album
 	 */
-	public function newAlbum(string $albumId = null): Album
+	public function newAlbum(?string $albumId = null): Album
 	{
 		return new Album($this->dbh, $this->settings->constructAlbumSettings(), $albumId);
 	}

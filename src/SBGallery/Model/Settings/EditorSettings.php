@@ -19,7 +19,7 @@ class EditorSettings
 
 	public ?string $labelsParameter;
 
-	public function __construct(string $id = "editor1", string $iframePage = null, string $iconsPath = "image/editor", int $width = 60, int $height = 20, string $labelsParameter = null)
+	public function __construct(string $id = "editor1", ?string $iframePage = null, string $iconsPath = "image/editor", int $width = 60, int $height = 20, ?string $labelsParameter = null)
 	{
 		$pageBaseURL = Page::computeBaseURL();
 

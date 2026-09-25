@@ -11,7 +11,7 @@ class PicturePageSettings
 
 	public ?string $pictureEditorLabelsFile;
 
-	public function __construct(PicturePageLabels $picturePageLabels = null, string $pictureEditorLabelsFile = null)
+	public function __construct(?PicturePageLabels $picturePageLabels = null, ?string $pictureEditorLabelsFile = null)
 	{
 		if($picturePageLabels === null)
 			$this->picturePageLabels = new PicturePageLabels();
